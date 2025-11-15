@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BEU Syllabus</title>
+
+<meta name="theme-color" content="#0066ff">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:Arial, sans-serif;
+    background:#f4f4f4;
+    padding:15px;
+    display:flex;
+    justify-content:center;
+    min-height:100vh;
+}
+
+.box{
+    width:100%;
+    max-width:600px;
+    background:white;
+    padding:22px;
+    border-radius:14px;
+    margin-top:20px;
+    box-shadow:0 6px 25px rgba(0,0,0,0.12);
+}
+
+img{
+    max-width:150px;
+    display:block;
+    margin:auto;
+}
+
+h2{
+    text-align:center;
+    margin:10px 0 20px;
+    font-size:24px;
+}
+
+select,button{
+    width:100%;
+    padding:15px;
+    margin-top:12px;
+    font-size:18px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#0066ff;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+}
+
+#devBtn{background:#444;}
+
+#msg{
+    margin-top:15px;
+    background:#eef5ff;
+    padding:15px;
+    border-left:4px solid #0066ff;
+    font-size:16px;
+}
+
+/* MODAL */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:10px;
+    z-index:9999;
+}
+
+.modal-box{
+    width:100%;
+    max-width:900px;
+    height:85vh;
+    background:white;
+    border-radius:14px;
+    display:flex;
+    flex-direction:column;
+}
+
+.modal-top{
+    padding:14px;
+    background:#eee;
+    display:flex;
+    justify-content:space-between;
+    font-size:18px;
+}
+
+iframe{flex:1;border:0;width:100%;}
+
+.close-btn{
+    background:#ff3333;
+    color:white;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+}
+
+/* REMOVE SHARE BUTTONS */
+.share, .post-share, .post-footer, .sharing, .share-buttons,
+.blogger-buttons, footer, #comments, .comments {
+    display:none !important;
+}
+</style>
+</head>
+
+<body>
+
+<div class="box">
+
+    <!-- FIXED LOGO (100% Visible) -->
+    <img src="https://i.ibb.co.com/H7Zbsmp/14-Hzbi-UJahl8-KCE1f-U55-ONhg22-Hf7vhq-T.png" alt="App Logo">
+
+    <h2>BEU Syllabus</h2>
+
+    <select id="branch">
+        <option value="">Select Branch</option>
+        <option value="CE">CE - Civil</option>
+        <option value="CS">CS - Computer Science</option>
+        <option value="EE">EE - Electrical</option>
+        <option value="EC">EC - Electronics</option>
+        <option value="ME">ME - Mechanical</option>
+    </select>
+
+    <select id="sem">
+        <option value="">Select Semester</option>
+        <option value="1st">1st Semester</option>
+        <option value="2nd">2nd Semester</option>
+    </select>
+
+    <button id="openBtn">Open Syllabus</button>
+
+    <div id="msg">Choose branch & semester to view syllabus.</div>
+
+    <button id="devBtn">Developer Info</button>
+</div>
+
+<!-- DEVELOPER MODAL -->
+<div class="modal" id="devModal">
+    <div class="modal-box">
+        <div class="modal-top">
+            <strong>Developer</strong>
+            <button class="close-btn" onclick="closeDev()">Close</button>
+        </div>
+        <div style="padding:20px;font-size:18px;">
+            <strong>Name:</strong> Md Zafar <br>
+            <strong>Email:</strong> mdzafarsabour10@gmail.com <br><br>
+            Version: 1.0 (PWA)
+        </div>
+    </div>
+</div>
+
+<!-- PDF MODAL -->
+<div class="modal" id="pdfModal">
+    <div class="modal-box">
+        <div class="modal-top">
+            <strong>Syllabus PDF</strong>
+            <button class="close-btn" onclick="closePDF()">Close</button>
+        </div>
+        <iframe id="pdfFrame"></iframe>
+    </div>
+</div>
+
+<script>
+// SYLLABUS DATABASE
+const syllabus={
+"1st":{
+ "CE":"https://drive.google.com/uc?export=viewer&id=1SdW3rin924CvhUbgGm_NOn3NlYlnA8ck",
+ "CS":"https://drive.google.com/uc?export=viewer&id=1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb",
+ "EE":"https://drive.google.com/uc?export=viewer&id=1BtS61CEIOidszDe5FLBVQUake_8RQZlK",
+ "EC":"https://drive.google.com/uc?export=viewer&id=1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m",
+ "ME":"https://drive.google.com/uc?export=viewer&id=1rCVyja--sFk_Gs8FBbCZK6eh00tr7SCL"
+},
+"2nd":{
+ "CE":"https://drive.google.com/uc?export=viewer&id=1HHdOvSF9dF3M3F_T8E9VgKCMo2HHDyBY",
+ "CS":"https://drive.google.com/uc?export=viewer&id=16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN",
+ "EE":"https://drive.google.com/uc?export=viewer&id=1iGAJZVD8GvXK5T9H0hzL3lQitVPlqkvQ",
+ "EC":"https://drive.google.com/uc?export=viewer&id=1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6",
+ "ME":"https://drive.google.com/uc?export=viewer&id=1nNQ1yv2NCSxhAriI4cGbvFhZSGnxIf6p"
+}
+};
+
+
+// OPEN PDF MODAL
+openBtn.onclick=()=>{
+    let b=branch.value;
+    let s=sem.value;
+
+    if(!b || !s){
+        msg.innerHTML="❌ Please select both branch & semester.";
+        return;
+    }
+
+    pdfFrame.src=syllabus[s][b];
+    pdfModal.style.display="flex";
+};
+
+// CLOSE PDF
+function closePDF(){
+    pdfModal.style.display="none";
+    pdfFrame.src="";
+}
+
+// OPEN DEV MODAL
+devBtn.onclick=()=>{ devModal.style.display="flex"; };
+
+// CLOSE DEV MODAL
+function closeDev(){ devModal.style.display="none"; }
+</script>
+
+</body>
+</html>
+
