@@ -4,16 +4,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BEU Syllabus</title>
 
-<!-- PWA MANIFEST -->
-<link rel="manifest" href="manifest.json">
 <meta name="theme-color" content="#0066ff">
-
-<!-- SERVICE WORKER -->
-<script>
-if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("service-worker.js");
-}
-</script>
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
@@ -36,12 +27,20 @@ body{
     box-shadow:0 6px 25px rgba(0,0,0,0.12);
 }
 
-img{max-width:150px;display:block;margin:auto;}
+/* LOGO */
+#logo{
+    width:150px;
+    height:150px;
+    object-fit:cover;
+    border-radius:25px;   /* ANDROID ROUNDED ICON STYLE */
+    display:block;
+    margin:0 auto 10px auto;
+    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
 
 h2{
     text-align:center;
-    margin-top:10px;
-    margin-bottom:20px;
+    margin:10px 0 20px;
     font-size:24px;
 }
 
@@ -111,7 +110,7 @@ iframe{flex:1;border:0;width:100%;}
     border-radius:8px;
 }
 
-/* REMOVE BLOGGER SHARE */
+/* REMOVE BLOGGER SHARE BUTTONS */
 .share, .post-share, .post-footer, .sharing, .share-buttons,
 .blogger-buttons, footer, #comments, .comments {
     display:none !important;
@@ -122,7 +121,9 @@ iframe{flex:1;border:0;width:100%;}
 <body>
 
 <div class="box">
-    <img src="icon-192.png" alt="App Logo">
+
+    <!-- ROUNDED LOGO -->
+    <img id="logo" src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/logo.png" alt="App Logo">
 
     <h2>BEU Syllabus</h2>
 
@@ -148,7 +149,6 @@ iframe{flex:1;border:0;width:100%;}
     <button id="devBtn">Developer Info</button>
 </div>
 
-
 <!-- DEVELOPER MODAL -->
 <div class="modal" id="devModal">
     <div class="modal-box">
@@ -159,7 +159,7 @@ iframe{flex:1;border:0;width:100%;}
         <div style="padding:20px;font-size:18px;">
             <strong>Name:</strong> Md Zafar <br>
             <strong>Email:</strong> mdzafarsabour10@gmail.com <br><br>
-            Version: 1.0 (PWA)
+            Version: 1.0 (PWA Ready)
         </div>
     </div>
 </div>
@@ -176,7 +176,7 @@ iframe{flex:1;border:0;width:100%;}
 </div>
 
 <script>
-// SYLLABUS LINKS
+// SYLLABUS DATABASE
 const syllabus={
 "1st":{
  "CE":"https://drive.google.com/uc?export=viewer&id=1SdW3rin924CvhUbgGm_NOn3NlYlnA8ck",
@@ -195,7 +195,7 @@ const syllabus={
 };
 
 
-// OPEN PDF
+// OPEN PDF MODAL
 openBtn.onclick=()=>{
     let b=branch.value;
     let s=sem.value;
