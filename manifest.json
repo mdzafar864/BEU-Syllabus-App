@@ -1,12 +1,11 @@
 {
   "name": "BEU Syllabus App",
   "short_name": "BEU App",
-  "start_url": "./",
-  "scope": "./",
+  "start_url": "/BEU-Syllabus-App/",
+  "scope": "/BEU-Syllabus-App/",
   "display": "standalone",
-  "theme_color": "#0066ff",
   "background_color": "#ffffff",
-  "orientation": "portrait",
+  "theme_color": "#0066ff",
   "icons": [
     {
       "src": "icon-192.png",
