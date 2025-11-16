@@ -27,7 +27,6 @@ body{
     box-shadow:0 6px 25px rgba(0,0,0,0.12);
 }
 
-/* LOGO */
 #logo{
     width:150px;
     height:150px;
@@ -38,11 +37,7 @@ body{
     box-shadow:0 5px 15px rgba(0,0,0,0.15);
 }
 
-h2{
-    text-align:center;
-    margin:10px 0 20px;
-    font-size:24px;
-}
+h2{text-align:center;margin:10px 0 20px;font-size:24px;}
 
 select,button{
     width:100%;
@@ -53,13 +48,7 @@ select,button{
     border:1px solid #ccc;
 }
 
-button{
-    background:#0066ff;
-    color:white;
-    font-weight:600;
-    cursor:pointer;
-}
-
+button{background:#0066ff;color:white;font-weight:600;cursor:pointer;}
 #devBtn{background:#444;}
 
 #msg{
@@ -72,31 +61,20 @@ button{
 
 /* MODAL */
 .modal{
-    position:fixed;
-    inset:0;
+    position:fixed; inset:0;
     background:rgba(0,0,0,0.6);
-    display:none;
-    justify-content:center;
-    align-items:center;
-    padding:10px;
-    z-index:9999;
+    display:none; justify-content:center; align-items:center;
+    padding:10px; z-index:9999;
 }
 
 .modal-box{
-    width:100%;
-    max-width:900px;
-    height:85vh;
-    background:white;
-    border-radius:14px;
-    display:flex;
-    flex-direction:column;
+    width:100%; max-width:900px; height:85vh;
+    background:white; border-radius:14px;
+    display:flex; flex-direction:column;
     animation:popup .35s ease;
 }
 
-@keyframes popup{
-    from{transform:scale(0.9);opacity:0;}
-    to{transform:scale(1);opacity:1;}
-}
+@keyframes popup{from{transform:scale(0.9);opacity:0;}to{transform:scale(1);opacity:1;}}
 
 .modal-top{
     padding:14px;
@@ -109,18 +87,9 @@ button{
 iframe{flex:1;border:0;width:100%;}
 
 .close-btn{
-    background:#ff3333;
-    color:white;
-    padding:8px 15px;
-    border:none;
-    border-radius:8px;
+    background:#ff3333; color:white;
+    padding:8px 15px; border:none; border-radius:8px;
     cursor:pointer;
-}
-
-/* REMOVE BLOGGER SHARE BUTTONS */
-.share, .post-share, .post-footer, .sharing, .share-buttons,
-.blogger-buttons, footer, #comments, .comments {
-    display:none !important;
 }
 </style>
 </head>
@@ -128,19 +97,16 @@ iframe{flex:1;border:0;width:100%;}
 <body>
 
 <div class="box">
-
-    <!-- ROUNDED LOGO -->
     <img id="logo" src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/logo.png" alt="App Logo">
-
     <h2>BEU Syllabus</h2>
 
     <select id="branch">
         <option value="">Select Branch</option>
-        <option value="CE">CE - Civil Engineering</option>
-        <option value="CS">CSE - Computer Science and Engineering</option>
-        <option value="EE">EE - Electrical Engineering</option>
-        <option value="EC">ECE - Electronics and Communication Engineering</option>
-        <option value="ME">ME - Mechanical Engineering</option>
+        <option value="CE">Civil Engineering (CE)</option>
+        <option value="CS">Computer Science and Engineering (CSE)</option>
+        <option value="EE">Electrical Engineering (EE)</option>
+        <option value="EC">Electronics and Communication Engineering (ECE)</option>
+        <option value="ME">Mechanical Engineering (ME)</option>
     </select>
 
     <select id="sem">
@@ -150,89 +116,30 @@ iframe{flex:1;border:0;width:100%;}
     </select>
 
     <button id="openBtn">Open Syllabus</button>
-
     <div id="msg">Choose branch & semester to view syllabus.</div>
-
     <button id="devBtn">Developer Info</button>
 </div>
 
-<!-- ======================= -->
-<!--     DEVELOPER MODAL     -->
-<!-- ======================= -->
+<!-- Developer Modal -->
 <div class="modal" id="devModal">
     <div class="modal-box">
         <div class="modal-top">
-            <strong style="font-size:20px;">About the Developer</strong>
+            <strong>About the Developer</strong>
             <button class="close-btn" onclick="closeDev()">Close</button>
         </div>
-
-        <div style="padding:25px;font-size:17px;line-height:1.7;color:#1e293b;overflow-y:auto;">
-
-            <!-- DEVELOPER PHOTO -->
-            <div style="text-align:center;">
-                <div style="
-                    width:140px;
-                    height:140px;
-                    border-radius:50%;
-                    background:white;
-                    padding:8px;
-                    margin:0 auto;
-                    box-shadow:0 4px 18px rgba(0,0,0,0.22);
-                    display:flex;
-                    justify-content:center;
-                    align-items:center;
-                ">
-                    <img src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer%20(2).png"
-                         style="
-                            width:100%;
-                            height:100%;
-                            object-fit:contain;
-                            border-radius:50%;
-                         ">
-                </div>
-            </div>
-
-            <h3 style="text-align:center;margin:15px 0 5px;font-size:22px;color:#0f172a;">Md Zafar</h3>
-            <p style="text-align:center;margin-bottom:18px;color:#475569;">
-                Full-Stack Developer • UI/UX Designer • PWA Specialist
-            </p>
-
-            <p><strong>Email:</strong>
-                <a href="mailto:mdzafarsabour10@gmail.com"
-                   style="color:#0066ff;text-decoration:none;font-weight:600;">
-                    mdzafarsabour10@gmail.com
-                </a>
-            </p>
-
-            <p><strong>Portfolio:</strong>
-                <a href="https://mdzafar864.github.io/Portfolio/" target="_blank"
-                   style="color:#0066ff;font-weight:600;text-decoration:none;">
-                    View Portfolio
-                </a>
-            </p>
-
-            <p><strong>LinkedIn:</strong>
-                <a href="https://www.linkedin.com/in/mdzafar864" target="_blank"
-                   style="color:#0066ff;font-weight:600;text-decoration:none;">
-                    View Profile
-                </a>
-            </p>
-
+        <div style="padding:25px;font-size:17px;line-height:1.7;color:#1e293b;overflow-y:auto;text-align:center;">
+            <img src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer%20(2).png" style="width:140px;height:140px;border-radius:50%;object-fit:contain;margin-bottom:15px;">
+            <h3>Md Zafar</h3>
+            <p>Full-Stack Developer • UI/UX Designer • PWA Specialist</p>
+            <p><strong>Email:</strong> <a href="mailto:mdzafarsabour35@gmail.com" style="color:#0066ff;">mdzafarsabour35@gmail.com</a></p>
+            <p><strong>Portfolio:</strong> <a href="https://mdzafar864.github.io/Portfolio/" target="_blank" style="color:#0066ff;">View Portfolio</a></p>
+            <p><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/mdzafar864" target="_blank" style="color:#0066ff;">View Profile</a></p>
             <p><strong>Version:</strong> 1.0 (PWA Ready)</p>
-
-            <hr style="margin:20px 0;border:0;border-top:1px solid #e2e8f0;">
-
-            <p style="color:#475569;">
-                This application is built to provide fast and clean access to the latest BEU syllabus.
-                It is optimized for mobile users, fully responsive, lightweight, and installable as a PWA.
-            </p>
-
         </div>
     </div>
 </div>
 
-
-<!-- PDF MODAL -->
+<!-- PDF Modal -->
 <div class="modal" id="pdfModal">
     <div class="modal-box">
         <div class="modal-top">
@@ -244,26 +151,24 @@ iframe{flex:1;border:0;width:100%;}
 </div>
 
 <script>
-// SYLLABUS DATABASE
 const syllabus={
 "1st":{
- "CE":"https://drive.google.com/uc?export=viewer&id=1SdW3rin924CvhUbgGm_NOn3NlYlnA8ck",
- "CS":"https://drive.google.com/uc?export=viewer&id=1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb",
- "EE":"https://drive.google.com/uc?export=viewer&id=1BtS61CEIOidszDe5FLBVQUake_8RQZlK",
- "EC":"https://drive.google.com/uc?export=viewer&id=1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m",
- "ME":"https://drive.google.com/uc?export=viewer&id=1rCVyja--sFk_Gs8FBbCZK6eh00tr7SCL"
+ "CE":"https://drive.google.com/uc?export=download&id=1SdW3rin924CvhUbgGm_NOn3NlYlnA8ck",
+ "CS":"https://drive.google.com/uc?export=download&id=1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb",
+ "EE":"https://drive.google.com/uc?export=download&id=1BtS61CEIOidszDe5FLBVQUake_8RQZlK",
+ "EC":"https://drive.google.com/uc?export=download&id=1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m",
+ "ME":"https://drive.google.com/uc?export=download&id=1rCVyja--sFk_Gs8FBbCZK6eh00tr7SCL"
 },
 "2nd":{
- "CE":"https://drive.google.com/uc?export=viewer&id=1HHdOvSF9dF3M3F_T8E9VgKCMo2HHDyBY",
- "CS":"https://drive.google.com/uc?export=viewer&id=16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN",
- "EE":"https://drive.google.com/uc?export=viewer&id=1iGAJZVD8GvXK5T9H0hzL3lQitVPlqkvQ",
- "EC":"https://drive.google.com/uc?export=viewer&id=1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6",
- "ME":"https://drive.google.com/uc?export=viewer&id=1nNQ1yv2NCSxhAriI4cGbvFhZSGnxIf6p"
+ "CE":"https://drive.google.com/uc?export=download&id=1HHdOvSF9dF3M3F_T8E9VgKCMo2HHDyBY",
+ "CS":"https://drive.google.com/uc?export=download&id=16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN",
+ "EE":"https://drive.google.com/uc?export=download&id=1iGAJZVD8GvXK5T9H0hzL3lQitVPlqkvQ",
+ "EC":"https://drive.google.com/uc?export=download&id=1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6",
+ "ME":"https://drive.google.com/uc?export=download&id=1nNQ1yv2NCSxhAriI4cGbvFhZSGnxIf6p"
 }
 };
 
-
-// OPEN PDF MODAL
+// OPEN PDF + DOWNLOAD
 openBtn.onclick=()=>{
     let b=branch.value;
     let s=sem.value;
@@ -273,10 +178,23 @@ openBtn.onclick=()=>{
         return;
     }
 
-    pdfFrame.src=syllabus[s][b];
-    pdfModal.style.display="flex";
-};
+    let pdfLink = syllabus[s][b];
 
+    // Open PDF in modal
+    pdfFrame.src = pdfLink;
+    pdfModal.style.display = "flex";
+
+    // Trigger download
+    const a = document.createElement('a');
+    a.href = pdfLink;
+    a.download = `${b}_${s}_syllabus.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+
+    // Update message
+    msg.innerHTML = "✅ Download Completed";
+};
 
 // CLOSE PDF
 function closePDF(){
@@ -284,10 +202,8 @@ function closePDF(){
     pdfFrame.src="";
 }
 
-// OPEN DEV MODAL
+// DEV MODAL
 devBtn.onclick=()=>{ devModal.style.display="flex"; };
-
-// CLOSE DEV MODAL
 function closeDev(){ devModal.style.display="none"; }
 </script>
 
