@@ -3,7 +3,6 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BEU Syllabus</title>
-
 <meta name="theme-color" content="#0066ff">
 
 <style>
@@ -16,7 +15,6 @@ body{
     justify-content:center;
     min-height:100vh;
 }
-
 .box{
     width:100%;
     max-width:600px;
@@ -26,7 +24,6 @@ body{
     margin-top:20px;
     box-shadow:0 6px 25px rgba(0,0,0,0.12);
 }
-
 #logo{
     width:150px;
     height:150px;
@@ -36,9 +33,7 @@ body{
     margin:0 auto 10px auto;
     box-shadow:0 5px 15px rgba(0,0,0,0.15);
 }
-
 h2{text-align:center;margin:10px 0 20px;font-size:24px;}
-
 select,button{
     width:100%;
     padding:15px;
@@ -47,10 +42,8 @@ select,button{
     border-radius:10px;
     border:1px solid #ccc;
 }
-
 button{background:#0066ff;color:white;font-weight:600;cursor:pointer;}
 #devBtn{background:#444;}
-
 #msg{
     margin-top:15px;
     background:#eef5ff;
@@ -58,24 +51,28 @@ button{background:#0066ff;color:white;font-weight:600;cursor:pointer;}
     border-left:4px solid #0066ff;
     font-size:16px;
 }
-
 /* MODAL */
 .modal{
-    position:fixed; inset:0;
+    position:fixed;
+    inset:0;
     background:rgba(0,0,0,0.6);
-    display:none; justify-content:center; align-items:center;
-    padding:10px; z-index:9999;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:10px;
+    z-index:9999;
 }
-
 .modal-box{
-    width:100%; max-width:900px; height:85vh;
-    background:white; border-radius:14px;
-    display:flex; flex-direction:column;
+    width:100%;
+    max-width:900px;
+    height:85vh;
+    background:white;
+    border-radius:14px;
+    display:flex;
+    flex-direction:column;
     animation:popup .35s ease;
 }
-
 @keyframes popup{from{transform:scale(0.9);opacity:0;}to{transform:scale(1);opacity:1;}}
-
 .modal-top{
     padding:14px;
     background:#f1f5f9;
@@ -83,14 +80,18 @@ button{background:#0066ff;color:white;font-weight:600;cursor:pointer;}
     justify-content:space-between;
     font-size:18px;
 }
-
 iframe{flex:1;border:0;width:100%;}
-
 .close-btn{
-    background:#ff3333; color:white;
-    padding:8px 15px; border:none; border-radius:8px;
+    background:#ff3333;
+    color:white;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
     cursor:pointer;
 }
+/* REMOVE BLOGGER SHARE BUTTONS */
+.share, .post-share, .post-footer, .sharing, .share-buttons,
+.blogger-buttons, footer, #comments, .comments {display:none !important;}
 </style>
 </head>
 
@@ -120,50 +121,49 @@ iframe{flex:1;border:0;width:100%;}
     <button id="devBtn">Developer Info</button>
 </div>
 
-<!-- Developer Modal -->
+<!-- DEVELOPER MODAL -->
 <div class="modal" id="devModal">
     <div class="modal-box">
         <div class="modal-top">
-            
-            <h3 style="text-align:center;margin:15px 0 5px;font-size:22px;color:#0f172a;">Md Zafar</h3>
-            <p style="text-align:center;margin-bottom:18px;color:#475569;">
-                Full-Stack Developer • UI/UX Designer • PWA Specialist
-            </p>
+            <strong>About the Developer</strong>
+            <button class="close-btn" onclick="closeDev()">Close</button>
+        </div>
+        <div style="padding:25px;font-size:17px;line-height:1.7;color:#1e293b;overflow-y:auto;text-align:center;">
+            <div style="
+                width:140px;
+                height:140px;
+                border-radius:50%;
+                background:white;
+                padding:8px;
+                margin:0 auto 15px auto;
+                box-shadow:0 4px 18px rgba(0,0,0,0.22);
+                display:flex;
+                justify-content:center;
+                align-items:center;">
+                <img src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer%20(2).png"
+                     style="width:100%;height:100%;object-fit:contain;border-radius:50%;">
+            </div>
 
-            <p><strong>Email:</strong>
-                <a href="mailto:mdzafarsabour35@gmail.com"
-                   style="color:#0066ff;text-decoration:none;font-weight:600;">
-                    mdzafarsabour35@gmail.com
-                </a>
-            </p>
+            <h3 style="margin-bottom:5px;">Md Zafar</h3>
+            <p style="margin-bottom:15px;">Full-Stack Developer • UI/UX Designer • PWA Specialist</p>
 
-            <p><strong>Portfolio:</strong>
-                <a href="https://mdzafar864.github.io/Portfolio/" target="_blank"
-                   style="color:#0066ff;font-weight:600;text-decoration:none;">
-                    View Portfolio
-                </a>
+            <p><strong>Email:</strong> 
+                <a href="mailto:mdzafarsabour35@gmail.com" style="color:#0066ff;">mdzafarsabour35@gmail.com</a>
             </p>
-
-            <p><strong>LinkedIn:</strong>
-                <a href="https://www.linkedin.com/in/mdzafar864" target="_blank"
-                   style="color:#0066ff;font-weight:600;text-decoration:none;">
-                    View Profile
-                </a>
+            <p><strong>Portfolio:</strong> 
+                <a href="https://mdzafar864.github.io/Portfolio/" target="_blank" style="color:#0066ff;">View Portfolio</a>
             </p>
-
+            <p><strong>LinkedIn:</strong> 
+                <a href="https://www.linkedin.com/in/mdzafar864" target="_blank" style="color:#0066ff;">View Profile</a>
+            </p>
             <p><strong>Version:</strong> 1.0 (PWA Ready)</p>
-
             <hr style="margin:20px 0;border:0;border-top:1px solid #e2e8f0;">
-
-            <p style="color:#475569;">
-                This application is built to provide fast and clean access to the latest BEU syllabus.
-                It is optimized for mobile users, fully responsive, lightweight, and installable as a PWA.
-            </p>
+            <p>This application provides fast access to BEU syllabus. Optimized for mobile, fully responsive, lightweight, and installable as a PWA.</p>
         </div>
     </div>
 </div>
 
-<!-- PDF Modal -->
+<!-- PDF MODAL -->
 <div class="modal" id="pdfModal">
     <div class="modal-box">
         <div class="modal-top">
@@ -192,7 +192,6 @@ const syllabus={
 }
 };
 
-// OPEN PDF + DOWNLOAD
 openBtn.onclick=()=>{
     let b=branch.value;
     let s=sem.value;
@@ -203,8 +202,6 @@ openBtn.onclick=()=>{
     }
 
     let pdfLink = syllabus[s][b];
-
-    // Open PDF in modal
     pdfFrame.src = pdfLink;
     pdfModal.style.display = "flex";
 
@@ -216,17 +213,13 @@ openBtn.onclick=()=>{
     a.click();
     document.body.removeChild(a);
 
-    // Update message
     msg.innerHTML = "✅ Download Completed";
 };
 
-// CLOSE PDF
 function closePDF(){
     pdfModal.style.display="none";
     pdfFrame.src="";
 }
-
-// DEV MODAL
 devBtn.onclick=()=>{ devModal.style.display="flex"; };
 function closeDev(){ devModal.style.display="none"; }
 </script>
