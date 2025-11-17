@@ -7,33 +7,41 @@
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
+
 body{
     font-family:Arial, sans-serif;
     background:#f4f4f4;
     padding:15px;
-    display:flex;
-    justify-content:center;
-    min-height:100vh;
+    width:100%;
+    max-width:900px;
+    margin:auto;
 }
+
+/* MAIN BOX */
 .box{
     width:100%;
-    max-width:600px;
     background:white;
-    padding:22px;
+    padding:25px;
     border-radius:14px;
-    margin-top:20px;
-    box-shadow:0 6px 25px rgba(0,0,0,0.12);
+    margin-top:25px;
+    box-shadow:0 6px 25px rgba(0,0,0,0.10);
 }
+
+/* LOGO */
 #logo{
-    width:150px;
-    height:150px;
+    width:140px;
+    height:140px;
     object-fit:cover;
-    border-radius:25px;
+    border-radius:20px;
     display:block;
     margin:0 auto 10px auto;
     box-shadow:0 5px 15px rgba(0,0,0,0.15);
 }
-h2{text-align:center;margin:10px 0 20px;font-size:24px;}
+
+/* TEXT */
+h2{text-align:center;margin:10px 0 25px;font-size:26px;}
+
+/* SELECT + BUTTON */
 select,button{
     width:100%;
     padding:15px;
@@ -42,15 +50,27 @@ select,button{
     border-radius:10px;
     border:1px solid #ccc;
 }
-button{background:#0066ff;color:white;font-weight:600;cursor:pointer;}
+
+button{
+    background:#0066ff;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+}
+
 #devBtn{background:#444;}
+
+/* MESSAGE BOX */
 #msg{
     margin-top:15px;
     background:#eef5ff;
     padding:15px;
     border-left:4px solid #0066ff;
     font-size:16px;
+    display:block;
+    transition:opacity .3s ease;
 }
+
 /* MODAL */
 .modal{
     position:fixed;
@@ -59,20 +79,27 @@ button{background:#0066ff;color:white;font-weight:600;cursor:pointer;}
     display:none;
     justify-content:center;
     align-items:center;
-    padding:10px;
+    padding:15px;
     z-index:9999;
 }
+
 .modal-box{
     width:100%;
-    max-width:900px;
-    height:85vh;
+    max-width:1000px;
+    height:90vh;
     background:white;
     border-radius:14px;
     display:flex;
     flex-direction:column;
     animation:popup .35s ease;
 }
-@keyframes popup{from{transform:scale(0.9);opacity:0;}to{transform:scale(1);opacity:1;}}
+
+/* Animation */
+@keyframes popup{
+    from{transform:scale(0.95);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+
 .modal-top{
     padding:14px;
     background:#f1f5f9;
@@ -80,25 +107,43 @@ button{background:#0066ff;color:white;font-weight:600;cursor:pointer;}
     justify-content:space-between;
     font-size:18px;
 }
-iframe{flex:1;border:0;width:100%;}
+
+iframe{
+    flex:1;
+    border:0;
+    width:100%;
+}
+
+/* CLOSE BUTTON */
 .close-btn{
     background:#ff3333;
     color:white;
-    padding:8px 15px;
+    padding:10px 18px;
     border:none;
     border-radius:8px;
     cursor:pointer;
 }
-/* REMOVE BLOGGER SHARE BUTTONS */
-.share, .post-share, .post-footer, .sharing, .share-buttons,
-.blogger-buttons, footer, #comments, .comments {display:none !important;}
+
+/* REMOVE BLOGGER PARTS */
+.share,.post-share,.post-footer,.sharing,.share-buttons,
+.blogger-buttons,footer,#comments,.comments{
+    display:none !important;
+}
+
+/* DESKTOP VIEW */
+@media (min-width:900px){
+    body{padding:30px;}
+    .box{padding:35px;}
+    h2{font-size:30px;}
+}
 </style>
 </head>
 
 <body>
 
 <div class="box">
-    <img id="logo" src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/logo.png" alt="App Logo">
+    <img id="logo" src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/logo.png">
+
     <h2>BEU Syllabus</h2>
 
     <select id="branch">
@@ -106,7 +151,7 @@ iframe{flex:1;border:0;width:100%;}
         <option value="CE">Civil Engineering (CE)</option>
         <option value="CS">Computer Science and Engineering (CSE)</option>
         <option value="EE">Electrical Engineering (EE)</option>
-        <option value="EC">Electronics and Communication Engineering (ECE)</option>
+        <option value="EC">Electronics and Communication (ECE)</option>
         <option value="ME">Mechanical Engineering (ME)</option>
     </select>
 
@@ -117,7 +162,9 @@ iframe{flex:1;border:0;width:100%;}
     </select>
 
     <button id="openBtn">Open Syllabus</button>
+
     <div id="msg">Choose branch & semester to view syllabus.</div>
+
     <button id="devBtn">Developer Info</button>
 </div>
 
@@ -128,37 +175,33 @@ iframe{flex:1;border:0;width:100%;}
             <strong>About the Developer</strong>
             <button class="close-btn" onclick="closeDev()">Close</button>
         </div>
+
         <div style="padding:25px;font-size:17px;line-height:1.7;color:#1e293b;overflow-y:auto;text-align:center;">
-            <div style="
-                width:140px;
-                height:140px;
-                border-radius:50%;
-                background:white;
-                padding:8px;
-                margin:0 auto 15px auto;
-                box-shadow:0 4px 18px rgba(0,0,0,0.22);
-                display:flex;
-                justify-content:center;
-                align-items:center;">
+            <div style="width:140px;height:140px;border-radius:50%;background:white;padding:8px;margin:0 auto 15px auto;box-shadow:0 4px 18px rgba(0,0,0,0.22);display:flex;justify-content:center;align-items:center;">
                 <img src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer%20(2).png"
                      style="width:100%;height:100%;object-fit:contain;border-radius:50%;">
             </div>
 
             <h3 style="margin-bottom:5px;">Md Zafar</h3>
-            <p style="margin-bottom:15px;">Full-Stack Developer • UI/UX Designer • PWA Specialist</p>
+            <p>Full-Stack Developer • UI/UX Designer • PWA Specialist</p>
 
             <p><strong>Email:</strong> 
                 <a href="mailto:mdzafarsabour35@gmail.com" style="color:#0066ff;">mdzafarsabour35@gmail.com</a>
             </p>
+
             <p><strong>Portfolio:</strong> 
                 <a href="https://mdzafar864.github.io/Portfolio/" target="_blank" style="color:#0066ff;">View Portfolio</a>
             </p>
+
             <p><strong>LinkedIn:</strong> 
                 <a href="https://www.linkedin.com/in/mdzafar864" target="_blank" style="color:#0066ff;">View Profile</a>
             </p>
+
             <p><strong>Version:</strong> 1.0 (PWA Ready)</p>
+
             <hr style="margin:20px 0;border:0;border-top:1px solid #e2e8f0;">
-            <p>This application provides fast access to BEU syllabus. Optimized for mobile, fully responsive, lightweight, and installable as a PWA.</p>
+
+            <p>This application provides fast access to BEU syllabus. Fully responsive, lightweight and PWA ready.</p>
         </div>
     </div>
 </div>
@@ -175,6 +218,7 @@ iframe{flex:1;border:0;width:100%;}
 </div>
 
 <script>
+// PDF LINKS
 const syllabus={
 "1st":{
  "CE":"https://drive.google.com/uc?export=download&id=1SdW3rin924CvhUbgGm_NOn3NlYlnA8ck",
@@ -192,37 +236,73 @@ const syllabus={
 }
 };
 
-openBtn.onclick=()=>{
-    let b=branch.value;
-    let s=sem.value;
+let hideTimer;
 
-    if(!b || !s){
-        msg.innerHTML="❌ Please select both branch & semester.";
+// RESET MESSAGE ON CHANGE
+branch.onchange = sem.onchange = () => {
+    clearTimeout(hideTimer);
+    msg.style.opacity = 1;
+    msg.innerHTML = "Choose branch & semester to view syllabus.";
+};
+
+// MAIN BUTTON ACTION
+openBtn.onclick = () => {
+    let b = branch.value;
+    let s = sem.value;
+
+    // Error case
+    if (!b || !s) {
+        showMessage("❌ Please select both branch & semester.");
         return;
     }
 
+    // PDF OPEN
     let pdfLink = syllabus[s][b];
     pdfFrame.src = pdfLink;
     pdfModal.style.display = "flex";
 
-    // Trigger download
+    // Auto download
     const a = document.createElement('a');
     a.href = pdfLink;
     a.download = `${b}_${s}_syllabus.pdf`;
     document.body.appendChild(a);
     a.click();
-    document.body.removeChild(a);
+    a.remove();
 
-    msg.innerHTML = "✅ Download Completed";
+    // Success msg
+    showMessage("✅ Download Completed");
 };
 
-function closePDF(){
-    pdfModal.style.display="none";
-    pdfFrame.src="";
+// CORE FUNCTION — FIXED
+function showMessage(text) {
+    clearTimeout(hideTimer);
+
+    msg.style.opacity = 1;
+    msg.innerHTML = text;
+
+    // AUTO HIDE AFTER 10 SEC
+    hideTimer = setTimeout(() => {
+        msg.style.opacity = 0;
+
+        // Bring back default text after fade-out
+        setTimeout(() => {
+            msg.innerHTML = "Choose branch & semester to view syllabus.";
+            msg.style.opacity = 1;
+        }, 500);
+
+    }, 10000);
 }
-devBtn.onclick=()=>{ devModal.style.display="flex"; };
-function closeDev(){ devModal.style.display="none"; }
+
+// CLOSE PDF
+function closePDF() {
+    pdfModal.style.display = "none";
+    pdfFrame.src = "";
+}
+
+// DEV MODAL
+devBtn.onclick = () => devModal.style.display = "flex";
+function closeDev() { devModal.style.display = "none"; }
 </script>
 
-</body>
+</body> 
 </html>
