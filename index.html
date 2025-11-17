@@ -94,7 +94,6 @@ button{
     animation:popup .35s ease;
 }
 
-/* Animation */
 @keyframes popup{
     from{transform:scale(0.95);opacity:0;}
     to{transform:scale(1);opacity:1;}
@@ -130,7 +129,7 @@ iframe{
     display:none !important;
 }
 
-/* DESKTOP VIEW */
+/* DESKTOP */
 @media (min-width:900px){
     body{padding:30px;}
     .box{padding:35px;}
@@ -176,30 +175,30 @@ iframe{
             <button class="close-btn" onclick="closeDev()">Close</button>
         </div>
 
-        <div style="padding:25px;font-size:17px;line-height:1.7;color:#1e293b;overflow-y:auto;text-align:center;">
+        <div style="padding:25px;font-size:17px;line-height:1.7;color:#1e293b;text-align:center;overflow-y:auto;">
             <div style="width:140px;height:140px;border-radius:50%;background:white;padding:8px;margin:0 auto 15px auto;box-shadow:0 4px 18px rgba(0,0,0,0.22);display:flex;justify-content:center;align-items:center;">
                 <img src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer%20(2).png"
                      style="width:100%;height:100%;object-fit:contain;border-radius:50%;">
             </div>
 
-            <h3 style="margin-bottom:5px;">Md Zafar</h3>
+            <h3>Md Zafar</h3>
             <p>Full-Stack Developer • UI/UX Designer • PWA Specialist</p>
 
-            <p><strong>Email:</strong> 
-                <a href="mailto:mdzafarsabour35@gmail.com" style="color:#0066ff;">mdzafarsabour35@gmail.com</a>
+            <p><b>Email:</b> 
+                <a href="mailto:mdzafarsabour35@gmail.com">mdzafarsabour35@gmail.com</a>
             </p>
 
-            <p><strong>Portfolio:</strong> 
-                <a href="https://mdzafar864.github.io/Portfolio/" target="_blank" style="color:#0066ff;">View Portfolio</a>
+            <p><b>Portfolio:</b> 
+                <a href="https://mdzafar864.github.io/Portfolio/" target="_blank">View Portfolio</a>
             </p>
 
-            <p><strong>LinkedIn:</strong> 
-                <a href="https://www.linkedin.com/in/mdzafar864" target="_blank" style="color:#0066ff;">View Profile</a>
+            <p><b>LinkedIn:</b> 
+                <a href="https://www.linkedin.com/in/mdzafar864" target="_blank">View Profile</a>
             </p>
 
-            <p><strong>Version:</strong> 1.0 (PWA Ready)</p>
+            <p><b>Version:</b> 1.0 (PWA Ready)</p>
 
-            <hr style="margin:20px 0;border:0;border-top:1px solid #e2e8f0;">
+            <hr style="margin:20px 0;">
 
             <p>This application provides fast access to BEU syllabus. Fully responsive, lightweight and PWA ready.</p>
         </div>
@@ -238,30 +237,27 @@ const syllabus={
 
 let hideTimer;
 
-// RESET MESSAGE ON CHANGE
+// RESET TO DEFAULT MSG ON SELECT CHANGE
 branch.onchange = sem.onchange = () => {
-    clearTimeout(hideTimer);
     msg.style.opacity = 1;
     msg.innerHTML = "Choose branch & semester to view syllabus.";
 };
 
-// MAIN BUTTON ACTION
+// MAIN BUTTON
 openBtn.onclick = () => {
     let b = branch.value;
     let s = sem.value;
 
-    // Error case
     if (!b || !s) {
-        showMessage("❌ Please select both branch & semester.");
+        showMessage("❌ Please select both branch & semester.", 10000);
         return;
     }
 
-    // PDF OPEN
     let pdfLink = syllabus[s][b];
     pdfFrame.src = pdfLink;
     pdfModal.style.display = "flex";
 
-    // Auto download
+    // auto download
     const a = document.createElement('a');
     a.href = pdfLink;
     a.download = `${b}_${s}_syllabus.pdf`;
@@ -269,40 +265,35 @@ openBtn.onclick = () => {
     a.click();
     a.remove();
 
-    // Success msg
-    showMessage("✅ Download Completed");
+    showMessage("✅ Download Completed", 30000);
 };
 
-// CORE FUNCTION — FIXED
-function showMessage(text) {
+// UNIVERSAL MESSAGE FUNCTION
+function showMessage(text, duration) {
     clearTimeout(hideTimer);
 
     msg.style.opacity = 1;
     msg.innerHTML = text;
 
-    // AUTO HIDE AFTER 10 SEC
     hideTimer = setTimeout(() => {
         msg.style.opacity = 0;
 
-        // Bring back default text after fade-out
         setTimeout(() => {
             msg.innerHTML = "Choose branch & semester to view syllabus.";
             msg.style.opacity = 1;
-        }, 500);
+        }, 400);
 
-    }, 10000);
+    }, duration);
 }
 
-// CLOSE PDF
 function closePDF() {
     pdfModal.style.display = "none";
     pdfFrame.src = "";
 }
 
-// DEV MODAL
 devBtn.onclick = () => devModal.style.display = "flex";
 function closeDev() { devModal.style.display = "none"; }
 </script>
 
-</body> 
+</body>
 </html>
