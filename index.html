@@ -1,13 +1,13 @@
 <!doctype html>
 <html lang="en">
 <head>
+<meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BEU Syllabus</title>
 <meta name="theme-color" content="#0066ff">
 
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-
 body{
     font-family:Arial, sans-serif;
     background:#f4f4f4;
@@ -141,7 +141,7 @@ iframe{
 <body>
 
 <div class="box">
-    <img id="logo" src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/logo.png">
+    <img id="logo" src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/logo.png" alt="BEU Logo">
 
     <h2>BEU Syllabus</h2>
 
@@ -150,14 +150,22 @@ iframe{
         <option value="CE">Civil Engineering (CE)</option>
         <option value="CS">Computer Science and Engineering (CSE)</option>
         <option value="EE">Electrical Engineering (EE)</option>
-        <option value="EC">Electronics and Communication (ECE)</option>
+        <option value="ECE">Electronic and Communication Engineering (ECE)</option>
         <option value="ME">Mechanical Engineering (ME)</option>
     </select>
 
     <select id="sem">
         <option value="">Select Semester</option>
-        <option value="1st">1st Semester</option>
-        <option value="2nd">2nd Semester</option>
+        <option value="1stNew">1st Semester (New)</option>
+        <option value="1stOld">1st Semester (Old)</option>
+        <option value="2ndNew">2nd Semester (New)</option>
+        <option value="2ndOld">2nd Semester (Old)</option>
+        <option value="3rd">3rd Semester</option>
+        <option value="4th">4th Semester</option>
+        <option value="5th">5th Semester</option>
+        <option value="6th">6th Semester</option>
+        <option value="7th">7th Semester</option>
+        <option value="8th">8th Semester</option>
     </select>
 
     <button id="openBtn">Open Syllabus</button>
@@ -178,22 +186,22 @@ iframe{
         <div style="padding:25px;font-size:17px;line-height:1.7;color:#1e293b;text-align:center;overflow-y:auto;">
             <div style="width:140px;height:140px;border-radius:50%;background:white;padding:8px;margin:0 auto 15px auto;box-shadow:0 4px 18px rgba(0,0,0,0.22);display:flex;justify-content:center;align-items:center;">
                 <img src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer%20(2).png"
-                     style="width:100%;height:100%;object-fit:contain;border-radius:50%;">
+                     style="width:100%;height:100%;object-fit:contain;border-radius:50%;" alt="Developer">
             </div>
 
             <h3>Md Zafar</h3>
             <p>Full-Stack Developer • UI/UX Designer • PWA Specialist</p>
 
-            <p><b>Email:</b> 
+            <p><b>Email:</b>
                 <a href="mailto:mdzafarsabour35@gmail.com">mdzafarsabour35@gmail.com</a>
             </p>
 
-            <p><b>Portfolio:</b> 
-                <a href="https://mdzafar864.github.io/Portfolio/" target="_blank">View Portfolio</a>
+            <p><b>Portfolio:</b>
+                <a href="https://mdzafar864.github.io/Portfolio/" target="_blank" rel="noopener">View Portfolio</a>
             </p>
 
-            <p><b>LinkedIn:</b> 
-                <a href="https://www.linkedin.com/in/mdzafar864" target="_blank">View Profile</a>
+            <p><b>LinkedIn:</b>
+                <a href="https://www.linkedin.com/in/mdzafar864" target="_blank" rel="noopener">View Profile</a>
             </p>
 
             <p><b>Version:</b> 1.0 (PWA Ready)</p>
@@ -212,27 +220,78 @@ iframe{
             <strong>Syllabus PDF</strong>
             <button class="close-btn" onclick="closePDF()">Close</button>
         </div>
-        <iframe id="pdfFrame"></iframe>
+        <iframe id="pdfFrame" title="Syllabus PDF"></iframe>
     </div>
 </div>
 
 <script>
-// PDF LINKS
-const syllabus={
-"1st":{
- "CE":"https://drive.google.com/uc?export=download&id=1SdW3rin924CvhUbgGm_NOn3NlYlnA8ck",
- "CS":"https://drive.google.com/uc?export=download&id=1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb",
- "EE":"https://drive.google.com/uc?export=download&id=1BtS61CEIOidszDe5FLBVQUake_8RQZlK",
- "EC":"https://drive.google.com/uc?export=download&id=1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m",
- "ME":"https://drive.google.com/uc?export=download&id=1rCVyja--sFk_Gs8FBbCZK6eh00tr7SCL"
-},
-"2nd":{
- "CE":"https://drive.google.com/uc?export=download&id=1HHdOvSF9dF3M3F_T8E9VgKCMo2HHDyBY",
- "CS":"https://drive.google.com/uc?export=download&id=16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN",
- "EE":"https://drive.google.com/uc?export=download&id=1iGAJZVD8GvXK5T9H0hzL3lQitVPlqkvQ",
- "EC":"https://drive.google.com/uc?export=download&id=1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6",
- "ME":"https://drive.google.com/uc?export=download&id=1nNQ1yv2NCSxhAriI4cGbvFhZSGnxIf6p"
-}
+// ==========================
+// UPDATED FULL DATABASE
+// ==========================
+const syllabus = {
+ "1stNew":{
+   "CE":"https://drive.google.com/uc?export=download&id=1Qd3X732fBWyEax1GTudkBWn7fpe57CgA",
+   "CS":"https://drive.google.com/uc?export=download&id=1Zp-UAEgj72UstczPS_wSIBtlPU48USal",
+   "EE":"https://drive.google.com/uc?export=download&id=1dZCtmM7w3H9dRpsWMlDhhJZNvFOiA1up",
+   "ME":"https://drive.google.com/uc?export=download&id=1yYB-UOYnpkOCYspJeZv83o7Rjy3wfcB8"
+ },
+
+ "1stOld":{
+   "CE":"https://drive.google.com/uc?export=download&id=1iRWghHRyCP6WPZ3Xoc0DdScIytir3xRn",
+   "CS":"https://drive.google.com/uc?export=download&id=1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb",
+   "EE":"https://drive.google.com/uc?export=download&id=1BtS61CEIOidszDe5FLBVQUake_8RQZlK",
+   "ME":"https://drive.google.com/uc?export=download&id=1gyWaJKhhcZNmSF9WlWfqRXfnTeA87hvY"
+ },
+
+ "2ndNew":{
+   "CE":"https://drive.google.com/uc?export=download&id=13q_AFXP9e2AWyHHtHWp_Fm4bRgtME3qv",
+   "CS":"https://drive.google.com/uc?export=download&id=15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh",
+   "EE":"https://drive.google.com/uc?export=download&id=1wgmEj8RSBWleYUZ1JjzD7tICuiQgJEDW",
+   "ME":"https://drive.google.com/uc?export=download&id=1hhAgOvC2LvbBRv6f7n1MSHPxD9MBVgsy"
+ },
+
+ "2ndOld":{
+   "CE":"https://drive.google.com/uc?export=download&id=1jW97lTtufHT26vkRP6KISUiKWSYe6F3o",
+   "CS":"https://drive.google.com/uc?export=download&id=16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN",
+   "EE":"https://drive.google.com/uc?export=download&id=1BySqdhfYv-ycam5M4NwPXO9CQZ0SImdd",
+   "ME":"https://drive.google.com/uc?export=download&id=1xwhvlJIQJRCqKLCPTKeOOdjzkUgr8S5U"
+ },
+
+ "3rd": {
+   "CE":"https://drive.google.com/uc?export=download&id=1IS4EV9JvOfoLW3cYRW7U-qBkXyRAvFlD",
+   "CS":"https://drive.google.com/uc?export=download&id=1ZlU22NFGirTuV01jKYiG9zdSU_IO29-t",
+   "EE":"https://drive.google.com/uc?export=download&id=1D2gAZlW299s9f60wcdicGSZK7DpZVXkc",
+   "ME":"https://drive.google.com/uc?export=download&id=1XE_l1tfHGZHMDIxU6KNlcjlqiKxKN-ZW"
+ },
+
+ "4th": {
+   "CE":"https://drive.google.com/uc?export=download&id=17w5zTFNaWUOg7S_vUrqW_AxtMyf7bPdU",
+   "CS":"https://drive.google.com/uc?export=download&id=1ODCj6Omx6dUuHR-Cmwh4iu37TaMQyTLn",
+   "EE":"https://drive.google.com/uc?export=download&id=1G-cJOckwjZRoaDz0Nnw-CphpqBcZztA7",
+   "ME":"https://drive.google.com/uc?export=download&id=1jVvYbUmth-RIbhLBXbDf3ooB8zgz8fSc"
+ },
+
+ "5th": {
+   "CE":"https://drive.google.com/uc?export=download&id=1tGXDItZ5g-AsnsXN0KmMifbA36vgxA0C",
+   "CS":"https://drive.google.com/uc?export=download&id=1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3",
+   "EE":"https://drive.google.com/uc?export=download&id=1MA_tDBF7Fuvg8OGgn8bzg4mHSUTmQ-dC",
+   "ME":"https://drive.google.com/uc?export=download&id=1FW1-YDLvthfdG52szzsLzTIU9DOI03bc"
+ },
+
+ "6th": {
+   "CE":"https://drive.google.com/uc?export=download&id=1MxzSoTSdMgCvgCPiDFsDjVuu4QaJCQge",
+   "CS":"https://drive.google.com/uc?export=download&id=1ckXxGY5kdHmxlAIGsq-NfDskA4Mj_xQj",
+   "EE":"https://drive.google.com/uc?export=download&id=1obhgEQmyRzDg1XPG7Gc6u5SyMugXN9bn"
+ },
+
+ "7th": {
+   "CE":"https://drive.google.com/uc?export=download&id=1EZWRyO1Zs96_tp-Dn1KRhhgbNK_DGQGU",
+   "EE":"https://drive.google.com/uc?export=download&id=1ey1jhsveL-eO0gc0FgwlNs7U05qRQHp5"
+ },
+
+ "8th": {
+   "EE":"https://drive.google.com/uc?export=download&id=1BwL_f3KCmWzuEulEth3G3hQw5sxLvBOy"
+ }
 };
 
 let hideTimer;
@@ -253,19 +312,28 @@ openBtn.onclick = () => {
         return;
     }
 
+    // check exists
+    if (!syllabus[s] || !syllabus[s][b]) {
+        showMessage("❌ Syllabus not available for this selection.", 9000);
+        return;
+    }
+
     let pdfLink = syllabus[s][b];
     pdfFrame.src = pdfLink;
     pdfModal.style.display = "flex";
 
     // auto download
-    const a = document.createElement('a');
-    a.href = pdfLink;
-    a.download = `${b}_${s}_syllabus.pdf`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-
-    showMessage("✅ Download Completed", 30000);
+    try {
+        const a = document.createElement('a');
+        a.href = pdfLink;
+        a.download = `${b}_${s}_syllabus.pdf`;
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        showMessage("✅ Download Completed", 30000);
+    } catch (e) {
+        showMessage("⚠️ Could not start download automatically. Opening preview...", 8000);
+    }
 };
 
 // UNIVERSAL MESSAGE FUNCTION
