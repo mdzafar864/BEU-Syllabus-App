@@ -2,13 +2,14 @@
 <html lang="en">
 <head>
     <!-- Correct PWA Paths -->
-    <link rel="manifest" href="/BEU-Syllabus-App/manifest.json">
+    <link rel="manifest" href="/manifest.json">
 
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/BEU-Syllabus-App/service-worker.js")
+  navigator.serviceWorker
+    .register("/service-worker.js")
     .then(() => console.log("SW Registered"))
-    .catch(err => console.log("SW Error:", err));
+    .catch((err) => console.log("SW Error:", err));
 }
 </script>
     
