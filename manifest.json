@@ -1,11 +1,14 @@
 {
   "name": "BEU Syllabus App",
-  "short_name": "BEU App",
-  "start_url": "/BEU-Syllabus-App/",
+  "short_name": "BEU Syllabus",
+  "description": "Fast, clean and offline-ready BEU Syllabus PWA for all branches and semesters.",
+  "start_url": "/BEU-Syllabus-App/index.html",
   "scope": "/BEU-Syllabus-App/",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#0066ff",
+  "orientation": "portrait-primary",
+
   "icons": [
     {
       "src": "icon-192.png",
@@ -16,6 +19,12 @@
       "src": "icon-512.png",
       "sizes": "512x512",
       "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
     }
   ]
 }
