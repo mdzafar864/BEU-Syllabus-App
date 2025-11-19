@@ -1,53 +1,45 @@
-const CACHE_NAME = "beu-syllabus-v1";
-const ASSETS = [
-  "/BEU-Syllabus-App/",
-  "/BEU-Syllabus-App/index.html",
-  "/BEU-Syllabus-App/manifest.json",
-  "/BEU-Syllabus-App/icon-192.png",
-  "/BEU-Syllabus-App/icon-512.png",
-  "/BEU-Syllabus-App/logo.png",
-  "/BEU-Syllabus-App/Developer (2).png"
+const CACHE_NAME = "beu-syllabus-cache-v1";
+const urlsToCache = [
+  "/",
+  "/index.html",
+  "/icon-192.png",
+  "/icon-512.png"
 ];
 
-// INSTALL — Cache all required assets
+// Install SW
 self.addEventListener("install", (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      return cache.addAll(ASSETS);
+    caches.open(CACHE_NAME).then((cache) => {
+      return cache.addAll(urlsToCache);
     })
   );
   self.skipWaiting();
 });
 
-// ACTIVATE — Cleanup old caches
+// Activate SW
 self.addEventListener("activate", (event) => {
   event.waitUntil(
-    caches.keys().then(keys => {
+    caches.keys().then((cacheNames) => {
       return Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) {
-            return caches.delete(key);
-          }
-        })
+        cacheNames
+          .filter((name) => name !== CACHE_NAME)
+          .map((name) => caches.delete(name))
       );
     })
   );
   self.clients.claim();
 });
 
-// FETCH — Network fallback with cache support
+// Fetch Offline Support
 self.addEventListener("fetch", (event) => {
   event.respondWith(
-    caches.match(event.request).then(cached => {
+    caches.match(event.request).then((response) => {
       return (
-        cached ||
-        fetch(event.request)
-          .then(response => {
-            return response;
-          })
-          .catch(() => cached)
+        response ||
+        fetch(event.request).catch(() =>
+          caches.match("/index.html")
+        )
       );
     })
   );
 });
-    
