@@ -104,7 +104,13 @@ button{
     background:#f1f5f9;
     display:flex;
     justify-content:space-between;
+    align-items:center;
     font-size:18px;
+}
+
+.modal-top .btn-group{
+    display:flex;
+    gap:10px;
 }
 
 iframe{
@@ -113,7 +119,7 @@ iframe{
     width:100%;
 }
 
-/* CLOSE BUTTON */
+/* CLOSE + DOWNLOAD BUTTONS */
 .close-btn{
     background:#ff3333;
     color:white;
@@ -121,6 +127,9 @@ iframe{
     border:none;
     border-radius:8px;
     cursor:pointer;
+}
+#downloadPDFBtn{
+    background:#0066ff;
 }
 
 /* REMOVE BLOGGER PARTS */
@@ -218,104 +227,106 @@ iframe{
     <div class="modal-box">
         <div class="modal-top">
             <strong>Syllabus PDF</strong>
-            <button class="close-btn" onclick="closePDF()">Close</button>
+            <div class="btn-group">
+                <button class="close-btn" onclick="closePDF()">Close</button>
+                <button class="close-btn" id="downloadPDFBtn">Download</button>
+            </div>
         </div>
         <iframe id="pdfFrame" title="Syllabus PDF"></iframe>
     </div>
 </div>
 
 <script>
-// ==========================
-// UPDATED FULL DATABASE
-// ==========================
+
+// FULL DATABASE
 const syllabus = {
- "1stNew":{
-   "CE":"https://drive.google.com/uc?export=download&id=1Qd3X732fBWyEax1GTudkBWn7fpe57CgA",
-   "CS":"https://drive.google.com/uc?export=download&id=1Zp-UAEgj72UstczPS_wSIBtlPU48USal",
-   "EE":"https://drive.google.com/uc?export=download&id=1dZCtmM7w3H9dRpsWMlDhhJZNvFOiA1up",
-   "ECE":"https://drive.google.com/uc?export=download&id=14cLD5aiYQp_2U3qKN16pa7U4fowBMg3J",
-   "ME":"https://drive.google.com/uc?export=download&id=1yYB-UOYnpkOCYspJeZv83o7Rjy3wfcB8"
- },
+  "1stNew": {
+    "CE": "https://drive.google.com/file/d/1Qd3X732fBWyEax1GTudkBWn7fpe57CgA/preview",
+    "CS": "https://drive.google.com/file/d/1Zp-UAEgj72UstczPS_wSIBtlPU48USal/preview",
+    "EE": "https://drive.google.com/file/d/1dZCtmM7w3H9dRpsWMlDhhJZNvFOiA1up/preview",
+    "ECE": "https://drive.google.com/file/d/14cLD5aiYQp_2U3qKN16pa7U4fowBMg3J/preview",
+    "ME": "https://drive.google.com/file/d/1yYB-UOYnpkOCYspJeZv83o7Rjy3wfcB8/preview"
+  },
 
- "1stOld":{
-   "CE":"https://drive.google.com/uc?export=download&id=1iRWghHRyCP6WPZ3Xoc0DdScIytir3xRn",
-   "CS":"https://drive.google.com/uc?export=download&id=1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb",
-   "EE":"https://drive.google.com/uc?export=download&id=1BtS61CEIOidszDe5FLBVQUake_8RQZlK",
-   "ECE":"https://drive.google.com/uc?export=download&id=1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m",
-   "ME":"https://drive.google.com/uc?export=download&id=1gyWaJKhhcZNmSF9WlWfqRXfnTeA87hvY"
- },
+  "1stOld": {
+    "CE": "https://drive.google.com/file/d/1iRWghHRyCP6WPZ3Xoc0DdScIytir3xRn/preview",
+    "CS": "https://drive.google.com/file/d/1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb/preview",
+    "EE": "https://drive.google.com/file/d/1BtS61CEIOidszDe5FLBVQUake_8RQZlK/preview",
+    "ECE": "https://drive.google.com/file/d/1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m/preview",
+    "ME": "https://drive.google.com/file/d/1gyWaJKhhcZNmSF9WlWfqRXfnTeA87hvY/preview"
+  },
 
- "2ndNew":{
-   "CE":"https://drive.google.com/uc?export=download&id=13q_AFXP9e2AWyHHtHWp_Fm4bRgtME3qv",
-   "CS":"https://drive.google.com/uc?export=download&id=15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh",
-   "EE":"https://drive.google.com/uc?export=download&id=1wgmEj8RSBWleYUZ1JjzD7tICuiQgJEDW",
-   "ECE":"https://drive.google.com/uc?export=download&id=1THqchJygHP7BVVQjj-kf4YmMHBrjfA_x",
-   "ME":"https://drive.google.com/uc?export=download&id=1hhAgOvC2LvbBRv6f7n1MSHPxD9MBVgsy"
- },
+  "2ndNew": {
+    "CE": "https://drive.google.com/file/d/13q_AFXP9e2AWyHHtHWp_Fm4bRgtME3qv/preview",
+    "CS": "https://drive.google.com/file/d/15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh/preview",
+    "EE": "https://drive.google.com/file/d/1wgmEj8RSBWleYUZ1JjzD7tICuiQgJEDW/preview",
+    "ECE": "https://drive.google.com/file/d/1THqchJygHP7BVVQjj-kf4YmMHBrjfA_x/preview",
+    "ME": "https://drive.google.com/file/d/1hhAgOvC2LvbBRv6f7n1MSHPxD9MBVgsy/preview"
+  },
 
- "2ndOld":{
-   "CE":"https://drive.google.com/uc?export=download&id=1jW97lTtufHT26vkRP6KISUiKWSYe6F3o",
-   "CS":"https://drive.google.com/uc?export=download&id=16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN",
-   "EE":"https://drive.google.com/uc?export=download&id=1CrAHd-0bwzESjiLtb-AQwOeKtopyiJm9",
-   "ECE":"https://drive.google.com/uc?export=download&id=1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6",
-   "ME":"https://drive.google.com/uc?export=download&id=1xwhvlJIQJRCqKLCPTKeOOdjzkUgr8S5U"
- },
+  "2ndOld": {
+    "CE": "https://drive.google.com/file/d/1jW97lTtufHT26vkRP6KISUiKWSYe6F3o/preview",
+    "CS": "https://drive.google.com/file/d/16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN/preview",
+    "EE": "https://drive.google.com/file/d/1CrAHd-0bwzESjiLtb-AQwOeKtopyiJm9/preview",
+    "ECE": "https://drive.google.com/file/d/1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6/preview",
+    "ME": "https://drive.google.com/file/d/1xwhvlJIQJRCqKLCPTKeOOdjzkUgr8S5U/preview"
+  },
 
- "3rd": {
-   "CE":"https://drive.google.com/uc?export=download&id=1IS4EV9JvOfoLW3cYRW7U-qBkXyRAvFlD",
-   "CS":"https://drive.google.com/uc?export=download&id=1ZlU22NFGirTuV01jKYiG9zdSU_IO29-t",
-   "EE":"https://drive.google.com/uc?export=download&id=1D2gAZlW299s9f60wcdicGSZK7DpZVXkc",
-   "ECE":"https://drive.google.com/uc?export=download&id=1auOpeh5UX4E23rnxIQo1K9TdFrqSXrm0",
-   "ME":"https://drive.google.com/uc?export=download&id=1XE_l1tfHGZHMDIxU6KNlcjlqiKxKN-ZW"
- },
+  "3rd": {
+    "CE": "https://drive.google.com/file/d/1IS4EV9JvOfoLW3cYRW7U-qBkXyRAvFlD/preview",
+    "CS": "https://drive.google.com/file/d/1ZlU22NFGirTuV01jKYiG9zdSU_IO29-t/preview",
+    "EE": "https://drive.google.com/file/d/1D2gAZlW299s9f60wcdicGSZK7DpZVXkc/preview",
+    "ECE": "https://drive.google.com/file/d/1auOpeh5UX4E23rnxIQo1K9TdFrqSXrm0/preview",
+    "ME": "https://drive.google.com/file/d/1XE_l1tfHGZHMDIxU6KNlcjlqiKxKN-ZW/preview"
+  },
 
- "4th": {
-   "CE":"https://drive.google.com/uc?export=download&id=17w5zTFNaWUOg7S_vUrqW_AxtMyf7bPdU",
-   "CS":"https://drive.google.com/uc?export=download&id=1ODCj6Omx6dUuHR-Cmwh4iu37TaMQyTLn",
-   "EE":"https://drive.google.com/uc?export=download&id=1G-cJOckwjZRoaDz0Nnw-CphpqBcZztA7",
-   "ECE":"https://drive.google.com/uc?export=download&id=1nkfp0xRno6_ybJSWqZ6_ryiwI4aNsjXh",
-   "ME":"https://drive.google.com/uc?export=download&id=1jVvYbUmth-RIbhLBXbDf3ooB8zgz8fSc"
- },
+  "4th": {
+    "CE": "https://drive.google.com/file/d/17w5zTFNaWUOg7S_vUrqW_AxtMyf7bPdU/preview",
+    "CS": "https://drive.google.com/file/d/1ODCj6Omx6dUuHR-Cmwh4iu37TaMQyTLn/preview",
+    "EE": "https://drive.google.com/file/d/1G-cJOckwjZRoaDz0Nnw-CphpqBcZztA7/preview",
+    "ECE": "https://drive.google.com/file/d/1nkfp0xRno6_ybJSWqZ6_ryiwI4aNsjXh/preview",
+    "ME": "https://drive.google.com/file/d/1jVvYbUmth-RIbhLBXbDf3ooB8zgz8fSc/preview"
+  },
 
- "5th": {
-   "CE":"https://drive.google.com/uc?export=download&id=1tGXDItZ5g-AsnsXN0KmMifbA36vgxA0C",
-   "CS":"https://drive.google.com/uc?export=download&id=1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3",
-   "EE":"https://drive.google.com/uc?export=download&id=1MA_tDBF7Fuvg8OGgn8bzg4mHSUTmQ-dC",
-   "ECE":"https://drive.google.com/uc?export=download&id=1dJV_E7tPdhmmA7IutIDeaDMz3rxYb9XR",
-   "ME":"https://drive.google.com/uc?export=download&id=1FW1-YDLvthfdG52szzsLzTIU9DOI03bc"
- },
+  "5th": {
+    "CE": "https://drive.google.com/file/d/1tGXDItZ5g-AsnsXN0KmMifbA36vgxA0C/preview",
+    "CS": "https://drive.google.com/file/d/1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3/preview",
+    "EE": "https://drive.google.com/file/d/1MA_tDBF7Fuvg8OGgn8bzg4mHSUTmQ-dC/preview",
+    "ECE": "https://drive.google.com/file/d/1dJV_E7tPdhmmA7IutIDeaDMz3rxYb9XR/preview",
+    "ME": "https://drive.google.com/file/d/1FW1-YDLvthfdG52szzsLzTIU9DOI03bc/preview"
+  },
 
- "6th": {
-   "CE":"https://drive.google.com/uc?export=download&id=1MxzSoTSdMgCvgCPiDFsDjVuu4QaJCQge",
-   "CS":"https://drive.google.com/uc?export=download&id=1ckXxGY5kdHmxlAIGsq-NfDskA4Mj_xQj",
-   "EE":"https://drive.google.com/uc?export=download&id=1obhgEQmyRzDg1XPG7Gc6u5SyMugXN9bn",
-   "ECE":"https://drive.google.com/uc?export=download&id=1reUmWqura-4UnEx7tpjv6wANADxvW_lc",
-   "ME":"https://drive.google.com/uc?export=download&id=19UDBkvdYqgMqRzV_Fgre8vq8utOapy2q"
- },
+  "6th": {
+    "CE": "https://drive.google.com/file/d/1MxzSoTSdMgCvgCPiDFsDjVuu4QaJCQge/preview",
+    "CS": "https://drive.google.com/file/d/1ckXxGY5kdHmxlAIGsq-NfDskA4Mj_xQj/preview",
+    "EE": "https://drive.google.com/file/d/1obhgEQmyRzDg1XPG7Gc6u5SyMugXN9bn/preview",
+    "ECE": "https://drive.google.com/file/d/1reUmWqura-4UnEx7tpjv6wANADxvW_lc/preview",
+    "ME": "https://drive.google.com/file/d/19UDBkvdYqgMqRzV_Fgre8vq8utOapy2q/preview"
+  },
 
- "7th": {
-   "CE":"https://drive.google.com/uc?export=download&id=1Qy64E3CCdfhQvD8PaihwPDFVz2FwDqGr",
-   "CS":"https://drive.google.com/uc?export=download&id=1uW4HVIaLErhWIyj36Lday4JMH1ZfuLEp",
-   "EE":"https://drive.google.com/uc?export=download&id=1ey1jhsveL-eO0gc0FgwlNs7U05qRQHp5",
-   "ECE":"https://drive.google.com/uc?export=download&id=1aDSSzOz8kWsmO0oJV7Z5CZ2lnCXReEqq",
-   "ME":"https://drive.google.com/uc?export=download&id=1kMv43ZFJMctH_iRYbI230GCNN4UkZYud"
- },
+  "7th": {
+    "CE": "https://drive.google.com/file/d/1Qy64E3CCdfhQvD8PaihwPDFVz2FwDqGr/preview",
+    "CS": "https://drive.google.com/file/d/1uW4HVIaLErhWIyj36Lday4JMH1ZfuLEp/preview",
+    "EE": "https://drive.google.com/file/d/1ey1jhsveL-eO0gc0FgwlNs7U05qRQHp5/preview",
+    "ECE": "https://drive.google.com/file/d/1aDSSzOz8kWsmO0oJV7Z5CZ2lnCXReEqq/preview",
+    "ME": "https://drive.google.com/file/d/1kMv43ZFJMctH_iRYbI230GCNN4UkZYud/preview"
+  },
 
- "8th": {
-   "EE":"https://drive.google.com/uc?export=download&id=1BwL_f3KCmWzuEulEth3G3hQw5sxLvBOy",
-   "ME":"https://drive.google.com/uc?export=download&id=1PPkfTohITDMkIFNuw836gSOSUjCFtt3n",
- }
+  "8th": {
+    "EE": "https://drive.google.com/file/d/1BwL_f3KCmWzuEulEth3G3hQw5sxLvBOy/preview",
+    "ME": "https://drive.google.com/file/d/1PPkfTohITDMkIFNuw836gSOSUjCFtt3n/preview"
+  }
 };
 
 let hideTimer;
 
-// RESET TO DEFAULT MSG ON SELECT CHANGE
+// RESET MSG ON CHANGE
 branch.onchange = sem.onchange = () => {
     msg.style.opacity = 1;
     msg.innerHTML = "Choose branch & semester to view syllabus.";
 };
 
-// MAIN BUTTON
+// OPEN PDF
 openBtn.onclick = () => {
     let b = branch.value;
     let s = sem.value;
@@ -325,7 +336,6 @@ openBtn.onclick = () => {
         return;
     }
 
-    // check exists
     if (!syllabus[s] || !syllabus[s][b]) {
         showMessage("❌ Syllabus not available for this selection.", 9000);
         return;
@@ -335,45 +345,47 @@ openBtn.onclick = () => {
     pdfFrame.src = pdfLink;
     pdfModal.style.display = "flex";
 
-    // auto download
-    try {
-        const a = document.createElement('a');
-        a.href = pdfLink;
-        a.download = `${b}_${s}_syllabus.pdf`;
-        document.body.appendChild(a);
-        a.click();
-        a.remove();
-        showMessage("✅ Download Completed", 30000);
-    } catch (e) {
-        showMessage("⚠️ Could not start download automatically. Opening preview...", 8000);
-    }
+    showMessage("📄 Preview opened. Click Download to save.", 8000);
 };
 
-// UNIVERSAL MESSAGE FUNCTION
+// SHOW MESSAGE
 function showMessage(text, duration) {
     clearTimeout(hideTimer);
-
     msg.style.opacity = 1;
     msg.innerHTML = text;
 
     hideTimer = setTimeout(() => {
         msg.style.opacity = 0;
-
         setTimeout(() => {
             msg.innerHTML = "Choose branch & semester to view syllabus.";
             msg.style.opacity = 1;
         }, 400);
-
     }, duration);
 }
 
+// CLOSE MODALS
 function closePDF() {
     pdfModal.style.display = "none";
     pdfFrame.src = "";
 }
-
 devBtn.onclick = () => devModal.style.display = "flex";
 function closeDev() { devModal.style.display = "none"; }
+
+// DOWNLOAD PDF
+const downloadPDFBtn = document.getElementById('downloadPDFBtn');
+downloadPDFBtn.onclick = () => {
+    const pdfLink = pdfFrame.src;
+    if(!pdfLink) return;
+
+    const a = document.createElement('a');
+    a.href = pdfLink;
+    a.download = `${branch.value}_${sem.value}_syllabus.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    showMessage("✅ Download completed!", 5000);
+};
 </script>
 
 </body>
