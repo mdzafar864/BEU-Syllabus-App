@@ -1,6 +1,17 @@
 <!doctype html>
 <html lang="en">
 <head>
+    <!-- Correct PWA Paths -->
+    <link rel="manifest" href="/PWA/manifest.json">
+
+<script>
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/PWA/service-worker.js")
+    .then(() => console.log("SW Registered"))
+    .catch(err => console.log("SW Error:", err));
+}
+</script>
+    
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BEU Syllabus</title>
