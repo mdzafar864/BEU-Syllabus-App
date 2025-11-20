@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://mdzafar864.github.io/BEU-Syllabus-App/sitemap.xml
