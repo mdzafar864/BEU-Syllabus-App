@@ -2,19 +2,19 @@
 <html lang="en">
 <head>
 
-    <!-- 👉 Google Verification Code Added 👈 -->
-    <meta name="google-site-verification" content="3JRj0E_NGgRfQLI_oBviyP75mB1sxccJoRSAoorQTMg" />
+    <!-- Google Verification Code -->
+    <meta name="google-site-verification" content="3JRj0E_NGgRfQLI_oBviyP75mB1sxccJoRSAoorQTMg">
 
-    <!-- Correct PWA Paths -->
+    <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json">
 
     <script>
-    if ("serviceWorker" in navigator) {
-      navigator.serviceWorker
-        .register("/service-worker.js")
-        .then(() => console.log("SW Registered"))
-        .catch((err) => console.log("SW Error:", err));
-    }
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker
+                .register("/service-worker.js")
+                .then(() => console.log("SW Registered"))
+                .catch((err) => console.log("SW Error:", err));
+        }
     </script>
     
 <meta charset="utf-8">
