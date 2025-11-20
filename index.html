@@ -45,13 +45,13 @@
     <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/favicon.ico">
 
     <!-- Correct PWA Paths -->
-    <link rel="manifest" href="/BEU-Syllabus-App/manifest.json">
+<link rel="manifest" href="/BEU-Syllabus-App/manifest.json">
 
 <script>
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/BEU-Syllabus-App/service-worker.js")
-    .then(() => console.log("SW Registered"))
-    .catch(err => console.log("SW Error:", err));
+navigator.serviceWorker.register("/BEU-Syllabus-App/service-worker.js")
+.then(() => console.log("SW Registered"))
+.catch(err => console.log("SW Error:", err));
 }
 </script>
     
