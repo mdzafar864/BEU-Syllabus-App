@@ -186,23 +186,6 @@ iframe{
     background:#0066ff;
 }
 
-/* Animation */
-@keyframes footerFadeUp {
-    0% {
-        opacity:0;
-        transform:translateY(25px);
-    }
-    100% {
-        opacity:1;
-        transform:translateY(0);
-    }
-}
-
-/* Apply animation */
-#myFooter {
-    animation: footerFadeUp 1.3s ease-out forwards;
-}
-
 /* DESKTOP */
 @media (min-width:900px){
     body{padding:30px;}
@@ -464,6 +447,27 @@ downloadPDFBtn.onclick = () => {
 ">
     © 2025 BEU Syllabus Viewer • Developed by <b>Md Zafar</b>
 </footer>
+
+    <style> 
+        /* Animation */
+@keyframes footerFadeUp {
+    0% {
+        opacity:0;
+        transform:translateY(25px);
+    }
+    100% {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Apply animation */
+#myFooter {
+    animation: footerFadeUp 1.3s ease-out forwards;
+}
+    </style>
+
+    
     
 </body>
 </html>
