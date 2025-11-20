@@ -435,32 +435,19 @@ downloadPDFBtn.onclick = () => {
     showMessage("✅ Download completed!", 5000);
 };
 </script>
-
     
+<!-- FOOTER -->
 <footer id="myFooter" style="
     width:100%;
     text-align:center;
     padding:30px 10px;
     font-size:8px;
     margin-top:10px;
-    opacity:0;
-    transition:opacity 1s ease, transform 1s ease;
-    transform:translateY(25px);
+    opacity:1 !important;   /* force visible */
+    transform:none !important;
 ">
     © 2025 BEU Syllabus Viewer • Developed by <b>Md Zafar</b>
 </footer>
 
-    <script>
-window.addEventListener("load", () => {
-    const f = document.getElementById("myFooter");
-    setTimeout(() => {
-        f.style.opacity = "1";
-        f.style.transform = "translateY(0)";
-    }, 500);
-});
-    </script>
-    
-
-    
 </body>
 </html>
