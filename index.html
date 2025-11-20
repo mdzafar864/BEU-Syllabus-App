@@ -436,9 +436,38 @@ downloadPDFBtn.onclick = () => {
 };
 </script>
 
-    <footer id="myFooter">
+    
+
+    <!-- FOOTER -->
+<footer id="myFooter" style="
+    width:100%;
+    text-align:center;
+    padding:30px 10px;
+    font-size:8px;
+    margin-top:10px;
+    opacity:0;
+">
     © 2025 BEU Syllabus Viewer • Developed by <b>Md Zafar</b>
 </footer>
+
+    <style> 
+        /* Animation */
+@keyframes footerFadeUp {
+    0% {
+        opacity:0;
+        transform:translateY(25px);
+    }
+    100% {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Apply animation */
+#myFooter {
+    animation: footerFadeUp 1.3s ease-out forwards;
+}
+    </style>
 
     
 </body>
