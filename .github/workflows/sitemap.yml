@@ -6,30 +6,30 @@ on:
       - main
   workflow_dispatch:
 
+permissions:
+  contents: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Generate the sitemap
+      - name: Generate sitemap
         uses: cicirello/generate-sitemap@v1
         with:
-          base-url-path: https://mdzafar864.github.io/BEU-Syllabus-App
-          include-tags: true
-
-      - name: Move sitemap to root folder
-        run: mv sitemap.xml ./sitemap.xml
+          base-url-path: https://mdzafar864.github.io/BEU-Syllabus-App/
 
       - name: Commit sitemap
         run: |
-          git config --global user.name "github-actions"
-          git config --global user.email "github-actions@github.com"
+          git config --local user.name "github-actions"
+          git config --local user.email "github-actions@github.com"
           git add sitemap.xml
-          git commit -m "Add or update sitemap.xml" || echo "No changes to commit"
+          git commit -m "Update sitemap" || echo "No changes"
 
-      - name: Push sitemap
-        run: git push
-        
+      - name: Push changes
+        uses: ad-m/github-push-action@v0.8.0
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
