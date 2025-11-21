@@ -17,7 +17,11 @@ jobs:
       - name: Generate the sitemap
         uses: cicirello/generate-sitemap@v1
         with:
-          base-url-path: https://mdzafar864.github.io/BEU-Syllabus-App/
+          base-url-path: https://mdzafar864.github.io/BEU-Syllabus-App
+          include-tags: true
+
+      - name: Move sitemap to root folder
+        run: mv sitemap.xml ./sitemap.xml
 
       - name: Commit sitemap
         run: |
