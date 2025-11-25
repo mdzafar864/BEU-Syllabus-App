@@ -195,27 +195,23 @@ iframe{
     /* ----------------------------------------
    🚀 MERGED FINAL LINK COLOR CONTROL CSS 
    ---------------------------------------- */
-
-/* Default: Blue */
+/* Correct LVHA Order */
 a:link {
     color: #0066ff;
 }
 
-/* Click press: Red */
-a:active {
-    color: #FF0000;
-}
-
-/* Hover: Red */
-a:hover {
-    color: #FF0000;
-}
-
-/* Visited = Blue (No purple) */
 a:visited {
-    color: #0066ff;
+    color: #0066ff;   /* no purple */
 }
-    
+
+a:hover {
+    color: #FF0000;   /* hover = red */
+}
+
+a:active {
+    color: #FF0000;   /* click press = red */
+}
+
 </style>
 </head>
 
