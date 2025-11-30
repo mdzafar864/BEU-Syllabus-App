@@ -2,7 +2,7 @@
 //  BEU Syllabus – Auto-Update SW
 // =============================
 
-const CACHE_NAME = "beu-syllabus-cache-v6";   // 🚨 Increase version on every deploy
+const CACHE_NAME = "beu-syllabus-cache-v4";   // 🚨 Increase version on every deploy
 
 const ASSETS = [
   "/BEU-Syllabus-App/",
