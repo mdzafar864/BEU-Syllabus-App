@@ -216,7 +216,7 @@ iframe{
     h2{font-size:30px;}
 }
     /* ----------------------------------------
-     MERGED FINAL LINK COLOR CONTROL CSS 
+       FINAL LINK COLOR CONTROL CSS 
    ---------------------------------------- */
 /* Correct LVHA Order */
 
@@ -494,39 +494,7 @@ downloadPDFBtn.onclick = () => {
 
     showMessage("✅ Download completed!", 5000);
 };
-
-// Check if service workers are supported in the browser
-if ("serviceWorker" in navigator) {
-  navigator.serviceWorker.register("/BEU-Syllabus-App/service-worker.js")
-    .then(registration => {
-      console.log("[SW] Service Worker Registered");
-
-      // Check for updates to the service worker
-      registration.onupdatefound = () => {
-        const newWorker = registration.installing;
-
-        newWorker.onstatechange = () => {
-          if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-            // New content is available, prompt user to refresh
-            if (confirm("A new version of the app is available. Would you like to update now?")) {
-              newWorker.postMessage("skipWaiting");
-              window.location.reload();
-            }
-          }
-        };
-      };
-    })
-    .catch(err => console.log("[SW] Registration failed:", err));
-
-  // Listen for updates and show a notification if a new update is available
-  navigator.serviceWorker.addEventListener("message", event => {
-    if (event.data === "skipWaiting") {
-      // Optionally, you can prompt the user for confirmation before refreshing
-      window.location.reload();
-    }
-  });
-}
-
+    
 </script>
     
         <!-- FOOTER -->
