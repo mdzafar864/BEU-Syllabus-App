@@ -1,6 +1,8 @@
-// service-worker.js (GitHub Pages Version - Auto Update Enabled)
+// =============================
+//  BEU Syllabus – Auto-Update SW
+// =============================
 
-const CACHE_NAME = "beu-syllabus-cache-v3"; // ← Change version on every deploy
+const CACHE_NAME = "beu-syllabus-cache-v4";   // 🚨 Increase version on every deploy
 
 const ASSETS = [
   "/BEU-Syllabus-App/",
@@ -13,41 +15,64 @@ const ASSETS = [
 
 // ============= INSTALL =============
 self.addEventListener("install", event => {
-  self.skipWaiting(); // Force SW to activate immediately
+  console.log("[SW] Installing…");
+  self.skipWaiting(); // Activate immediately
+
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+    caches.open(CACHE_NAME).then(cache => {
+      console.log("[SW] Caching assets…");
+      return cache.addAll(ASSETS);
+    })
   );
 });
 
 // ============= ACTIVATE =============
 self.addEventListener("activate", event => {
+  console.log("[SW] Activating…");
+
   event.waitUntil(
     caches.keys().then(keys =>
       Promise.all(
         keys.map(key => {
-          if (key !== CACHE_NAME) return caches.delete(key);
+          if (key !== CACHE_NAME) {
+            console.log("[SW] Deleting old cache:", key);
+            return caches.delete(key);
+          }
         })
       )
     )
   );
-  clients.claim(); // Take control instantly
+
+  clients.claim(); // take over clients immediately
 });
 
 // ============= FETCH (Network First) =============
 self.addEventListener("fetch", event => {
+  // Ignore chrome-extension:// URLs
+  if (!event.request.url.startsWith("http")) return;
+
   event.respondWith(
     fetch(event.request)
       .then(response => {
-        // Fresh data → update cache
+        // Save fresh version to cache
         const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(event.request, clone));
+        caches.open(CACHE_NAME).then(cache => {
+          cache.put(event.request, clone);
+        });
         return response;
       })
       .catch(() => {
-        // Offline → return from cache
+        // Load from cache when offline
         return caches.match(event.request).then(cached => {
           return cached || caches.match("/BEU-Syllabus-App/index.html");
         });
       })
   );
+});
+
+// ========== LISTEN FOR "SKIP WAITING" ==========
+self.addEventListener("message", event => {
+  if (event.data === "skipWaiting") {
+    self.skipWaiting();
+  }
 });
