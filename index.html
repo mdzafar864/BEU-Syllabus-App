@@ -48,11 +48,33 @@
 <link rel="manifest" href="/BEU-Syllabus-App/manifest.json">
 
 <script>
-if ("serviceWorker" in navigator) {
-navigator.serviceWorker.register("/BEU-Syllabus-App/service-worker.js")
-.then(() => console.log("SW Registered"))
-.catch(err => console.log("SW Error:", err));
-}
+        // Service Worker Registration
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/BEU-Syllabus-App/service-worker.js")
+                .then(registration => {
+                    console.log("[SW] Service Worker Registered");
+
+                    registration.onupdatefound = () => {
+                        const newWorker = registration.installing;
+                        newWorker.onstatechange = () => {
+                            if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                                if (confirm("A new version of the app is available. Would you like to update now?")) {
+                                    newWorker.postMessage("skipWaiting");
+                                    window.location.reload();
+                                }
+                            }
+                        };
+                    };
+                })
+                .catch(err => console.log("[SW] Registration failed:", err));
+
+            // Listen for update message
+            navigator.serviceWorker.addEventListener("message", event => {
+                if (event.data === "skipWaiting") {
+                    window.location.reload();
+                }
+            });
+        }
 </script>
     
 <meta charset="utf-8">
