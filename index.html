@@ -2,82 +2,71 @@
 <html lang="en">
 <head>
 
-    <!-- Google Verification Code -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Verification -->
     <meta name="google-site-verification" content="o4SUX7ZbxE9gI4_-edZ2Wxp_cFjMwllnNxnvU72gkbE">
     <meta name="google-site-verification" content="3JRj0E_NGgRfQLI_oBviyP75mB1sxccJoRSAoorQTMg"/>
 
-    <!-- BASIC SEO -->
-    <meta name="description" content="BEU Syllabus Viewer – Fast and easy access to BEU engineering syllabus for all branches and semesters. Fully responsive, clean and mobile-friendly.">
+    <!-- SEO -->
+    <title>BEU Syllabus Viewer | Bihar Engineering University Syllabus</title>
+
+    <meta name="description" content="BEU Syllabus Viewer – Fast and easy access to BEU Engineering University syllabus for all branches and semesters. Mobile-friendly and offline support.">
 
     <!-- KEYWORDS (1st to 8th Semester + Branch-wise) -->
-    <meta name="keywords" content="
-    BEU syllabus,
-    BEU syllabus PDF,
-    BEU engineering syllabus,
-    BEU 1st semester syllabus,
-    BEU 2nd semester syllabus,
-    BEU 3rd semester syllabus,
-    BEU 4th semester syllabus,
-    BEU 5th semester syllabus,
-    BEU 6th semester syllabus,
-    BEU 7th semester syllabus,
-    BEU 8th semester syllabus,
-    CSE BEU syllabus,
-    Mechanical BEU syllabus,
-    Civil BEU syllabus,
-    Electrical BEU syllabus,
-    ECE BEU syllabus,
-    BEU semester wise syllabus,
-    BEU syllabus viewer,
-    Bihar Engineering University syllabus
-    ">
-
+    <meta name="keywords" content=" BEU syllabus, BEU syllabus PDF, BEU engineering syllabus, BEU 1st semester syllabus, BEU 2nd semester syllabus, BEU 3rd semester syllabus, BEU 4th semester syllabus, BEU 5th semester syllabus, BEU 6th semester syllabus, BEU 7th semester syllabus, BEU 8th semester syllabus, CSE BEU syllabus, Mechanical BEU syllabus, Civil BEU syllabus, Electrical BEU syllabus, ECE BEU syllabus, BEU semester wise syllabus, BEU syllabus viewer, Bihar Engineering University syllabus ">
     <meta name="author" content="Md Zafar">
 
-    <!-- Search Engine Settings -->
+    <!-- Search Engine -->
     <meta name="robots" content="index, follow">
-    <meta name="googlebot" content="index, follow">
-    <meta name="bingbot" content="index, follow">
 
-    <!-- Canonical URL -->
+    <!-- Canonical -->
     <link rel="canonical" href="https://mdzafar864.github.io/BEU-Syllabus-App/">
 
     <!-- Favicon -->
-    <link rel="icon" type="image/x-icon" href="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/favicon.ico">
+    <link rel="icon" href="favicon.ico">
 
-    <!-- Correct PWA Paths -->
-<link rel="manifest" href="/BEU-Syllabus-App/manifest.json">
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0066ff">
+    <link rel="apple-touch-icon" href="icon-192.png">
 
-<script>
-        // Service Worker Registration
-        if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/BEU-Syllabus-App/service-worker.js")
-        .then(registration => {
-            console.log("[SW] Service Worker Registered");
+    <!-- 🔥 UNIVERSAL SERVICE WORKER -->
+    <script>
+    const BASE = location.hostname.includes("github.io")
+      ? "/BEU-Syllabus-App"
+      : "";
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register(`${BASE}/service-worker.js`)
+          .then(registration => {
+            console.log("✅ SW Registered");
 
             registration.onupdatefound = () => {
-                const newWorker = registration.installing;
-                newWorker.onstatechange = () => {
-                    if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
-                        // New content is available, prompt user to refresh
-                        if (confirm("A new version of the app is available. Would you like to update now?")) {
-                            newWorker.postMessage("skipWaiting");
-                            window.location.reload();
-                        }
-                    }
-                };
-            };
-        })
-        .catch(err => console.log("[SW] Registration failed:", err));
+              const newWorker = registration.installing;
 
-    // Listen for updates and show a notification if a new update is available
-    navigator.serviceWorker.addEventListener("message", event => {
-        if (event.data === "skipWaiting") {
-            window.location.reload();
-        }
-    });
-}
-</script>
+              newWorker.onstatechange = () => {
+                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                  
+                  // 🔔 Update Popup
+                  if (confirm("🚀 New version available! Update now?")) {
+                    newWorker.postMessage("skipWaiting");
+                  }
+                }
+              };
+            };
+          })
+          .catch(err => console.log("❌ SW Error:", err));
+      });
+
+      // Auto reload after update
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        window.location.reload();
+      });
+    }
+    </script>
     
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
