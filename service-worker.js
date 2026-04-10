@@ -1,78 +1,79 @@
 // =============================
-//  BEU Syllabus – Auto-Update SW
+//  UNIVERSAL PWA SW (GitHub + Netlify)
 // =============================
 
-const CACHE_NAME = "beu-syllabus-cache-v8";   // 🚨 Increase version on every deploy
+const CACHE_NAME = "beu-pwa-v11";
 
+// 🔥 AUTO detect base path
+const BASE = self.location.hostname.includes("github.io")
+  ? "/BEU-Syllabus-App"
+  : "";
+
+// App shell
 const ASSETS = [
-  "/BEU-Syllabus-App/",
-  "/BEU-Syllabus-App/index.html",
-  "/BEU-Syllabus-App/manifest.json",
-  "/BEU-Syllabus-App/icon-192.png",
-  "/BEU-Syllabus-App/icon-512.png",
-  "/BEU-Syllabus-App/logo.png"
+  `${BASE}/`,
+  `${BASE}/index.html`,
+  `${BASE}/manifest.json`,
+  `${BASE}/icon-192.png`,
+  `${BASE}/icon-512.png`,
+  `${BASE}/logo.png`
 ];
 
-// ============= INSTALL =============
+// INSTALL
 self.addEventListener("install", event => {
-  console.log("[SW] Installing…");
-  self.skipWaiting(); // Activate immediately
-
+  self.skipWaiting();
   event.waitUntil(
-    caches.open(CACHE_NAME).then(cache => {
-      console.log("[SW] Caching assets…");
-      return cache.addAll(ASSETS);
+    caches.open(CACHE_NAME).then(cache => cache.addAll(ASSETS))
+  );
+});
+
+// ACTIVATE
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    caches.keys().then(keys =>
+      Promise.all(
+        keys.map(key => key !== CACHE_NAME && caches.delete(key))
+      )
+    )
+  );
+  self.clients.claim();
+});
+
+// FETCH
+self.addEventListener("fetch", event => {
+  if (!event.request.url.startsWith("http")) return;
+
+  const req = event.request;
+
+  // HTML → Network First
+  if (req.headers.get("accept").includes("text/html")) {
+    event.respondWith(
+      fetch(req)
+        .then(res => {
+          const clone = res.clone();
+          caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
+          return res;
+        })
+        .catch(() =>
+          caches.match(req).then(res => res || caches.match(`${BASE}/index.html`))
+        )
+    );
+    return;
+  }
+
+  // Other → Cache First
+  event.respondWith(
+    caches.match(req).then(cacheRes => {
+      return cacheRes || fetch(req).then(res => {
+        const clone = res.clone();
+        caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
+        return res;
+      });
     })
   );
 });
 
-// ============= ACTIVATE =============
-self.addEventListener("activate", event => {
-  console.log("[SW] Activating…");
-
-  event.waitUntil(
-    caches.keys().then(keys =>
-      Promise.all(
-        keys.map(key => {
-          if (key !== CACHE_NAME) {
-            console.log("[SW] Deleting old cache:", key);
-            return caches.delete(key);
-          }
-        })
-      )
-    )
-  );
-
-  clients.claim(); // take over clients immediately
-});
-
-// ============= FETCH (Network First) =============
-self.addEventListener("fetch", event => {
-  // Ignore chrome-extension:// URLs
-  if (!event.request.url.startsWith("http")) return;
-
-  event.respondWith(
-    fetch(event.request)
-      .then(response => {
-        // Save fresh version to cache
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then(cache => {
-          cache.put(event.request, clone);
-        });
-        return response;
-      })
-      .catch(() => {
-        // Load from cache when offline
-        return caches.match(event.request).then(cached => {
-          return cached || caches.match("/BEU-Syllabus-App/index.html");
-        });
-      })
-  );
-});
-
-// ========== LISTEN FOR "SKIP WAITING" ==========
+// FORCE UPDATE
 self.addEventListener("message", event => {
-  if (event.data === "skipWaiting") {
-    self.skipWaiting();
-  }
+  if (event.data === "skipWaiting") self.skipWaiting();
 });
