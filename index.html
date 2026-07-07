@@ -153,10 +153,11 @@ button{
 
 .modal-box{
     width:100%;
-    max-width:1000px;
-    height:90vh;
-    background:white;
-    border-radius:14px;
+    max-width:520px;
+    max-height:90vh;
+    background:#fff;
+    border-radius:20px;
+    overflow:hidden;
     display:flex;
     flex-direction:column;
     animation:popup .35s ease;
@@ -230,6 +231,123 @@ a:hover {
 a:active {
     color: #FF0000;
 }
+    
+    /* ===========================
+   DEVELOPER MODAL
+=========================== */
+
+.dev-content{
+    padding:25px;
+    text-align:center;
+    overflow-y:auto;
+    color:#1e293b;
+}
+
+.dev-photo-wrap{
+    width:150px;
+    height:150px;
+    margin:0 auto 18px;
+    border-radius:50%;
+    overflow:hidden;
+    background:#fff;
+    border:6px solid #fff;
+    box-shadow:0 8px 25px rgba(0,0,0,.18);
+}
+
+.dev-photo{
+    width:100%;
+    height:100%;
+    display:block;
+    object-fit:cover;
+    object-position:center top;
+}
+
+.dev-content h3{
+    margin:12px 0 5px;
+    font-size:30px;
+    font-weight:700;
+    color:#111827;
+}
+
+.dev-role{
+    font-size:17px;
+    color:#64748b;
+    margin-bottom:18px;
+}
+
+.dev-content p{
+    margin:10px 0;
+    font-size:17px;
+    line-height:1.7;
+}
+
+.dev-content a{
+    text-decoration:none;
+    color:#0066ff;
+    font-weight:600;
+}
+
+.youtube-btn{
+    display:inline-block;
+    margin-top:20px;
+    background:#ff0000;
+    color:#fff !important;
+    text-decoration:none;
+    padding:14px 24px;
+    border-radius:12px;
+    font-size:17px;
+    font-weight:700;
+    transition:.3s;
+}
+
+.youtube-btn:hover{
+    background:#d90000;
+    color:#fff !important;
+    transform:translateY(-2px);
+}
+
+.dev-content hr{
+    margin:22px 0;
+    border:none;
+    border-top:1px solid #ddd;
+}
+
+@media(max-width:600px){
+
+.modal-box{
+    max-width:95%;
+}
+
+.modal-top{
+    padding:15px;
+}
+
+.modal-top strong{
+    font-size:22px;
+}
+
+.close-btn{
+    padding:10px 18px;
+    font-size:16px;
+}
+
+.dev-photo-wrap{
+    width:130px;
+    height:130px;
+}
+
+.dev-content{
+    padding:20px;
+}
+
+.dev-content h3{
+    font-size:26px;
+}
+
+.youtube-btn{
+    width:100%;
+}
+}
 
 </style>
 </head>
@@ -285,12 +403,12 @@ a:active {
     <div class="dev-content">
 
       <div class="dev-photo-wrap">
-        <img
-          loading="lazy"
-          src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer.png"
-          alt="Developer Image"
-          class="dev-photo">
-      </div>
+    <img
+        src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer.png"
+        class="dev-photo"
+        loading="lazy"
+        alt="Md Zafar">
+    </div>
 
       <h3>Md Zafar</h3>
 
