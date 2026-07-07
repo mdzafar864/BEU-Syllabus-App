@@ -232,121 +232,150 @@ a:active {
     color: #FF0000;
 }
     
-    /* ===========================
-   DEVELOPER MODAL
-=========================== */
+    /* PROFESSIONAL DEVELOPER MODAL */
 
-.dev-content{
-    padding:25px;
+.developer-modal{
+    width:100%;
+    max-width:430px;
+    max-height:90vh;
+    border-radius:24px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.dev-header{
+    position:relative;
     text-align:center;
-    overflow-y:auto;
-    color:#1e293b;
+    padding:32px 22px 28px;
+    background:linear-gradient(135deg,#0066ff,#00c6ff);
+    color:#fff;
+}
+
+.dev-close{
+    position:absolute;
+    top:14px;
+    right:14px;
+    width:38px;
+    height:38px;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,.25);
+    color:#fff;
+    font-size:26px;
+    line-height:38px;
+    cursor:pointer;
 }
 
 .dev-photo-wrap{
-    width:150px;
-    height:150px;
-    margin:0 auto 18px;
+    width:145px;
+    height:145px;
+    margin:0 auto 16px;
     border-radius:50%;
-    overflow:hidden;
+    padding:6px;
     background:#fff;
-    border:6px solid #fff;
-    box-shadow:0 8px 25px rgba(0,0,0,.18);
+    box-shadow:0 10px 30px rgba(0,0,0,.28);
 }
 
 .dev-photo{
     width:100%;
     height:100%;
-    display:block;
+    border-radius:50%;
     object-fit:cover;
     object-position:center top;
+    display:block;
 }
 
-.dev-content h3{
-    margin:12px 0 5px;
-    font-size:30px;
-    font-weight:700;
-    color:#111827;
+.dev-header h2{
+    margin:8px 0 5px;
+    font-size:28px;
+    font-weight:800;
 }
 
-.dev-role{
-    font-size:17px;
-    color:#64748b;
-    margin-bottom:18px;
+.dev-header p{
+    margin:0;
+    font-size:15px;
+    line-height:1.5;
+    opacity:.95;
 }
 
-.dev-content p{
-    margin:10px 0;
-    font-size:17px;
-    line-height:1.7;
+.dev-body{
+    padding:22px;
+    text-align:left;
+    overflow-y:auto;
 }
 
-.dev-content a{
-    text-decoration:none;
+.dev-card{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:12px;
+}
+
+.dev-card b{
+    display:block;
+    color:#0f172a;
+    margin-bottom:4px;
+    font-size:15px;
+}
+
+.dev-card a,
+.dev-card span{
+    font-size:15px;
     color:#0066ff;
-    font-weight:600;
+    word-break:break-word;
+    text-decoration:none;
 }
 
 .youtube-btn{
-    display:inline-block;
-    margin-top:20px;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    margin:18px 0;
+    padding:15px 20px;
     background:#ff0000;
     color:#fff !important;
     text-decoration:none;
-    padding:14px 24px;
-    border-radius:12px;
+    border-radius:14px;
     font-size:17px;
-    font-weight:700;
-    transition:.3s;
+    font-weight:800;
+    box-shadow:0 8px 24px rgba(255,0,0,.28);
 }
 
-.youtube-btn:hover{
-    background:#d90000;
-    color:#fff !important;
-    transform:translateY(-2px);
-}
-
-.dev-content hr{
-    margin:22px 0;
-    border:none;
-    border-top:1px solid #ddd;
-}
-
-@media(max-width:600px){
-
-.modal-box{
-    max-width:95%;
-}
-
-.modal-top{
+.dev-about{
+    font-size:15.5px;
+    line-height:1.7;
+    color:#334155;
+    text-align:center;
+    background:#f1f5f9;
     padding:15px;
+    border-radius:14px;
 }
 
-.modal-top strong{
-    font-size:22px;
-}
+@media(max-width:480px){
+    .developer-modal{
+        max-width:94vw;
+        border-radius:20px;
+    }
 
-.close-btn{
-    padding:10px 18px;
-    font-size:16px;
-}
+    .dev-header{
+        padding:28px 18px 24px;
+    }
 
-.dev-photo-wrap{
-    width:130px;
-    height:130px;
-}
+    .dev-photo-wrap{
+        width:130px;
+        height:130px;
+    }
 
-.dev-content{
-    padding:20px;
-}
+    .dev-header h2{
+        font-size:26px;
+    }
 
-.dev-content h3{
-    font-size:26px;
-}
-
-.youtube-btn{
-    width:100%;
-}
+    .dev-body{
+        padding:18px;
+    }
 }
 
 </style>
@@ -393,40 +422,41 @@ a:active {
 
 <!-- DEVELOPER MODAL -->
 <div class="modal" id="devModal">
-  <div class="modal-box">
+  <div class="modal-box developer-modal">
 
-    <div class="modal-top">
-      <strong>About the Developer</strong>
-      <button class="close-btn" onclick="closeDev()">Close</button>
-    </div>
-
-    <div class="dev-content">
+    <div class="dev-header">
+      <button class="dev-close" onclick="closeDev()">×</button>
 
       <div class="dev-photo-wrap">
-    <img
-        src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer.png"
-        class="dev-photo"
-        loading="lazy"
-        alt="Md Zafar">
+        <img
+          src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer.png"
+          alt="Md Zafar"
+          loading="lazy"
+          class="dev-photo">
+      </div>
+
+      <h2>Md Zafar</h2>
+      <p>Full-Stack Developer • UI/UX Designer • PWA Specialist</p>
     </div>
 
-      <h3>Md Zafar</h3>
+    <div class="dev-body">
 
-      <p class="dev-role">
-        Full-Stack Developer • UI/UX Designer • PWA Specialist
-      </p>
-
-      <p><b>Email:</b>
+      <div class="dev-card">
+        <b>Email</b>
         <a href="mailto:mdzafarsabour35@gmail.com">mdzafarsabour35@gmail.com</a>
-      </p>
+      </div>
 
-      <p><b>LinkedIn:</b>
+      <div class="dev-card">
+        <b>LinkedIn</b>
         <a href="https://www.linkedin.com/in/mdzafar864" target="_blank" rel="noopener">
           View Profile
         </a>
-      </p>
+      </div>
 
-      <p><b>Version:</b> 1.0 (PWA Ready)</p>
+      <div class="dev-card">
+        <b>Version</b>
+        <span>1.0 (PWA Ready)</span>
+      </div>
 
       <a href="https://youtube.com/@engineerspathwayofficial?si=uvPvpPB5yO424cr-"
          target="_blank"
@@ -435,9 +465,7 @@ a:active {
         ▶ Visit My YouTube Channel
       </a>
 
-      <hr>
-
-      <p>
+      <p class="dev-about">
         This application provides fast access to BEU syllabus.
         Fully responsive, lightweight and PWA ready.
       </p>
