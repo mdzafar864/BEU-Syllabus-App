@@ -234,150 +234,220 @@ a:active {
     
     /* PROFESSIONAL DEVELOPER MODAL */
 
-.developer-modal{
-    width:100%;
-    max-width:430px;
-    max-height:90vh;
-    border-radius:24px;
-    overflow:hidden;
-    background:#fff;
-    box-shadow:0 20px 60px rgba(0,0,0,.35);
+.modal {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  z-index: 9999;
+  justify-content: center;
+  align-items: center;
+  padding: 18px;
 }
 
-.dev-header{
-    position:relative;
-    text-align:center;
-    padding:32px 22px 28px;
-    background:linear-gradient(135deg,#0066ff,#00c6ff);
-    color:#fff;
+.modal.active {
+  display: flex;
 }
 
-.dev-close{
-    position:absolute;
-    top:14px;
-    right:14px;
-    width:38px;
-    height:38px;
-    border-radius:50%;
-    border:none;
-    background:rgba(255,255,255,.25);
-    color:#fff;
-    font-size:26px;
-    line-height:38px;
-    cursor:pointer;
+.developer-modal {
+  width: 100%;
+  max-width: 430px;
+  max-height: 90vh;
+  overflow-y: auto;
+  background: #fff;
+  border-radius: 28px;
+  box-shadow: 0 20px 60px rgba(0,0,0,.35);
+  animation: modalZoom .25s ease;
 }
 
-.dev-photo-wrap{
-    width:145px;
-    height:145px;
-    margin:0 auto 16px;
-    border-radius:50%;
-    padding:6px;
-    background:#fff;
-    box-shadow:0 10px 30px rgba(0,0,0,.28);
+@keyframes modalZoom {
+  from {
+    opacity: 0;
+    transform: scale(.92);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
-.dev-photo{
-    width:100%;
-    height:100%;
-    border-radius:50%;
-    object-fit:cover;
-    object-position:center top;
-    display:block;
+.dev-header {
+  position: relative;
+  text-align: center;
+  padding: 64px 22px 36px;
+  background: linear-gradient(135deg, #0675ff, #08c6f9);
+  color: #fff;
+  border-radius: 28px 28px 0 0;
 }
 
-.dev-header h2{
-    margin:8px 0 5px;
-    font-size:28px;
-    font-weight:800;
+.dev-close {
+  position: absolute;
+  top: 22px;
+  right: 22px;
+  width: 44px;
+  height: 44px;
+  border: none;
+  border-radius: 50%;
+  background: rgba(255,255,255,.22);
+  color: #fff;
+  font-size: 34px;
+  font-weight: 800;
+  line-height: 44px;
+  cursor: pointer;
+  z-index: 20;
+  transition: all .25s ease;
 }
 
-.dev-header p{
-    margin:0;
-    font-size:15px;
-    line-height:1.5;
-    opacity:.95;
+.dev-close:hover,
+.dev-close:active {
+  background: rgba(255,255,255,.4);
+  transform: rotate(90deg) scale(1.08);
 }
 
-.dev-body{
-    padding:22px;
-    text-align:left;
-    overflow-y:auto;
+.dev-photo-wrap {
+  width: 142px;
+  height: 142px;
+  margin: 0 auto 22px;
+  border-radius: 50%;
+  padding: 7px;
+  background: #fff;
+  box-shadow: 0 10px 25px rgba(0,0,0,.18);
 }
 
-.dev-card{
-    background:#f8fafc;
-    border:1px solid #e2e8f0;
-    border-radius:14px;
-    padding:14px 16px;
-    margin-bottom:12px;
+.dev-photo {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
 }
 
-.dev-card b{
-    display:block;
-    color:#0f172a;
-    margin-bottom:4px;
-    font-size:15px;
+.dev-header h2 {
+  margin: 0;
+  font-size: 34px;
+  font-weight: 800;
+}
+
+.dev-header p {
+  margin: 10px 0 0;
+  font-size: 18px;
+  line-height: 1.45;
+  opacity: .95;
+}
+
+.dev-body {
+  padding: 22px;
+}
+
+.dev-card {
+  background: #f8fafc;
+  border: 1px solid #dfe7f1;
+  border-radius: 18px;
+  padding: 18px 20px;
+  margin-bottom: 14px;
+  transition: all .25s ease;
+}
+
+.dev-card b {
+  display: block;
+  color: #111827;
+  font-size: 17px;
+  margin-bottom: 8px;
 }
 
 .dev-card a,
-.dev-card span{
-    font-size:15px;
-    color:#0066ff;
-    word-break:break-word;
-    text-decoration:none;
+.dev-card span {
+  color: #006dff;
+  font-size: 18px;
+  text-decoration: none;
+  word-break: break-word;
 }
 
-.youtube-btn{
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    width:100%;
-    margin:18px 0;
-    padding:15px 20px;
-    background:#ff0000;
-    color:#fff !important;
-    text-decoration:none;
-    border-radius:14px;
-    font-size:17px;
-    font-weight:800;
-    box-shadow:0 8px 24px rgba(255,0,0,.28);
+.pwa-install-card {
+  cursor: pointer;
 }
 
-.dev-about{
-    font-size:15.5px;
-    line-height:1.7;
-    color:#334155;
-    text-align:center;
-    background:#f1f5f9;
-    padding:15px;
-    border-radius:14px;
+.pwa-install-card:hover,
+.pwa-install-card:active {
+  background: #eaf3ff;
+  transform: translateY(-3px);
+  box-shadow: 0 10px 22px rgba(0,109,255,.12);
 }
 
-@media(max-width:480px){
-    .developer-modal{
-        max-width:94vw;
-        border-radius:20px;
-    }
-
-    .dev-header{
-        padding:28px 18px 24px;
-    }
-
-    .dev-photo-wrap{
-        width:130px;
-        height:130px;
-    }
-
-    .dev-header h2{
-        font-size:26px;
-    }
-
-    .dev-body{
-        padding:18px;
-    }
+.youtube-btn {
+  display: block;
+  text-align: center;
+  margin: 22px 0;
+  padding: 18px 20px;
+  border-radius: 18px;
+  background: #ff0000;
+  color: #fff;
+  font-size: 20px;
+  font-weight: 800;
+  text-decoration: none;
+  box-shadow: 0 12px 25px rgba(255,0,0,.22);
+  transition: all .25s ease;
 }
 
+.youtube-btn:hover,
+.youtube-btn:active {
+  transform: translateY(-3px);
+  background: #e60000;
+}
+
+.dev-about {
+  background: #f1f5f9;
+  color: #334155;
+  padding: 22px;
+  border-radius: 18px;
+  text-align: center;
+  font-size: 18px;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@media (max-width: 480px) {
+  .developer-modal {
+    max-width: 100%;
+    border-radius: 24px;
+  }
+
+  .dev-header {
+    padding: 58px 18px 30px;
+  }
+
+  .dev-close {
+    top: 18px;
+    right: 18px;
+    width: 42px;
+    height: 42px;
+    font-size: 32px;
+    line-height: 42px;
+  }
+
+  .dev-photo-wrap {
+    width: 130px;
+    height: 130px;
+  }
+
+  .dev-header h2 {
+    font-size: 30px;
+  }
+
+  .dev-header p {
+    font-size: 16px;
+  }
+
+  .dev-card a,
+  .dev-card span {
+    font-size: 16px;
+  }
+
+  .youtube-btn {
+    font-size: 17px;
+  }
+}
+    
 </style>
 </head>
 
@@ -425,7 +495,7 @@ a:active {
   <div class="modal-box developer-modal">
 
     <div class="dev-header">
-      <button class="dev-close" onclick="closeDev()">×</button>
+      <button class="dev-close" onclick="closeDev()" aria-label="Close">×</button>
 
       <div class="dev-photo-wrap">
         <img
@@ -453,7 +523,7 @@ a:active {
         </a>
       </div>
 
-      <div class="dev-card">
+      <div class="dev-card pwa-install-card" onclick="installPWA()">
         <b>Version</b>
         <span>1.0 (PWA Ready)</span>
       </div>
@@ -473,6 +543,7 @@ a:active {
     </div>
   </div>
 </div>
+    
 
 <!-- PDF MODAL -->
 <div class="modal" id="pdfModal">
@@ -647,6 +718,36 @@ downloadPDFBtn.onclick = () => {
 
     showMessage("✅ Download completed!", 5000);
 };
+
+let deferredPrompt = null;
+
+window.addEventListener("beforeinstallprompt", function(e) {
+  e.preventDefault();
+  deferredPrompt = e;
+});
+
+async function installPWA() {
+  if (!deferredPrompt) {
+    alert("PWA install option abhi available nahi hai. Chrome browser menu se 'Add to Home Screen' karein.");
+    return;
+  }
+
+  deferredPrompt.prompt();
+  await deferredPrompt.userChoice;
+  deferredPrompt = null;
+}
+
+function closeDev() {
+  const modal = document.getElementById("devModal");
+  modal.classList.remove("active");
+  modal.style.display = "none";
+}
+
+function openDev() {
+  const modal = document.getElementById("devModal");
+  modal.style.display = "flex";
+  modal.classList.add("active");
+}
     
 </script>
     
