@@ -1,0 +1,877 @@
+<!doctype html>
+<html lang="en">
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- Google Verification -->
+    <meta name="google-site-verification" content="o4SUX7ZbxE9gI4_-edZ2Wxp_cFjMwllnNxnvU72gkbE">
+    <meta name="google-site-verification" content="3JRj0E_NGgRfQLI_oBviyP75mB1sxccJoRSAoorQTMg"/>
+
+    <!-- SEO -->
+    <title>BEU Syllabus Viewer | Bihar Engineering University Syllabus</title>
+
+    <meta name="description" content="BEU Syllabus Viewer – Fast and easy access to BEU Engineering University syllabus for all branches and semesters. Mobile-friendly and offline support.">
+
+    <!-- KEYWORDS (1st to 8th Semester + Branch-wise) -->
+    <meta name="keywords" content=" BEU syllabus, BEU syllabus PDF, BEU engineering syllabus, BEU 1st semester syllabus, BEU 2nd semester syllabus, BEU 3rd semester syllabus, BEU 4th semester syllabus, BEU 5th semester syllabus, BEU 6th semester syllabus, BEU 7th semester syllabus, BEU 8th semester syllabus, CSE BEU syllabus, Mechanical BEU syllabus, Civil BEU syllabus, Electrical BEU syllabus, ECE BEU syllabus, BEU semester wise syllabus, BEU syllabus viewer, Bihar Engineering University syllabus ">
+    <meta name="developer" content="Md Zafar">
+
+    <!-- Search Engine -->
+    <meta name="robots" content="index, follow">
+
+    <!-- Canonical -->
+    <link rel="canonical" href="https://beu-syllabus-viewers.netlify.app/">
+    <link rel="canonical" href="https://mdzafar864.github.io/BEU-Syllabus-App/">
+
+    <!-- Favicon -->
+    <link rel="icon" href="favicon.ico">
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0066ff">
+    <link rel="apple-touch-icon" href="icon-192.png">
+
+    <!-- 🔥 UNIVERSAL SERVICE WORKER -->
+    <script>
+    const BASE = location.hostname.includes("github.io")
+      ? "/BEU-Syllabus-App"
+      : "";
+
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", () => {
+        navigator.serviceWorker.register(`${BASE}/service-worker.js`)
+          .then(registration => {
+            console.log("✅ SW Registered");
+
+            registration.onupdatefound = () => {
+              const newWorker = registration.installing;
+
+              newWorker.onstatechange = () => {
+                if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                  
+                  // 🔔 Update Popup
+                  if (confirm("🚀 New version available! Update now?")) {
+                    newWorker.postMessage("skipWaiting");
+                  }
+                }
+              };
+            };
+          })
+          .catch(err => console.log("❌ SW Error:", err));
+      });
+
+      // Auto reload after update
+      navigator.serviceWorker.addEventListener("controllerchange", () => {
+        window.location.reload();
+      });
+    }
+    </script>
+    
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BEU Syllabus</title>
+<meta name="theme-color" content="#0066ff">
+
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+body{
+    font-family:Arial, sans-serif;
+    background:#f4f4f4;
+    padding:15px;
+    width:100%;
+    max-width:900px;
+    margin:auto;
+}
+
+/* MAIN BOX */
+.box{
+    width:100%;
+    background:white;
+    padding:25px;
+    border-radius:14px;
+    margin-top:25px;
+    box-shadow:0 6px 25px rgba(0,0,0,0.10);
+}
+
+/* LOGO */
+#logo{
+    width:140px;
+    height:140px;
+    object-fit:cover;
+    border-radius:20px;
+    display:block;
+    margin:0 auto 10px auto;
+    box-shadow:0 5px 15px rgba(0,0,0,0.15);
+}
+
+/* TEXT */
+h2{text-align:center;margin:10px 0 25px;font-size:26px;}
+
+/* SELECT + BUTTON */
+select,button{
+    width:100%;
+    padding:15px;
+    margin-top:12px;
+    font-size:18px;
+    border-radius:10px;
+    border:1px solid #ccc;
+}
+
+button{
+    background:#0066ff;
+    color:white;
+    font-weight:600;
+    cursor:pointer;
+}
+
+#devBtn{background:#444;}
+#installBtn{background:#16a34a;}
+
+/* MESSAGE BOX */
+#msg{
+    margin-top:15px;
+    background:#eef5ff;
+    padding:15px;
+    border-left:4px solid #0066ff;
+    font-size:16px;
+    display:block;
+    transition:opacity .3s ease;
+}
+
+/* MODAL */
+.modal{
+    position:fixed;
+    inset:0;
+    background:rgba(0,0,0,0.6);
+    display:none;
+    justify-content:center;
+    align-items:center;
+    padding:15px;
+    z-index:9999;
+}
+
+.modal.active{
+    display:flex;
+}
+
+.modal-box{
+    width:100%;
+    max-width:520px;
+    height:92vh;
+    background:#fff;
+    border-radius:20px;
+    overflow:hidden;
+    display:flex;
+    flex-direction:column;
+    animation:popup .35s ease;
+}
+
+@keyframes popup{
+    from{transform:scale(0.95);opacity:0;}
+    to{transform:scale(1);opacity:1;}
+}
+
+.modal-top{
+    padding:14px;
+    background:#f1f5f9;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    font-size:18px;
+}
+
+.modal-top .btn-group{
+    display:flex;
+    gap:10px;
+}
+
+iframe{
+    display:block;
+    width:100%;
+    height:100%;
+    flex:1;
+    min-height:0;
+    border:0;
+}
+
+
+@media (max-width:768px){
+
+    .modal-box{
+        width:100%;
+        max-width:100%;
+        height:96vh;
+        border-radius:16px;
+    }
+
+    .modal-top{
+        flex-shrink:0;
+    }
+
+    iframe{
+        width:100%;
+        height:100%;
+    }
+}
+
+/* CLOSE + DOWNLOAD BUTTONS */
+.close-btn{
+    background:#ff3333;
+    color:white;
+    padding:10px 18px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+}
+#downloadPDFBtn{
+    background:#0066ff;
+}
+
+/* DESKTOP */
+@media (min-width:900px){
+    body{padding:30px;}
+    .box{padding:35px;}
+    h2{font-size:30px;}
+}
+    /* ----------------------------------------
+       FINAL LINK COLOR CONTROL CSS 
+   ---------------------------------------- */
+/* Correct LVHA Order */
+
+/* Default: Blue */
+a:link {
+    color: #0066ff;
+}
+    
+/* Visited = Blue (No purple) */
+a:visited {
+    color: #0066ff;
+}
+   
+/* Hover: Red */
+a:hover {
+    color: #FF0000;
+}
+    
+/* Click press: Red */
+a:active {
+    color: #FF0000;
+}
+    
+    /* PROFESSIONAL DEVELOPER MODAL */
+
+.developer-modal{
+    width:100%;
+    max-width:430px;
+    max-height:90vh;
+    border-radius:24px;
+    overflow:hidden;
+    background:#fff;
+    box-shadow:0 20px 60px rgba(0,0,0,.35);
+}
+
+.dev-header{
+    position:relative;
+    text-align:center;
+    padding:32px 22px 28px;
+    background:linear-gradient(135deg,#0066ff,#00c6ff);
+    color:#fff;
+}
+
+.dev-close{
+    position:absolute;
+    top:18px;
+    right:18px;
+    width:42px;
+    height:42px;
+    min-width:42px;
+    min-height:42px;
+    padding:0;
+    border-radius:50%;
+    border:none;
+    background:rgba(255,255,255,.25);
+    color:#fff;
+    font-size:0;
+    line-height:1;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    -webkit-appearance:none;
+    appearance:none;
+}
+
+.dev-close::before,
+.dev-close::after{
+    content:"";
+    position:absolute;
+    width:20px;
+    height:4px;
+    border-radius:4px;
+    background:#fff;
+    left:50%;
+    top:50%;
+    transform-origin:center;
+}
+
+.dev-close::before{
+    transform:translate(-50%, -50%) rotate(45deg);
+}
+
+.dev-close::after{
+    transform:translate(-50%, -50%) rotate(-45deg);
+}
+
+.dev-photo-wrap{
+    width:145px;
+    height:145px;
+    margin:0 auto 16px;
+    border-radius:50%;
+    padding:6px;
+    background:#fff;
+    box-shadow:0 10px 30px rgba(0,0,0,.28);
+}
+
+.dev-photo{
+    width:100%;
+    height:100%;
+    border-radius:50%;
+    object-fit:cover;
+    object-position:center top;
+    display:block;
+}
+
+.dev-header h2{
+    margin:8px 0 5px;
+    font-size:28px;
+    font-weight:800;
+}
+
+.dev-header p{
+    margin:0;
+    font-size:15px;
+    line-height:1.5;
+    opacity:.95;
+}
+
+.dev-body{
+    padding:22px;
+    text-align:left;
+    overflow-y:auto;
+}
+
+.dev-card{
+    background:#f8fafc;
+    border:1px solid #e2e8f0;
+    border-radius:14px;
+    padding:14px 16px;
+    margin-bottom:12px;
+}
+
+.dev-card b{
+    display:block;
+    color:#0f172a;
+    margin-bottom:4px;
+    font-size:15px;
+}
+
+.dev-card a,
+.dev-card span{
+    font-size:15px;
+    color:#0066ff;
+    word-break:break-word;
+    text-decoration:none;
+}
+
+.youtube-btn{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    width:100%;
+    margin:18px 0;
+    padding:15px 20px;
+    background:#ff0000;
+    color:#fff !important;
+    text-decoration:none;
+    border-radius:14px;
+    font-size:17px;
+    font-weight:800;
+    box-shadow:0 8px 24px rgba(255,0,0,.28);
+}
+
+.dev-about{
+    font-size:15.5px;
+    line-height:1.7;
+    color:#334155;
+    text-align:center;
+    background:#f1f5f9;
+    padding:15px;
+    border-radius:14px;
+}
+
+@media(max-width:480px){
+    .developer-modal{
+        max-width:94vw;
+        border-radius:20px;
+    }
+
+    .dev-header{
+        padding:28px 18px 24px;
+    }
+
+    .dev-photo-wrap{
+        width:130px;
+        height:130px;
+    }
+
+    .dev-header h2{
+        font-size:26px;
+    }
+
+    .dev-body{
+        padding:18px;
+        max-height:58vh;
+    }
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="box">
+    <img id="logo" loading="lazy" src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/logo.png" alt="BEU Logo">
+
+    <h2>BEU Syllabus</h2>
+
+    <select id="branch">
+        <option value="">Select Branch</option>
+        <option value="CE">Civil Engineering (CE)</option>
+        <option value="CS">Computer Science and Engineering (CSE)</option>
+        <option value="IOT">Computer Science and Engineering (IOT)</option>
+        <option value="EE">Electrical Engineering (EE)</option>
+        <option value="ECE">Electronic and Communication Engineering (ECE)</option>
+        <option value="ME">Mechanical Engineering (ME)</option>
+    </select>
+
+    <select id="sem">
+        <option value="">Select Semester</option>
+        <option value="1stNew">1st Semester (New)</option>
+        <option value="1stOld">1st Semester (Old)</option>
+        <option value="2ndNew">2nd Semester (New)</option>
+        <option value="2ndOld">2nd Semester (Old)</option>
+        <option value="3rdNew">3rd Semester (New)</option>
+        <option value="3rdOld">3rd Semester (Old)</option>
+        <option value="4th">4th Semester</option>
+        <option value="5th">5th Semester</option>
+        <option value="6th">6th Semester</option>
+        <option value="7th">7th Semester</option>
+        <option value="8th">8th Semester</option>
+    </select>
+
+    <button id="openBtn">Open Syllabus</button>
+
+    <div id="msg">Choose branch & semester to view syllabus.</div>
+
+    <button id="devBtn">Developer Info</button>
+    <button id="installBtn" type="button">📲 Install App</button>
+</div>
+
+<!-- DEVELOPER MODAL -->
+<div class="modal" id="devModal">
+  <div class="modal-box developer-modal">
+
+    <div class="dev-header">
+      <button class="dev-close" type="button" aria-label="Close developer info" onclick="closeDev()"></button>
+
+      <div class="dev-photo-wrap">
+        <img
+          src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/Developer.png"
+          alt="Md Zafar"
+          loading="lazy"
+          class="dev-photo">
+      </div>
+
+      <h2>Md Zafar</h2>
+      <p>Full-Stack Developer • UI/UX Designer • PWA Specialist</p>
+    </div>
+
+    <div class="dev-body">
+
+      <div class="dev-card">
+        <b>Email</b>
+        <a href="mailto:mdzafarsabour35@gmail.com">mdzafarsabour35@gmail.com</a>
+      </div>
+
+      <div class="dev-card">
+        <b>LinkedIn</b>
+        <a href="https://www.linkedin.com/in/mdzafar864" target="_blank" rel="noopener">
+          View Profile
+        </a>
+      </div>
+
+      <div class="dev-card">
+        <b>Version</b>
+        <span>1.0 (PWA Ready)</span>
+      </div>
+
+      <a href="https://youtube.com/@engineerspathwayofficial?si=uvPvpPB5yO424cr-"
+         target="_blank"
+         rel="noopener"
+         class="youtube-btn">
+        ▶ Visit My YouTube Channel
+      </a>
+
+      <p class="dev-about">
+        This application provides fast access to BEU syllabus.
+        Fully responsive, lightweight and PWA ready.
+      </p>
+
+    </div>
+  </div>
+</div>
+
+<!-- PDF MODAL -->
+<div class="modal" id="pdfModal">
+    <div class="modal-box">
+        <div class="modal-top">
+            <strong>Syllabus PDF</strong>
+            <div class="btn-group">
+                <button class="close-btn" onclick="closePDF()">Close</button>
+                <button class="close-btn" id="downloadPDFBtn">Download</button>
+            </div>
+        </div>
+        <iframe id="pdfFrame" loading="lazy" title="Syllabus PDF"></iframe>
+    </div>
+</div>
+
+<script>
+
+// PWA INSTALL PROMPT + INSTALLED CHECK
+let deferredPrompt = null;
+let installInProgress = false;
+const installBtn = document.getElementById("installBtn");
+
+function isPWAStandalone() {
+    return window.matchMedia("(display-mode: standalone)").matches ||
+           window.matchMedia("(display-mode: fullscreen)").matches ||
+           window.navigator.standalone === true ||
+           document.referrer.startsWith("android-app://");
+}
+
+function updateInstallButton() {
+    if (!installBtn) return;
+
+    if (isPWAStandalone()) {
+        installBtn.innerHTML = "✅ App Mode Active";
+        installBtn.style.background = "#16a34a";
+        installBtn.disabled = false;
+        return;
+    }
+
+    if (localStorage.getItem("beu_pwa_installed") === "yes") {
+        installBtn.innerHTML = "✅ App Already Installed";
+        installBtn.style.background = "#16a34a";
+        installBtn.disabled = false;
+        return;
+    }
+
+    installBtn.innerHTML = "📲 Install App";
+    installBtn.style.background = "#16a34a";
+    installBtn.disabled = false;
+}
+
+window.addEventListener("beforeinstallprompt", (e) => {
+    e.preventDefault();
+    deferredPrompt = e;
+    installInProgress = false;
+    localStorage.removeItem("beu_pwa_installed");
+    updateInstallButton();
+});
+
+// ✅ Success popup ONLY after browser confirms app installation
+let installSuccessPopupShown = false;
+let installSuccessTimer = null;
+
+window.addEventListener("appinstalled", () => {
+    deferredPrompt = null;
+    installInProgress = false;
+
+    localStorage.setItem("beu_pwa_installed", "yes");
+    updateInstallButton();
+
+    // Pehle click par success alert nahi dikhana.
+    // Browser ke appinstalled event ke baad thoda wait karke sirf ek baar success popup show hoga.
+    clearTimeout(installSuccessTimer);
+    installSuccessTimer = setTimeout(() => {
+        if (installSuccessPopupShown) return;
+        installSuccessPopupShown = true;
+
+        showMessage("✅ App install successfully completed.", 6000);
+        alert("✅ App install successfully completed!\n\nAb app icon se open karein.");
+    }, 8000);
+});
+
+async function installPWA() {
+    updateInstallButton();
+
+    if (isPWAStandalone()) {
+        alert("✅ Aap already installed app ke andar ho.");
+        return;
+    }
+
+    if (installInProgress) {
+        showMessage("⏳ App install ho raha hai...", 5000);
+        return;
+    }
+
+    if (localStorage.getItem("beu_pwa_installed") === "yes" && !deferredPrompt) {
+        showMessage("✅ App already installed hai. App icon se open karein.", 6000);
+        return;
+    }
+
+    if (!deferredPrompt) {
+        alert("Install option abhi available nahi hai. Agar install nahi hai to Chrome menu (⋮) se 'Add to Home Screen' / 'Install App' karein.");
+        return;
+    }
+
+    const promptEvent = deferredPrompt;
+    deferredPrompt = null;
+    installInProgress = true;
+
+    promptEvent.prompt();
+    const choice = await promptEvent.userChoice;
+
+    if (choice.outcome === "accepted") {
+        installBtn.innerHTML = "⏳ Installing...";
+        installBtn.style.background = "#16a34a";
+        showMessage("⏳ App install ho raha hai...", 15000);
+        // Final success message appinstalled event ke andar hi aayega.
+    } else {
+        installInProgress = false;
+        showMessage("❌ App install cancel ho gaya.", 5000);
+        updateInstallButton();
+    }
+}
+
+window.addEventListener("DOMContentLoaded", updateInstallButton);
+window.matchMedia("(display-mode: standalone)").addEventListener("change", updateInstallButton);
+
+// FULL DATABASE
+const syllabus = {
+  "1stNew": {
+    "CE": "https://drive.google.com/file/d/1Qd3X732fBWyEax1GTudkBWn7fpe57CgA/preview",
+    "CS": "https://drive.google.com/file/d/1Zp-UAEgj72UstczPS_wSIBtlPU48USal/preview",
+    "EE": "https://drive.google.com/file/d/1dZCtmM7w3H9dRpsWMlDhhJZNvFOiA1up/preview",
+    "ECE": "https://drive.google.com/file/d/14cLD5aiYQp_2U3qKN16pa7U4fowBMg3J/preview",
+    "ME": "https://drive.google.com/file/d/1yYB-UOYnpkOCYspJeZv83o7Rjy3wfcB8/preview"
+  },
+
+  "1stOld": {
+    "CE": "https://drive.google.com/file/d/1iRWghHRyCP6WPZ3Xoc0DdScIytir3xRn/preview",
+    "CS": "https://drive.google.com/file/d/1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb/preview",
+    "EE": "https://drive.google.com/file/d/1BtS61CEIOidszDe5FLBVQUake_8RQZlK/preview",
+    "ECE": "https://drive.google.com/file/d/1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m/preview",
+    "ME": "https://drive.google.com/file/d/1gyWaJKhhcZNmSF9WlWfqRXfnTeA87hvY/preview"
+  },
+
+  "2ndNew": {
+    "CE": "https://drive.google.com/file/d/13q_AFXP9e2AWyHHtHWp_Fm4bRgtME3qv/preview",
+    "CS": "https://drive.google.com/file/d/15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh/preview",
+    "EE": "https://drive.google.com/file/d/1wgmEj8RSBWleYUZ1JjzD7tICuiQgJEDW/preview",
+    "ECE": "https://drive.google.com/file/d/1THqchJygHP7BVVQjj-kf4YmMHBrjfA_x/preview",
+    "ME": "https://drive.google.com/file/d/1hhAgOvC2LvbBRv6f7n1MSHPxD9MBVgsy/preview"
+  },
+
+  "2ndOld": {
+    "CE": "https://drive.google.com/file/d/1jW97lTtufHT26vkRP6KISUiKWSYe6F3o/preview",
+    "CS": "https://drive.google.com/file/d/16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN/preview",
+    "EE": "https://drive.google.com/file/d/1CrAHd-0bwzESjiLtb-AQwOeKtopyiJm9/preview",
+    "ECE": "https://drive.google.com/file/d/1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6/preview",
+    "ME": "https://drive.google.com/file/d/1xwhvlJIQJRCqKLCPTKeOOdjzkUgr8S5U/preview"
+  },
+    
+  "3rdNew": {
+    "CE": "https://drive.google.com/file/d/1GzMwwCkUrHPmc5fgyWOxOSsPof9dQZO8/preview",
+    "CS": "https://drive.google.com/file/d/18tjQnI2qGtbSzRWEp08KqKY4gDvE25em/preview",
+    "IOT": "https://drive.google.com/file/d/1DyoqlnntdtG-RA0ET1wH4FrR-DOB3mtF/preview",
+    "EE": "https://drive.google.com/file/d/1nKpL1rXXa7EGJqbvDkmEem1uh74QWjOU/preview",
+    "ECE": "https://drive.google.com/file/d/1kWy1_zhggLM9U4jrkTzGWNdLcE-4QXMr/preview",
+    "ME": "https://drive.google.com/file/d/14yS8pyf83vIA1vs-_DbAvWbYpF8y6gc9/preview"
+  },
+    
+  "3rdOld": {
+    "CE": "https://drive.google.com/file/d/1IS4EV9JvOfoLW3cYRW7U-qBkXyRAvFlD/preview",
+    "CS": "https://drive.google.com/file/d/1ZlU22NFGirTuV01jKYiG9zdSU_IO29-t/preview",
+    "EE": "https://drive.google.com/file/d/1D2gAZlW299s9f60wcdicGSZK7DpZVXkc/preview",
+    "ECE": "https://drive.google.com/file/d/1auOpeh5UX4E23rnxIQo1K9TdFrqSXrm0/preview",
+    "ME": "https://drive.google.com/file/d/1XE_l1tfHGZHMDIxU6KNlcjlqiKxKN-ZW/preview"
+  },
+
+  "4th": {
+    "CE": "https://drive.google.com/file/d/17w5zTFNaWUOg7S_vUrqW_AxtMyf7bPdU/preview",
+    "CS": "https://drive.google.com/file/d/1ODCj6Omx6dUuHR-Cmwh4iu37TaMQyTLn/preview",
+    "EE": "https://drive.google.com/file/d/1G-cJOckwjZRoaDz0Nnw-CphpqBcZztA7/preview",
+    "ECE": "https://drive.google.com/file/d/1nkfp0xRno6_ybJSWqZ6_ryiwI4aNsjXh/preview",
+    "ME": "https://drive.google.com/file/d/1jVvYbUmth-RIbhLBXbDf3ooB8zgz8fSc/preview"
+  },
+
+  "5th": {
+    "CE": "https://drive.google.com/file/d/1tGXDItZ5g-AsnsXN0KmMifbA36vgxA0C/preview",
+    "CS": "https://drive.google.com/file/d/1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3/preview",
+    "EE": "https://drive.google.com/file/d/1MA_tDBF7Fuvg8OGgn8bzg4mHSUTmQ-dC/preview",
+    "ECE": "https://drive.google.com/file/d/1dJV_E7tPdhmmA7IutIDeaDMz3rxYb9XR/preview",
+    "ME": "https://drive.google.com/file/d/1FW1-YDLvthfdG52szzsLzTIU9DOI03bc/preview"
+  },
+
+  "6th": {
+    "CE": "https://drive.google.com/file/d/1MxzSoTSdMgCvgCPiDFsDjVuu4QaJCQge/preview",
+    "CS": "https://drive.google.com/file/d/1ckXxGY5kdHmxlAIGsq-NfDskA4Mj_xQj/preview",
+    "EE": "https://drive.google.com/file/d/1obhgEQmyRzDg1XPG7Gc6u5SyMugXN9bn/preview",
+    "ECE": "https://drive.google.com/file/d/1reUmWqura-4UnEx7tpjv6wANADxvW_lc/preview",
+    "ME": "https://drive.google.com/file/d/19UDBkvdYqgMqRzV_Fgre8vq8utOapy2q/preview"
+  },
+
+  "7th": {
+    "CE": "https://drive.google.com/file/d/1Qy64E3CCdfhQvD8PaihwPDFVz2FwDqGr/preview",
+    "CS": "https://drive.google.com/file/d/1uW4HVIaLErhWIyj36Lday4JMH1ZfuLEp/preview",
+    "EE": "https://drive.google.com/file/d/1ey1jhsveL-eO0gc0FgwlNs7U05qRQHp5/preview",
+    "ECE": "https://drive.google.com/file/d/1aDSSzOz8kWsmO0oJV7Z5CZ2lnCXReEqq/preview",
+    "ME": "https://drive.google.com/file/d/1kMv43ZFJMctH_iRYbI230GCNN4UkZYud/preview"
+  },
+
+  "8th": {
+    "EE": "https://drive.google.com/file/d/1BwL_f3KCmWzuEulEth3G3hQw5sxLvBOy/preview",
+    "ME": "https://drive.google.com/file/d/1PPkfTohITDMkIFNuw836gSOSUjCFtt3n/preview"
+  }
+};
+
+let hideTimer;
+
+// RESET MSG ON CHANGE
+branch.onchange = sem.onchange = () => {
+    msg.style.opacity = 1;
+    msg.innerHTML = "Choose branch & semester to view syllabus.";
+};
+
+// OPEN PDF
+openBtn.onclick = () => {
+    let b = branch.value;
+    let s = sem.value;
+
+    if (!b || !s) {
+        showMessage("❌ Please select both branch & semester.", 10000);
+        return;
+    }
+
+    if (!syllabus[s] || !syllabus[s][b]) {
+        showMessage("❌ Syllabus not available for this selection.", 9000);
+        return;
+    }
+
+    let pdfLink = syllabus[s][b];
+    pdfFrame.src = pdfLink;
+    pdfModal.style.display = "flex";
+    pdfModal.classList.add("active");
+
+    showMessage("📄 Preview opened. Click Download to save.", 8000);
+};
+
+// SHOW MESSAGE
+function showMessage(text, duration) {
+    clearTimeout(hideTimer);
+    msg.style.opacity = 1;
+    msg.innerHTML = text;
+
+    hideTimer = setTimeout(() => {
+        msg.style.opacity = 0;
+        setTimeout(() => {
+            msg.innerHTML = "Choose branch & semester to view syllabus.";
+            msg.style.opacity = 1;
+        }, 400);
+    }, duration);
+}
+
+// CLOSE MODALS
+function closePDF() {
+    const pdfModalEl = document.getElementById("pdfModal");
+    const pdfFrameEl = document.getElementById("pdfFrame");
+    pdfModalEl.classList.remove("active");
+    pdfModalEl.style.display = "none";
+    pdfFrameEl.src = "";
+}
+
+// DEVELOPER OPTIONS / MODAL
+function openDev() {
+    const modal = document.getElementById("devModal");
+    modal.style.display = "flex";
+    modal.classList.add("active");
+}
+
+function closeDev() {
+    const modal = document.getElementById("devModal");
+    modal.classList.remove("active");
+    modal.style.display = "none";
+}
+
+document.getElementById("devBtn").addEventListener("click", openDev);
+document.getElementById("installBtn").addEventListener("click", installPWA);
+
+// Close developer modal when clicking outside card
+document.getElementById("devModal").addEventListener("click", function(e){
+    if (e.target === this) closeDev();
+});
+
+// DOWNLOAD PDF
+const downloadPDFBtn = document.getElementById('downloadPDFBtn');
+downloadPDFBtn.onclick = () => {
+    const pdfLink = pdfFrame.src;
+    if(!pdfLink) return;
+
+    const a = document.createElement('a');
+    a.href = pdfLink;
+    a.download = `${branch.value}_${sem.value}_syllabus.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+
+    showMessage("✅ Download completed!", 5000);
+};
+    
+</script>
+    
+        <!-- FOOTER -->
+<footer id="myFooter" style="
+    width:100%;
+    text-align:center;
+    padding:30px 10px;
+    font-size:8px;
+    margin-top:10px;
+    opacity:0;
+">
+    © 2025 BEU Syllabus Viewer • Developed by <b>Md Zafar</b>
+</footer>
+
+    <style> 
+        /* Animation */
+@keyframes footerFadeUp {
+    0% {
+        opacity:0;
+        transform:translateY(25px);
+    }
+    100% {
+        opacity:1;
+        transform:translateY(0);
+    }
+}
+
+/* Apply animation */
+#myFooter {
+    animation: footerFadeUp 1.3s ease-out forwards;
+}
+    </style>
+
+</body>
+</html>
