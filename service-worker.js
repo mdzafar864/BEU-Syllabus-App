@@ -2,7 +2,7 @@
 //  UNIVERSAL PWA SW (GitHub + Netlify)
 // =============================
 
-const CACHE_NAME = "beu-pwa-v25";
+const CACHE_NAME = "beu-pwa-v26";
 
 // 🔥 AUTO detect base path
 const BASE = self.location.hostname.includes("github.io")
@@ -39,37 +39,34 @@ self.addEventListener("activate", event => {
   self.clients.claim();
 });
 
-// FETCH
+// FETCH - (Updated for Perfect Offline & Dynamic Update)
 self.addEventListener("fetch", event => {
   if (!event.request.url.startsWith("http")) return;
 
   const req = event.request;
 
-  // HTML → Network First
-  if (req.headers.get("accept").includes("text/html")) {
-    event.respondWith(
-      fetch(req)
-        .then(res => {
+  // Network First Strategy for all assets & files
+  event.respondWith(
+    fetch(req)
+      .then(res => {
+        // If response is valid, clone and update the cache dynamically
+        if (res.status === 200 || res.status === 0) {
           const clone = res.clone();
           caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
-          return res;
-        })
-        .catch(() =>
-          caches.match(req).then(res => res || caches.match(`${BASE}/index.html`))
-        )
-    );
-    return;
-  }
-
-  // Other → Cache First
-  event.respondWith(
-    caches.match(req).then(cacheRes => {
-      return cacheRes || fetch(req).then(res => {
-        const clone = res.clone();
-        caches.open(CACHE_NAME).then(cache => cache.put(req, clone));
+        }
         return res;
-      });
-    })
+      })
+      .catch(() => {
+        // Fallback to cache if network fails (Offline mode)
+        return caches.match(req).then(cacheRes => {
+          if (cacheRes) return cacheRes;
+          
+          // Specific fallback for HTML pages
+          if (req.headers.get("accept") && req.headers.get("accept").includes("text/html")) {
+            return caches.match(`${BASE}/index.html`);
+          }
+        });
+      })
   );
 });
 
