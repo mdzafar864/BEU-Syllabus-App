@@ -879,8 +879,14 @@ openBtn.onclick = () => {
         return;
     }
 
-    let pdfLink = syllabus[s][b];
-    pdfFrame.src = pdfLink;
+    // Track Open Syllabus button click
+    trackGA4Event("open_syllabus_click", {
+        button_text: "Open Syllabus",
+        click_location: "main_page"
+    });
+
+    let pdflink = syllabus[s][b];
+    pdfFrame.src = pdflink;
     pdfModal.style.display = "flex";
     pdfModal.classList.add("active");
 
