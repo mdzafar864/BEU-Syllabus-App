@@ -939,6 +939,14 @@ document.getElementById("installBtn").addEventListener("click", () => {
     installPWA();
 });
 
+    // Track Open Syllabus button click
+document.getElementById("openBtn").addEventListener("click", () => {
+    trackGA4Event("open_syllabus_click", {
+        button_text: "Open Syllabus",
+        click_location: "main_page"
+    });
+});
+    
 // Close developer modal when clicking outside card
 document.getElementById("devModal").addEventListener("click", function(e){
     if (e.target === this) closeDev();
