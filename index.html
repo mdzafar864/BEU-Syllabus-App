@@ -496,12 +496,22 @@ a:active {
     <select id="branch">
         <option value="">Select Branch</option>
         <option value="CE">Civil Engineering (CE)</option>
-        <option value="CS">Computer Science and Engineering (CSE)</option>
-        <option value="AI">Computer Science and Engineering (AI)</option>
+        <option value="CSE">Computer Science & Engineering (CSE)</option>
+        <option value="AI">Computer Science & Engineering (AI)</option>
+        <option value="ML">Computer Science & Engineering (AI & ML)</option>
+        <option value="CS">Computer Science & Engineering (Cyber Security)</option>
+        <option value="DS">Computer Science & Engineering (Data Science)</option>
+        <option value="Net">Computer Science & Engineering (Networks)</option>
+        <option value="Tech">CSE (IoT & Cyber Security with Block chain Technology)</option>
         <option value="IOT">Computer Science and Engineering (IOT)</option>
         <option value="EE">Electrical Engineering (EE)</option>
         <option value="ECE">Electronic and Communication Engineering (ECE)</option>
+        <option value="VLSI">Electronics Engineering (VLSI Design and Technology)</option>
+        <option value="ACT">Advance Communication & Technology (ACT)</option>
+        <option value="IT">Information Technology (IT)</option>
+        <option value="IE">Instrumentation Engineering (IE)</option>
         <option value="ME">Mechanical Engineering (ME)</option>
+        
     </select>
 
     <select id="sem">
@@ -618,11 +628,20 @@ function trackGA4Event(eventName, eventParameters = {}) {
 function getBranchName(branchCode) {
     const branchNames = {
         CE: "Civil Engineering",
-        CS: "Computer Science and Engineering",
-        AI: "Computer Science & Engineering",
-        IOT: "Computer Science and Engineering",
+        CSE: "Computer Science & Engineering",
+        AI: "Computer Science & Engineering AI",
+        ML: "Computer Science & Engineering ML",
+        CS: "Computer Science & Engineering Cyber security",
+        DS: "Computer Science & Engineering Data science",
+        Net: "Computer Science & Engineering Networks",
+        Tech: "CSE IoT & Cyber Security with Block chain Technology",
+        IOT: "Computer Science and Engineering IOT",
         EE: "Electrical Engineering",
-        ECE: "Electronics and Communication Engineering",
+        ECE: "Electronic and Communication Engineering",
+        VLSI: "Electronics Engineering VLSI Design and Technology",
+        ACT: "Advance Communication & Technology",
+        IT: "Information Technology",
+        IE: "Instrumentation Engineering",
         ME: "Mechanical Engineering"
     };
     return branchNames[branchCode] || branchCode || "Unknown";
@@ -774,7 +793,7 @@ window.matchMedia("(display-mode: standalone)").addEventListener("change", updat
 const syllabus = {
   "1stNew": {
     "CE": "https://drive.google.com/file/d/1Qd3X732fBWyEax1GTudkBWn7fpe57CgA/preview",
-    "CS": "https://drive.google.com/file/d/1Zp-UAEgj72UstczPS_wSIBtlPU48USal/preview",
+    "CSE": "https://drive.google.com/file/d/1Zp-UAEgj72UstczPS_wSIBtlPU48USal/preview",
     "EE": "https://drive.google.com/file/d/1dZCtmM7w3H9dRpsWMlDhhJZNvFOiA1up/preview",
     "ECE": "https://drive.google.com/file/d/14cLD5aiYQp_2U3qKN16pa7U4fowBMg3J/preview",
     "ME": "https://drive.google.com/file/d/1yYB-UOYnpkOCYspJeZv83o7Rjy3wfcB8/preview",
@@ -783,7 +802,7 @@ const syllabus = {
 
   "1stOld": {
     "CE": "https://drive.google.com/file/d/1iRWghHRyCP6WPZ3Xoc0DdScIytir3xRn/preview",
-    "CS": "https://drive.google.com/file/d/1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb/preview",
+    "CSE": "https://drive.google.com/file/d/1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb/preview",
     "EE": "https://drive.google.com/file/d/1BtS61CEIOidszDe5FLBVQUake_8RQZlK/preview",
     "ECE": "https://drive.google.com/file/d/1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m/preview",
     "ME": "https://drive.google.com/file/d/1gyWaJKhhcZNmSF9WlWfqRXfnTeA87hvY/preview"
@@ -791,7 +810,7 @@ const syllabus = {
 
   "2ndNew": {
     "CE": "https://drive.google.com/file/d/13q_AFXP9e2AWyHHtHWp_Fm4bRgtME3qv/preview",
-    "CS": "https://drive.google.com/file/d/15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh/preview",
+    "CSE": "https://drive.google.com/file/d/15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh/preview",
     "EE": "https://drive.google.com/file/d/1wgmEj8RSBWleYUZ1JjzD7tICuiQgJEDW/preview",
     "ECE": "https://drive.google.com/file/d/1THqchJygHP7BVVQjj-kf4YmMHBrjfA_x/preview",
     "ME": "https://drive.google.com/file/d/1hhAgOvC2LvbBRv6f7n1MSHPxD9MBVgsy/preview",
@@ -800,7 +819,7 @@ const syllabus = {
 
   "2ndOld": {
     "CE": "https://drive.google.com/file/d/1jW97lTtufHT26vkRP6KISUiKWSYe6F3o/preview",
-    "CS": "https://drive.google.com/file/d/16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN/preview",
+    "CSE": "https://drive.google.com/file/d/16JynS8hA5JtsSlIc3-HBUPqI9o1F2ziN/preview",
     "EE": "https://drive.google.com/file/d/1CrAHd-0bwzESjiLtb-AQwOeKtopyiJm9/preview",
     "ECE": "https://drive.google.com/file/d/1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6/preview",
     "ME": "https://drive.google.com/file/d/1xwhvlJIQJRCqKLCPTKeOOdjzkUgr8S5U/preview"
@@ -808,7 +827,7 @@ const syllabus = {
     
   "3rdNew": {
     "CE": "https://drive.google.com/file/d/1GzMwwCkUrHPmc5fgyWOxOSsPof9dQZO8/preview",
-    "CS": "https://drive.google.com/file/d/18tjQnI2qGtbSzRWEp08KqKY4gDvE25em/preview",
+    "CSE": "https://drive.google.com/file/d/18tjQnI2qGtbSzRWEp08KqKY4gDvE25em/preview",
     "IOT": "https://drive.google.com/file/d/1DyoqlnntdtG-RA0ET1wH4FrR-DOB3mtF/preview",
     "EE": "https://drive.google.com/file/d/1nKpL1rXXa7EGJqbvDkmEem1uh74QWjOU/preview",
     "ECE": "https://drive.google.com/file/d/1kWy1_zhggLM9U4jrkTzGWNdLcE-4QXMr/preview",
@@ -818,7 +837,7 @@ const syllabus = {
     
   "3rdOld": {
     "CE": "https://drive.google.com/file/d/1IS4EV9JvOfoLW3cYRW7U-qBkXyRAvFlD/preview",
-    "CS": "https://drive.google.com/file/d/1ZlU22NFGirTuV01jKYiG9zdSU_IO29-t/preview",
+    "CSE": "https://drive.google.com/file/d/1ZlU22NFGirTuV01jKYiG9zdSU_IO29-t/preview",
     "EE": "https://drive.google.com/file/d/1D2gAZlW299s9f60wcdicGSZK7DpZVXkc/preview",
     "ECE": "https://drive.google.com/file/d/1auOpeh5UX4E23rnxIQo1K9TdFrqSXrm0/preview",
     "ME": "https://drive.google.com/file/d/1XE_l1tfHGZHMDIxU6KNlcjlqiKxKN-ZW/preview"
@@ -826,7 +845,7 @@ const syllabus = {
 
     "4thNew": {
     "CE": "",
-    "CS": "",
+    "CSE": "",
     "EE": "https://drive.google.com/file/d/1BCJ8zrbXmVMS69iAWu7wncgcpxWsqZHy/preview",
     "ECE": "",
     "ME": ""
@@ -834,7 +853,7 @@ const syllabus = {
 
   "4thOld": {
     "CE": "https://drive.google.com/file/d/17w5zTFNaWUOg7S_vUrqW_AxtMyf7bPdU/preview",
-    "CS": "https://drive.google.com/file/d/1ODCj6Omx6dUuHR-Cmwh4iu37TaMQyTLn/preview",
+    "CSE": "https://drive.google.com/file/d/1ODCj6Omx6dUuHR-Cmwh4iu37TaMQyTLn/preview",
     "EE": "https://drive.google.com/file/d/1G-cJOckwjZRoaDz0Nnw-CphpqBcZztA7/preview",
     "ECE": "https://drive.google.com/file/d/1nkfp0xRno6_ybJSWqZ6_ryiwI4aNsjXh/preview",
     "ME": "https://drive.google.com/file/d/1jVvYbUmth-RIbhLBXbDf3ooB8zgz8fSc/preview"
@@ -842,7 +861,7 @@ const syllabus = {
 
   "5th": {
     "CE": "https://drive.google.com/file/d/1tGXDItZ5g-AsnsXN0KmMifbA36vgxA0C/preview",
-    "CS": "https://drive.google.com/file/d/1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3/preview",
+    "CSE": "https://drive.google.com/file/d/1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3/preview",
     "EE": "https://drive.google.com/file/d/1MA_tDBF7Fuvg8OGgn8bzg4mHSUTmQ-dC/preview",
     "ECE": "https://drive.google.com/file/d/1dJV_E7tPdhmmA7IutIDeaDMz3rxYb9XR/preview",
     "ME": "https://drive.google.com/file/d/1FW1-YDLvthfdG52szzsLzTIU9DOI03bc/preview"
@@ -850,7 +869,7 @@ const syllabus = {
 
   "6th": {
     "CE": "https://drive.google.com/file/d/1MxzSoTSdMgCvgCPiDFsDjVuu4QaJCQge/preview",
-    "CS": "https://drive.google.com/file/d/1ckXxGY5kdHmxlAIGsq-NfDskA4Mj_xQj/preview",
+    "CSE": "https://drive.google.com/file/d/1ckXxGY5kdHmxlAIGsq-NfDskA4Mj_xQj/preview",
     "EE": "https://drive.google.com/file/d/1obhgEQmyRzDg1XPG7Gc6u5SyMugXN9bn/preview",
     "ECE": "https://drive.google.com/file/d/1reUmWqura-4UnEx7tpjv6wANADxvW_lc/preview",
     "ME": "https://drive.google.com/file/d/19UDBkvdYqgMqRzV_Fgre8vq8utOapy2q/preview"
@@ -858,7 +877,7 @@ const syllabus = {
 
   "7th": {
     "CE": "https://drive.google.com/file/d/1Qy64E3CCdfhQvD8PaihwPDFVz2FwDqGr/preview",
-    "CS": "https://drive.google.com/file/d/1uW4HVIaLErhWIyj36Lday4JMH1ZfuLEp/preview",
+    "CSE": "https://drive.google.com/file/d/1uW4HVIaLErhWIyj36Lday4JMH1ZfuLEp/preview",
     "EE": "https://drive.google.com/file/d/1ey1jhsveL-eO0gc0FgwlNs7U05qRQHp5/preview",
     "ECE": "https://drive.google.com/file/d/1aDSSzOz8kWsmO0oJV7Z5CZ2lnCXReEqq/preview",
     "ME": "https://drive.google.com/file/d/1kMv43ZFJMctH_iRYbI230GCNN4UkZYud/preview"
