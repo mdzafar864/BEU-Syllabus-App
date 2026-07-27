@@ -14,11 +14,4 @@
     <priority>0.9</priority>
   </url>
 
-  <!-- Netlify Site URLs -->
-  <url>
-    <loc>https://beu-syllabus-viewers.netlify.app/</loc>
-    <lastmod>2026-04-14</lastmod>
-    <priority>0.8</priority>
-  </url>
-
 </urlset>
