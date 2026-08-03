@@ -119,6 +119,7 @@ assets/screenshots/home.png
 assets/screenshots/branch.png
 assets/screenshots/semester.png
 assets/screenshots/pdf-viewer.png
+assets/developer.png
 ```
 
 ---
