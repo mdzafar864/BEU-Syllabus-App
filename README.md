@@ -116,10 +116,10 @@ BEU-Syllabus-App
 
 ```
 ![Home](assets/screenshots/home.png)
-assets/screenshots/branch.png
-assets/screenshots/semester.png
-assets/screenshots/pdf-viewer.png
-assets/developer.png
+![Branch](assets/screenshots/branch.png)
+![Semester](assets/screenshots/semester.png)
+![PDF Viewer](assets/screenshots/pdf-viewer.png)
+![Developer Info](assets/developer-info.png)
 ```
 
 ---
