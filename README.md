@@ -204,7 +204,7 @@ git push origin feature-name
 # 👨‍💻 Developer
 
 <p align="center">
-<img src="Developer.png" width="170">
+<img src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main//assets/Developer.png" width="170">
 </p>
 
 ## Md Zafar
