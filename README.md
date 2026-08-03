@@ -1,7 +1,7 @@
 # 📚 BEU Syllabus App
 
 <p align="center">
-  <img src="logo.png" alt="BEU Syllabus App Logo" width="160">
+  <img src="https://raw.githubusercontent.com/mdzafar864/BEU-Syllabus-App/main/assets/logo.png" alt="BEU Syllabus App Logo" width="160">
 </p>
 
 <h1 align="center">BEU Syllabus App</h1>
