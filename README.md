@@ -114,17 +114,36 @@ BEU-Syllabus-App
 
 ## 📸 Screenshots
 
-| Home | Branch |
-|------|--------|
-| ![Home](./assets/screenshots/home.png) | ![Branch](./assets/screenshots/branch.png) |
+<table align="center">
+  <tr>
+    <td align="center">
+      <b>🏠 Home</b><br><br>
+      <img src="./assets/screenshots/home.png" alt="Home" width="280">
+    </td>
+    <td align="center">
+      <b>📂 Branch</b><br><br>
+      <img src="./assets/screenshots/branch.png" alt="Branch" width="280">
+    </td>
+  </tr>
 
-| Semester | PDF Viewer |
-|----------|------------|
-| ![Semester](./assets/screenshots/semester.png) | ![PDF Viewer](./assets/screenshots/pdf-viewer.png) |
+  <tr>
+    <td align="center">
+      <b>🎓 Semester</b><br><br>
+      <img src="./assets/screenshots/semester.png" alt="Semester" width="280">
+    </td>
+    <td align="center">
+      <b>📄 PDF Viewer</b><br><br>
+      <img src="./assets/screenshots/pdf-viewer.png" alt="PDF Viewer" width="280">
+    </td>
+  </tr>
 
-| Developer |
-|-----------|
-| ![Developer](./assets/screenshots/developer-info.png) |
+  <tr>
+    <td colspan="2" align="center">
+      <b>👨‍💻 Developer Info</b><br><br>
+      <img src="./assets/screenshots/developer-info.png" alt="Developer Info" width="320">
+    </td>
+  </tr>
+</table>
 
 ---
 
