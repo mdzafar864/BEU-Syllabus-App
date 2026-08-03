@@ -115,7 +115,7 @@ BEU-Syllabus-App
 # 📸 Screenshots
 
 ```
-assets/screenshots/home.png
+![Home](assets/screenshots/home.png)
 assets/screenshots/branch.png
 assets/screenshots/semester.png
 assets/screenshots/pdf-viewer.png
