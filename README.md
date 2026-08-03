@@ -115,11 +115,22 @@ BEU-Syllabus-App
 # 📸 Screenshots
 
 ```
+## 📱 Screenshots
+
+### Home
 ![Home](assets/screenshots/home.png)
+
+### Branch Selection
 ![Branch](assets/screenshots/branch.png)
+
+### Semester Selection
 ![Semester](assets/screenshots/semester.png)
+
+### PDF Viewer
 ![PDF Viewer](assets/screenshots/pdf-viewer.png)
-![Developer Info](assets/developer-info.png)
+
+### Developer Info
+![Developer Info](assets/screenshots/developer-info.png)
 ```
 
 ---
