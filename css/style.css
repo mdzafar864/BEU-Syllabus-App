@@ -292,16 +292,31 @@ a:active {
 }
 
 .dev-header h2 {
-    margin: 8px 0 5px;
+    margin: 8px 0 6px;
     font-size: 28px;
     font-weight: 800;
 }
 
 .dev-header p {
-    margin: 0;
+    margin: 4px 0;
     font-size: 15px;
-    line-height: 1.5;
+    line-height: 1.6;
     opacity: .95;
+}
+
+.dev-role {
+    display: block;
+    font-size: 16px;
+    font-weight: 700;
+    margin-bottom: 6px;
+    color: #fff;
+}
+
+.dev-title {
+    display: block;
+    font-size: 14px;
+    font-weight: 400;
+    opacity: .9;
 }
 
 .dev-body {
