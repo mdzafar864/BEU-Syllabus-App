@@ -298,5 +298,5 @@ Special Thanks To
 ---
 
 <p align="center">
-© 2026 <strong>BEU Syllabus App</strong> · Developed by <strong>Md Zafar</strong>
+© 2026 MZ Tech Solutions. <b>All Rights Reserved.</b>
 </p>
