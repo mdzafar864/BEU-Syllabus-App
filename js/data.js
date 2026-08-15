@@ -19,13 +19,24 @@ const syllabus = {
             "AI": "https://drive.google.com/file/d/10jbUuttq5qN0Tv7LTkk4dWCrZGgbUZ10/preview"
         },
         "2026-2030": {
-            "CE": "",
-            "CSE": "",
-            "IOT": "",
-            "EE": "",
-            "ECE": "",
-            "ME": "",
-            "AI": ""
+            "CE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "CSE": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "IOT": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "CS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "AI": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "DS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "ML": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "NET": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "Tech": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "IT": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "EE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
+            "EEE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
+            "ECE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
+            "ACT": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
+            "VLSI": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
+            "IE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
+            "ME": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview"
+            
         }
     },
     "2nd": {
@@ -162,7 +173,7 @@ const branchNames = {
     ML: "Computer Science & Engineering ML",
     CS: "Computer Science & Engineering Cyber security",
     DS: "Computer Science & Engineering Data science",
-    Net: "Computer Science & Engineering Networks",
+    NET: "Computer Science & Engineering Networks",
     Tech: "CSE IoT & Cyber Security with Block chain Technology",
     IOT: "Computer Science & Engineering IOT",
     EE: "Electrical Engineering",
