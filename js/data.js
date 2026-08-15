@@ -1,5 +1,6 @@
 // data.js
 // Structure: syllabus[semester][session][branch] = pdfLink
+
 const syllabus = {
     "1st": {
         "2018-2023": {
@@ -9,6 +10,7 @@ const syllabus = {
             "ECE": "https://drive.google.com/file/d/1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m/preview",
             "ME": "https://drive.google.com/file/d/1gyWaJKhhcZNmSF9WlWfqRXfnTeA87hvY/preview"
         },
+
         "2024-2025": {
             "CE": "https://drive.google.com/file/d/1Qd3X732fBWyEax1GTudkBWn7fpe57CgA/preview",
             "CSE": "https://drive.google.com/file/d/1Zp-UAEgj72UstczPS_wSIBtlPU48USal/preview",
@@ -18,27 +20,28 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1yYB-UOYnpkOCYspJeZv83o7Rjy3wfcB8/preview",
             "AI": "https://drive.google.com/file/d/10jbUuttq5qN0Tv7LTkk4dWCrZGgbUZ10/preview"
         },
+
         "2026-2030": {
             "CE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
             "CSE": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "IOT": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "CS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "AI": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
-            "DS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
-            "ML": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "AIDS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "AIML": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "NET": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
-            "Tech": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "IOTCS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "IT": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "EE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "EEE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "ECE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "ACT": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "VLSI": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
-            "IE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
+            "EIE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "ME": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview"
-            
         }
     },
+
     "2nd": {
         "2018-2023": {
             "CE": "https://drive.google.com/file/d/1jW97lTtufHT26vkRP6KISUiKWSYe6F3o/preview",
@@ -47,6 +50,7 @@ const syllabus = {
             "ECE": "https://drive.google.com/file/d/1eJQJy3I853QoqfNzOT5XFUgncJKxbnv6/preview",
             "ME": "https://drive.google.com/file/d/1xwhvlJIQJRCqKLCPTKeOOdjzkUgr8S5U/preview"
         },
+
         "2024-2025": {
             "CE": "https://drive.google.com/file/d/13q_AFXP9e2AWyHHtHWp_Fm4bRgtME3qv/preview",
             "CSE": "https://drive.google.com/file/d/15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh/preview",
@@ -57,6 +61,7 @@ const syllabus = {
             "AI": "https://drive.google.com/file/d/10jbUuttq5qN0Tv7LTkk4dWCrZGgbUZ10/preview"
         }
     },
+
     "3rd": {
         "2018-2023": {
             "CE": "https://drive.google.com/file/d/1IS4EV9JvOfoLW3cYRW7U-qBkXyRAvFlD/preview",
@@ -65,6 +70,7 @@ const syllabus = {
             "ECE": "https://drive.google.com/file/d/1auOpeh5UX4E23rnxIQo1K9TdFrqSXrm0/preview",
             "ME": "https://drive.google.com/file/d/1XE_l1tfHGZHMDIxU6KNlcjlqiKxKN-ZW/preview"
         },
+
         "2024-2025": {
             "CE": "https://drive.google.com/file/d/1GzMwwCkUrHPmc5fgyWOxOSsPof9dQZO8/preview",
             "CSE": "https://drive.google.com/file/d/18tjQnI2qGtbSzRWEp08KqKY4gDvE25em/preview",
@@ -75,6 +81,7 @@ const syllabus = {
             "AI": "https://drive.google.com/file/d/1psBOKvD7xHSEOkzAjiFmJ8giSeJu6hxM/preview"
         }
     },
+
     "4th": {
         "2018-2023": {
             "CE": "https://drive.google.com/file/d/17w5zTFNaWUOg7S_vUrqW_AxtMyf7bPdU/preview",
@@ -83,6 +90,7 @@ const syllabus = {
             "ECE": "https://drive.google.com/file/d/1nkfp0xRno6_ybJSWqZ6_ryiwI4aNsjXh/preview",
             "ME": "https://drive.google.com/file/d/1jVvYbUmth-RIbhLBXbDf3ooB8zgz8fSc/preview"
         },
+
         "2024-2025": {
             "CE": "",
             "CSE": "",
@@ -91,6 +99,7 @@ const syllabus = {
             "ME": ""
         }
     },
+
     "5th": {
         "2018-2023": {
             "CE": "https://drive.google.com/file/d/1tGXDItZ5g-AsnsXN0KmMifbA36vgxA0C/preview",
@@ -99,6 +108,7 @@ const syllabus = {
             "ECE": "https://drive.google.com/file/d/1dJV_E7tPdhmmA7IutIDeaDMz3rxYb9XR/preview",
             "ME": "https://drive.google.com/file/d/1FW1-YDLvthfdG52szzsLzTIU9DOI03bc/preview"
         },
+
         "2024-2025": {
             "CE": "https://drive.google.com/file/d/1tGXDItZ5g-AsnsXN0KmMifbA36vgxA0C/preview",
             "CSE": "https://drive.google.com/file/d/1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3/preview",
@@ -107,6 +117,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1FW1-YDLvthfdG52szzsLzTIU9DOI03bc/preview"
         }
     },
+
     "6th": {
         "2018-2023": {
             "CE": "https://drive.google.com/file/d/1MxzSoTSdMgCvgCPiDFsDjVuu4QaJCQge/preview",
@@ -115,6 +126,7 @@ const syllabus = {
             "ECE": "https://drive.google.com/file/d/1reUmWqura-4UnEx7tpjv6wANADxvW_lc/preview",
             "ME": "https://drive.google.com/file/d/19UDBkvdYqgMqRzV_Fgre8vq8utOapy2q/preview"
         },
+
         "2024-2025": {
             "CE": "https://drive.google.com/file/d/1MxzSoTSdMgCvgCPiDFsDjVuu4QaJCQge/preview",
             "CSE": "https://drive.google.com/file/d/1ckXxGY5kdHmxlAIGsq-NfDskA4Mj_xQj/preview",
@@ -123,6 +135,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/19UDBkvdYqgMqRzV_Fgre8vq8utOapy2q/preview"
         }
     },
+
     "7th": {
         "2018-2023": {
             "CE": "https://drive.google.com/file/d/1Qy64E3CCdfhQvD8PaihwPDFVz2FwDqGr/preview",
@@ -131,6 +144,7 @@ const syllabus = {
             "ECE": "https://drive.google.com/file/d/1aDSSzOz8kWsmO0oJV7Z5CZ2lnCXReEqq/preview",
             "ME": "https://drive.google.com/file/d/1kMv43ZFJMctH_iRYbI230GCNN4UkZYud/preview"
         },
+
         "2024-2025": {
             "CE": "https://drive.google.com/file/d/1Qy64E3CCdfhQvD8PaihwPDFVz2FwDqGr/preview",
             "CSE": "https://drive.google.com/file/d/1uW4HVIaLErhWIyj36Lday4JMH1ZfuLEp/preview",
@@ -139,12 +153,14 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1kMv43ZFJMctH_iRYbI230GCNN4UkZYud/preview"
         }
     },
+
     "8th": {
         "2018-2023": {
             "EE": "https://drive.google.com/file/d/1BwL_f3KCmWzuEulEth3G3hQw5sxLvBOy/preview",
             "ME": "https://drive.google.com/file/d/1PPkfTohITDMkIFNuw836gSOSUjCFtt3n/preview",
             "CE": "https://drive.google.com/file/d/1DV6rPVbPYfuPehfUlg6sKlaw-VkcwEuq/preview"
         },
+
         "2024-2025": {
             "EE": "https://drive.google.com/file/d/1BwL_f3KCmWzuEulEth3G3hQw5sxLvBOy/preview",
             "ME": "https://drive.google.com/file/d/1PPkfTohITDMkIFNuw836gSOSUjCFtt3n/preview",
@@ -153,8 +169,10 @@ const syllabus = {
     }
 };
 
+
 // Which sessions are selectable for each semester.
-// 2026-2030 is only available at 1st semester for now (new intake, not yet progressed further).
+// 2026-2030 is only available for 1st semester for now.
+
 const sessionsBySemester = {
     "1st": ["2018-2023", "2024-2025", "2026-2030"],
     "2nd": ["2018-2023", "2024-2025"],
@@ -166,25 +184,55 @@ const sessionsBySemester = {
     "8th": ["2018-2023", "2024-2025"]
 };
 
+
+// Branch names
+
 const branchNames = {
-    CE: "Civil Engineering",
-    CSE: "Computer Science & Engineering",
-    AI: "Computer Science & Engineering AI",
-    ML: "Computer Science & Engineering ML",
-    CS: "Computer Science & Engineering Cyber security",
-    DS: "Computer Science & Engineering Data science",
-    NET: "Computer Science & Engineering Networks",
-    Tech: "CSE IoT & Cyber Security with Block chain Technology",
-    IOT: "Computer Science & Engineering IOT",
-    EE: "Electrical Engineering",
-    EEE: "Electrical and Electronics Engineering",
-    ECE: "Electronic & Communication Engineering",
-    VLSI: "Electronics Engineering VLSI Design and Technology",
-    ACT: "Advance Communication & Technology",
-    IT: "Information Technology",
-    IE: "Instrumentation Engineering",
-    ME: "Mechanical Engineering"
+    CSE: "Computer Science Engineering (CSE)",
+    IT: "Information Technology (IT)",
+    AI: "Artificial Intelligence (AI)",
+    AIML: "Artificial Intelligence & Machine Learning (AIML)",
+    AIDS: "Artificial Intelligence & Data Science (AIDS)",
+
+    CS: "Computer Science Engineering (Cyber Security)",
+    IOT: "Internet of Things (IoT)",
+    IOTCS: "IoT & Cyber Security including Block Chain Technology",
+    NET: "Computer Science Engineering (Networks)",
+
+    "3DAG": "3-D Animation & Graphics",
+    MC: "Mathematics & Computing",
+
+    CE: "Civil Engineering (CE)",
+    CECA: "Civil Engineering with Computer Applications",
+
+    ME: "Mechanical Engineering (ME)",
+    MSME: "Mechanical & Smart Manufacturing Engineering",
+    RA: "Robotics & Automation",
+
+    EE: "Electrical Engineering (EE)",
+    EEE: "Electrical & Electronics Engineering (EEE)",
+
+    ECE: "Electronics & Communication Engineering (ECE)",
+    ACT: "Electronics & Communication Engineering (Advance Communication Technology)",
+    VLSI: "Electronics Engineering (VLSI Design & Technology)",
+    EIE: "Electronics & Instrumentation Engineering",
+
+    PE: "Petrochemical Engineering",
+    CHLT: "Chemical Engineering (Leather Technology)",
+    CHPP: "Chemical Engineering (Plastic & Polymer)",
+    CHE: "Chemical Engineering",
+    WM: "Waste Management",
+    AE: "Aeronautical Engineering",
+    BRE: "Biomedical & Robotics Engineering",
+    MTE: "Mechatronics Engineering",
+    MIN: "Mining Engineering",
+    FTS: "Fire Technology & Safety",
+    FPP: "Food Processing & Preservation",
+    FTM: "Food Technology & Management"
 };
+
+
+// Semester names
 
 const semesterNames = {
     "1st": "1st Semester",
