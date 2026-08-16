@@ -131,6 +131,10 @@ BEU-Syllabus-App
       <b>🎓 Semester</b><br><br>
       <img src="./assets/screenshots/semester.png" alt="Semester" width="280">
     </td>
+     <td align="center">
+      <b>Session</b><br><br>
+      <img src="./assets/screenshots/session.png" alt="Session" width="280">
+    </td>
     <td align="center">
       <b>📄 PDF Viewer</b><br><br>
       <img src="./assets/screenshots/pdf-viewer.png" alt="PDF Viewer" width="280">
