@@ -136,9 +136,6 @@ BEU-Syllabus-App
       <b>📄 PDF Viewer</b><br><br>
       <img src="./assets/screenshots/pdf-viewer.png" alt="PDF Viewer" width="280">
     </td>
-  </tr>
-
-  <tr>
     <td colspan="2" align="center">
       <b>👨‍💻 Developer Info</b><br><br>
       <img src="./assets/screenshots/developer-info.png" alt="Developer Info" width="320">
