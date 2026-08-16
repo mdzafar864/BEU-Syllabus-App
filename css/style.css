@@ -518,7 +518,7 @@ a:active { color: var(--danger); }
     width: 100%;
     text-align: center;
     padding: 10px 10px;
-    font-size: 8.5px;
+    font-size: 8px;
     color: var(--muted);
     margin-top: 10px;
     opacity: 1;
