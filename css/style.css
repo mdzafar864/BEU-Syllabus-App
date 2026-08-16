@@ -521,5 +521,5 @@ a:active { color: var(--danger); }
     font-size: 8.5px;
     color: var(--muted);
     margin-top: 10px;
-    opacity: 0;
+    opacity: 1;
 }
