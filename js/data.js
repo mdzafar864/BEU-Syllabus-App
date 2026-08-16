@@ -22,23 +22,43 @@ const syllabus = {
         },
 
         "2026-2030": {
-            "CE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
             "CSE": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
-            "IOT": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
-            "CS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "AI": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
-            "AIDS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "CS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "DS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "AIML": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
-            "NET": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "IOT": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "IOTCS": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "NET": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
             "IT": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "3DAG": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            "MC": "https://drive.google.com/file/d/1v18YYmZ5bTUaYQgzIb_tEwlzVQjKLL11/preview",
+            
             "EE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "EEE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "ECE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "ACT": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "VLSI": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
             "EIE": "https://drive.google.com/file/d/1LBQiy0HuJj6ZEEtx82uZXz5tUKRAe2Pp/preview",
-            "ME": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview"
+
+            "ME": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "MSME": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "RA": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "CE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "CECA": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "PE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "CHLT": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "CHPP": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "WM": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "AE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "BRE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "MTE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "MIN": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "CHE": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "FTS": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "FPP": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview",
+            "FTM": "https://drive.google.com/file/d/1_i3PFbBhv4meQ_fjhIVbrr_RGxJpIUtX/preview"
+            
         }
     },
 
@@ -189,43 +209,38 @@ const sessionsBySemester = {
 
 const branchNames = {
     CSE: "Computer Science Engineering (CSE)",
-    IT: "Information Technology (IT)",
-    AI: "Artificial Intelligence (AI)",
-    AIML: "Artificial Intelligence & Machine Learning (AIML)",
-    AIDS: "Artificial Intelligence & Data Science (AIDS)",
-
+    AI: "Computer Science Engineering (AI)",
     CS: "Computer Science Engineering (Cyber Security)",
-    IOT: "Internet of Things (IoT)",
+    DS: "Computer Science Engineering (Data Scince)",
+    AIML: "Computer Science Engineering (AI & ML)",
+    IOT: "Computer Science Engineering (IoT)",
     IOTCS: "IoT & Cyber Security including Block Chain Technology",
     NET: "Computer Science Engineering (Networks)",
-
+    IT: "Information Technology (IT)",
     "3DAG": "3-D Animation & Graphics",
     MC: "Mathematics & Computing",
 
-    CE: "Civil Engineering (CE)",
-    CECA: "Civil Engineering with Computer Applications",
-
-    ME: "Mechanical Engineering (ME)",
-    MSME: "Mechanical & Smart Manufacturing Engineering",
-    RA: "Robotics & Automation",
-
     EE: "Electrical Engineering (EE)",
     EEE: "Electrical & Electronics Engineering (EEE)",
-
     ECE: "Electronics & Communication Engineering (ECE)",
     ACT: "Electronics & Communication Engineering (Advance Communication Technology)",
     VLSI: "Electronics Engineering (VLSI Design & Technology)",
     EIE: "Electronics & Instrumentation Engineering",
 
+    ME: "Mechanical Engineering (ME)",
+    MSME: "Mechanical & Smart Manufacturing Engineering",
+    RA: "Robotics & Automation",
+    CE: "Civil Engineering (CE)",
+    CECA: "Civil Engineering with Computer Applications",
     PE: "Petrochemical Engineering",
     CHLT: "Chemical Engineering (Leather Technology)",
     CHPP: "Chemical Engineering (Plastic & Polymer)",
-    CHE: "Chemical Engineering",
     WM: "Waste Management",
     AE: "Aeronautical Engineering",
     BRE: "Biomedical & Robotics Engineering",
     MTE: "Mechatronics Engineering",
     MIN: "Mining Engineering",
+    CHE: "Chemical Engineering",
     FTS: "Fire Technology & Safety",
     FPP: "Food Processing & Preservation",
     FTM: "Food Technology & Management"
