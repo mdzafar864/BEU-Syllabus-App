@@ -2,7 +2,7 @@
 //  UNIVERSAL PWA SW (GitHub + Netlify)
 // =============================
 
-const CACHE_NAME = "beu-pwa-v38";
+const CACHE_NAME = "beu-pwa-v39";
 
 // 🔥 AUTO detect base path
 const BASE = self.location.hostname.includes("github.io")
