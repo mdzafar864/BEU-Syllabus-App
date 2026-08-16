@@ -124,9 +124,6 @@ BEU-Syllabus-App
       <b>📂 Branch</b><br><br>
       <img src="./assets/screenshots/branch.png" alt="Branch" width="280">
     </td>
-  </tr>
-
-  <tr>
     <td align="center">
       <b>🎓 Semester</b><br><br>
       <img src="./assets/screenshots/semester.png" alt="Semester" width="280">
