@@ -11,7 +11,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1gyWaJKhhcZNmSF9WlWfqRXfnTeA87hvY/preview"
         },
 
-        "2024-2025": {
+        "2024-2028": {
             "CE": "https://drive.google.com/file/d/1Qd3X732fBWyEax1GTudkBWn7fpe57CgA/preview",
             "CSE": "https://drive.google.com/file/d/1Zp-UAEgj72UstczPS_wSIBtlPU48USal/preview",
             "IOT": "https://drive.google.com/file/d/1TldGBNBWl1hfn7faKNgBK12BjDjXV7hE/preview",
@@ -71,7 +71,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1xwhvlJIQJRCqKLCPTKeOOdjzkUgr8S5U/preview"
         },
 
-        "2024-2025": {
+        "2024-2028": {
             "CE": "https://drive.google.com/file/d/13q_AFXP9e2AWyHHtHWp_Fm4bRgtME3qv/preview",
             "CSE": "https://drive.google.com/file/d/15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh/preview",
             "IOT": "https://drive.google.com/file/d/1iRpJ1SB_KyGgn84MqLZMutHnCHNTsYWk/preview",
@@ -91,7 +91,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1XE_l1tfHGZHMDIxU6KNlcjlqiKxKN-ZW/preview"
         },
 
-        "2024-2025": {
+        "2024-2028": {
             "CE": "https://drive.google.com/file/d/1GzMwwCkUrHPmc5fgyWOxOSsPof9dQZO8/preview",
             "CSE": "https://drive.google.com/file/d/18tjQnI2qGtbSzRWEp08KqKY4gDvE25em/preview",
             "IOT": "https://drive.google.com/file/d/1DyoqlnntdtG-RA0ET1wH4FrR-DOB3mtF/preview",
@@ -111,7 +111,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1jVvYbUmth-RIbhLBXbDf3ooB8zgz8fSc/preview"
         },
 
-        "2024-2025": {
+        "2024-2028": {
             "CE": "",
             "CSE": "",
             "EE": "https://drive.google.com/file/d/1BCJ8zrbXmVMS69iAWu7wncgcpxWsqZHy/preview",
@@ -129,7 +129,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1FW1-YDLvthfdG52szzsLzTIU9DOI03bc/preview"
         },
 
-        "2024-2025": {
+        "2024-2028": {
             "CE": "https://drive.google.com/file/d/1tGXDItZ5g-AsnsXN0KmMifbA36vgxA0C/preview",
             "CSE": "https://drive.google.com/file/d/1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3/preview",
             "EE": "https://drive.google.com/file/d/1MA_tDBF7Fuvg8OGgn8bzg4mHSUTmQ-dC/preview",
@@ -147,7 +147,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/19UDBkvdYqgMqRzV_Fgre8vq8utOapy2q/preview"
         },
 
-        "2024-2025": {
+        "2024-2028": {
             "CE": "https://drive.google.com/file/d/1MxzSoTSdMgCvgCPiDFsDjVuu4QaJCQge/preview",
             "CSE": "https://drive.google.com/file/d/1ckXxGY5kdHmxlAIGsq-NfDskA4Mj_xQj/preview",
             "EE": "https://drive.google.com/file/d/1obhgEQmyRzDg1XPG7Gc6u5SyMugXN9bn/preview",
@@ -165,7 +165,7 @@ const syllabus = {
             "ME": "https://drive.google.com/file/d/1kMv43ZFJMctH_iRYbI230GCNN4UkZYud/preview"
         },
 
-        "2024-2025": {
+        "2024-2028": {
             "CE": "https://drive.google.com/file/d/1Qy64E3CCdfhQvD8PaihwPDFVz2FwDqGr/preview",
             "CSE": "https://drive.google.com/file/d/1uW4HVIaLErhWIyj36Lday4JMH1ZfuLEp/preview",
             "EE": "https://drive.google.com/file/d/1ey1jhsveL-eO0gc0FgwlNs7U05qRQHp5/preview",
@@ -181,7 +181,7 @@ const syllabus = {
             "CE": "https://drive.google.com/file/d/1DV6rPVbPYfuPehfUlg6sKlaw-VkcwEuq/preview"
         },
 
-        "2024-2025": {
+        "2024-2028": {
             "EE": "https://drive.google.com/file/d/1BwL_f3KCmWzuEulEth3G3hQw5sxLvBOy/preview",
             "ME": "https://drive.google.com/file/d/1PPkfTohITDMkIFNuw836gSOSUjCFtt3n/preview",
             "CE": "https://drive.google.com/file/d/1DV6rPVbPYfuPehfUlg6sKlaw-VkcwEuq/preview"
@@ -194,14 +194,14 @@ const syllabus = {
 // 2026-2030 is only available for 1st semester for now.
 
 const sessionsBySemester = {
-    "1st": ["2018-2023", "2024-2025", "2026-2030"],
-    "2nd": ["2018-2023", "2024-2025"],
-    "3rd": ["2018-2023", "2024-2025"],
-    "4th": ["2018-2023", "2024-2025"],
-    "5th": ["2018-2023", "2024-2025"],
-    "6th": ["2018-2023", "2024-2025"],
-    "7th": ["2018-2023", "2024-2025"],
-    "8th": ["2018-2023", "2024-2025"]
+    "1st": ["2018-2023", "2024-2028", "2026-2030"],
+    "2nd": ["2018-2023", "2024-2028"],
+    "3rd": ["2018-2023", "2024-2028"],
+    "4th": ["2018-2023", "2024-2028"],
+    "5th": ["2018-2023", "2024-2028"],
+    "6th": ["2018-2023", "2024-2028"],
+    "7th": ["2018-2023", "2024-2028"],
+    "8th": ["2018-2023", "2024-2028"]
 };
 
 
