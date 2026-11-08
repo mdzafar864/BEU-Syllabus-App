@@ -39,7 +39,7 @@ body {
     font-family: var(--font);
     color: var(--ink);
     background: radial-gradient(circle at top, #eef3fb 0%, var(--bg) 55%, #eef1f7 100%);
-    min-height: 100dvh;
+    min-height: auto;
     padding: 15px;
     width: 100%;
     max-width: 900px;
