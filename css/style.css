@@ -260,35 +260,52 @@ button:focus-visible { outline: 3px solid var(--gold-500); outline-offset: 2px; 
   position: relative;
 }
 
+/* NOTE: this button used `font-size: 0` to hide its text, but every `em`
+   value on the element itself (top, right, width, height) is relative to
+   the element's OWN font-size, so they all resolved to 0 and the global
+   `button` padding then turned it into a small oval jammed in the corner.
+   Fix: size/position with the modal's font-size variable instead, and
+   reset the inherited global button padding/width. */
 .dev-close {
+  --dc-unit: var(--modal-fs);
   position: absolute;
-  top: 1.067em;
-  right: 1.067em;
-  width: 2.533em;
-  height: 2.533em;
+  top: calc(var(--dc-unit) * 1.067);
+  right: calc(var(--dc-unit) * 1.067);
+  z-index: 2;
+  width: calc(var(--dc-unit) * 2.533);
+  height: calc(var(--dc-unit) * 2.533);
+  min-width: 0;
+  padding: 0;
+  margin: 0;
+  flex: none;
   border-radius: 50%;
   border: none;
   background: rgba(255, 255, 255, 0.20);
   color: #fff;
   font-size: 0;
+  line-height: 0;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 0;
   box-shadow: none;
+  -webkit-tap-highlight-color: transparent;
 }
+
+.dev-close:hover { background: rgba(255, 255, 255, 0.32); transform: none; }
+.dev-close:active { background: rgba(255, 255, 255, 0.40); }
+.dev-close:focus-visible { outline: 3px solid var(--gold-500); outline-offset: 2px; }
 
 .dev-close::before,
 .dev-close::after {
   content: "";
   position: absolute;
-  width: 1.2em;
-  height: 0.2em;
-  background: white;
+  width: calc(var(--dc-unit) * 1.2);
+  height: calc(var(--dc-unit) * 0.2);
+  background: #fff;
   left: 50%;
   top: 50%;
-  border-radius: 0.267em;
+  border-radius: calc(var(--dc-unit) * 0.267);
 }
 
 .dev-close::before { transform: translate(-50%, -50%) rotate(45deg); }
