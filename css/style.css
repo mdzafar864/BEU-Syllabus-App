@@ -523,3 +523,78 @@ a:active { color: var(--danger); }
     margin-top: 6px;
     opacity: 1;
 }
+
+/* ==========================================================
+   FLOATING WHATSAPP BUTTON
+   ========================================================== */
+.wa-float,
+.wa-float:link,
+.wa-float:visited,
+.wa-float:hover,
+.wa-float:active {
+    color: #fff;
+    text-decoration: none;
+}
+
+.wa-float {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    z-index: 9000;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px 12px 16px;
+    background: linear-gradient(135deg, #25d366, #128c7e);
+    border-radius: 999px;
+    font-size: 15px;
+    font-weight: 700;
+    letter-spacing: 0.01em;
+    box-shadow: 0 10px 24px rgba(18, 140, 126, 0.4);
+    transition: transform .15s ease, box-shadow .2s ease;
+    animation: waPulse 2.4s ease-out infinite;
+}
+
+.wa-float:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 30px rgba(18, 140, 126, 0.5);
+}
+
+.wa-float:active {
+    transform: translateY(0);
+}
+
+.wa-float:focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(37, 211, 102, 0.4), 0 10px 24px rgba(18, 140, 126, 0.4);
+}
+
+.wa-icon {
+    width: 28px;
+    height: 28px;
+    flex-shrink: 0;
+}
+
+@keyframes waPulse {
+    0%   { box-shadow: 0 10px 24px rgba(18, 140, 126, 0.4), 0 0 0 0 rgba(37, 211, 102, 0.5); }
+    70%  { box-shadow: 0 10px 24px rgba(18, 140, 126, 0.4), 0 0 0 16px rgba(37, 211, 102, 0); }
+    100% { box-shadow: 0 10px 24px rgba(18, 140, 126, 0.4), 0 0 0 0 rgba(37, 211, 102, 0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .wa-float { animation: none; }
+}
+
+@media (max-width: 480px) {
+    .wa-float {
+        right: 14px;
+        bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+        padding: 11px 16px 11px 13px;
+        font-size: 14px;
+    }
+    .wa-icon { width: 26px; height: 26px; }
+}
+
+/* footer button ke neeche na chhupe */
+body { padding-bottom: 90px; }
