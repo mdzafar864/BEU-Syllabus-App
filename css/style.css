@@ -1,21 +1,3 @@
-/* =========================================================
-   BEU Syllabus — stylesheet
-   Layout pattern: single centered card, stacked controls,
-   pill buttons/tags, modal overlays.
-   Palette: navy + gold, drawn from the BEU logo.
-
-   RESPONSIVE MODEL (mobile -> tablet -> laptop -> TV)
-   - <html> font-size is the single scale knob. It is derived
-     from the *visible* viewport height (dvh) so the whole card
-     always fits without page scrolling, and is capped by width
-     so tablets/laptops do not blow up. All main-screen sizes
-     are rem-based and follow it.
-   - body is exactly one viewport tall (100dvh), flex column,
-     overflow hidden. Its padding-bottom reserves room for the
-     fixed WhatsApp button so nothing ever hides behind it.
-   - Short landscape screens switch the card to two columns.
-   ========================================================= */
-
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 :root {
