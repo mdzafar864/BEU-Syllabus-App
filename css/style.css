@@ -539,16 +539,16 @@ a:active { color: var(--danger); }
 .wa-float {
     position: fixed;
     right: 18px;
-    bottom: 18px;
+    bottom: 40px;
     bottom: calc(18px + env(safe-area-inset-bottom, 0px));
     z-index: 9000; /* below modals (9999) */
     display: inline-flex;
     align-items: center;
-    gap: 8px;
+    gap: 4px;
     padding: 10px 14px 14px 14px;
     background: linear-gradient(135deg, #25d366, #128c7e);
     border-radius: 999px;
-    font-size: 14px;
+    font-size: 10px;
     font-weight: 700;
     letter-spacing: 0.01em;
     box-shadow: 0 10px 24px rgba(18, 140, 126, 0.4);
