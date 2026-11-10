@@ -52,11 +52,18 @@ body {
 .box {
     width: 100%;
     background: var(--surface);
-    padding: 28px;
+    padding: 28px 24px 32px;
     border-radius: var(--radius-lg);
-    margin-top: 25px;
+    margin-top: 30px;
+    margin-bottom: 20px;
     box-shadow: var(--shadow-card);
     border: 1px solid rgba(15, 23, 42, 0.04);
+
+    /* screen ke andar fit + upar se crop na ho */
+    max-height: 90vh;
+    max-height: 90dvh;
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
 }
 
 /* LOGO */
@@ -539,8 +546,7 @@ a:active { color: var(--danger); }
 .wa-float {
     position: fixed;
     right: 18px;
-    bottom: 40px;
-    bottom: calc(18px + env(safe-area-inset-bottom, 0px));
+    bottom: calc(24px + env(safe-area-inset-bottom, 0px));
     z-index: 9000; /* below modals (9999) */
     display: inline-flex;
     align-items: center;
@@ -589,7 +595,7 @@ a:active { color: var(--danger); }
 @media (max-width: 480px) {
     .wa-float {
         right: 14px;
-        bottom: calc(40px + env(safe-area-inset-bottom, 0px));
+        bottom: calc(20px + env(safe-area-inset-bottom, 0px));
         padding: 11px 16px 11px 13px;
         font-size: 14px;
     }
