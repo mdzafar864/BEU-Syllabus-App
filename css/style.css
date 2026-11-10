@@ -541,7 +541,7 @@ a:active { color: var(--danger); }
     right: 18px;
     bottom: 18px;
     bottom: calc(18px + env(safe-area-inset-bottom, 0px));
-    z-index: 9000;
+    z-index: 9000; /* below modals (9999) */
     display: inline-flex;
     align-items: center;
     gap: 10px;
@@ -596,5 +596,5 @@ a:active { color: var(--danger); }
     .wa-icon { width: 26px; height: 26px; }
 }
 
-/* footer button ke neeche na chhupe */
+/* keep footer text clear of the floating button */
 body { padding-bottom: 90px; }
