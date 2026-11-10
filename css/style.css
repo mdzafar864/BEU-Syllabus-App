@@ -589,7 +589,7 @@ a:active { color: var(--danger); }
 @media (max-width: 480px) {
     .wa-float {
         right: 14px;
-        bottom: calc(14px + env(safe-area-inset-bottom, 0px));
+        bottom: calc(40px + env(safe-area-inset-bottom, 0px));
         padding: 11px 16px 11px 13px;
         font-size: 14px;
     }
