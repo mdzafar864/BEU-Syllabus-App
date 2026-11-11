@@ -29,6 +29,13 @@ jobs:
           # On PRs, check out the branch itself (not the detached merge commit) so it can be pushed
           ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
+      - name: Prettier format
+        uses: creyD/prettier_action@v4.3
+        with:
+          # Only format here; the final commit step below pushes all changes
+          dry: true
+          prettier_options: "--write **/*.{js,css,html}"
+
       - name: Super-Linter
         uses: super-linter/super-linter@v9.0.0
         env:
