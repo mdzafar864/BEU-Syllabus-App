@@ -24,6 +24,8 @@ jobs:
         with:
           # Full history is required so Super-Linter can detect changed files
           fetch-depth: 0
+          # PAT used for the push made by the commit step below
+          token: ${{ secrets.ACTIONS_TOKEN }}
           # Required so the commit step below can push
           persist-credentials: true
           # On PRs, check out the branch itself (not the detached merge commit) so it can be pushed
@@ -55,7 +57,7 @@ jobs:
           FIX_JAVASCRIPT_PRETTIER: true
 
           DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
 
       - name: Commit and push fixes
         uses: stefanzweifel/git-auto-commit-action@v5
