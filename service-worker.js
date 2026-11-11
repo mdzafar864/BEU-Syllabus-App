@@ -1,4 +1,4 @@
-const CACHE_NAME = "beu-pwa-v1.0.11";
+const CACHE_NAME = "beu-pwa-v1.0.12";
 
 // 🔥 AUTO detect base path
 const BASE = self.location.hostname.includes("github.io")
