@@ -36,6 +36,17 @@ jobs:
           VALIDATE_ALL_CODEBASE: false
           # Let linters fix formatting issues in the workspace
           APPLY_FIXES: all
+
+          # Per-language auto-fix switches (HTML, CSS, JavaScript)
+          # HTML: Prettier formatting
+          FIX_HTML_PRETTIER: true
+          # CSS: Stylelint rule fixes + Prettier formatting
+          FIX_CSS: true
+          FIX_CSS_PRETTIER: true
+          # JavaScript: ESLint fixes (syntax/style rules) + Prettier formatting
+          FIX_JAVASCRIPT_ES: true
+          FIX_JAVASCRIPT_PRETTIER: true
+
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
