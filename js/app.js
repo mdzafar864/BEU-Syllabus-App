@@ -192,7 +192,22 @@ function populateSessionOptions(semValue) {
     });
 }
 
-branch.onchange = resetMsg;
+// SEMESTER depends on branch: disabled until a branch is selected.
+function updateSemesterState() {
+    if (branch.value) {
+        sem.disabled = false;
+    } else {
+        // Branch cleared: reset semester and lock everything downstream
+        sem.value = "";
+        sem.disabled = true;
+        populateSessionOptions("");
+    }
+}
+
+branch.onchange = () => {
+    updateSemesterState();
+    resetMsg();
+};
 
 sem.onchange = () => {
     populateSessionOptions(sem.value);
@@ -200,6 +215,11 @@ sem.onchange = () => {
 };
 
 session.onchange = resetMsg;
+
+// Initial state (also covers browser-restored form values):
+// semester follows branch, session follows semester.
+sem.disabled = !branch.value;
+populateSessionOptions(sem.value);
 
 // OPEN PDF
 const openBtn = document.getElementById("openBtn");
