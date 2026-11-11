@@ -236,9 +236,14 @@ button:focus-visible { outline: 3px solid var(--gold-500); outline-offset: 2px; 
 }
 
 .close-btn {
-  background: #eef2f7; color: var(--navy-900); padding: 0.533em 1.2em;
+  background: var(--navy-900); color: #fff; padding: 0.533em 1.2em;
   border: none; border-radius: 2.667em; font-weight: 600; cursor: pointer;
   font-size: 0.867em; margin-top: 0; width: auto;
+}
+
+.close-btn:hover,
+.close-btn:active {
+  background: var(--gold-600); color: #000000; transform: none;
 }
 
 #openYoutubeBtn { background: var(--navy-700); color: white; }
