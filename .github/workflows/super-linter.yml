@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     permissions:
-      contents: read
+      contents: write
       packages: read
       # Needed only if you want Super-Linter to post status checks
       statuses: write
@@ -24,12 +24,24 @@ jobs:
         with:
           # Full history is required so Super-Linter can detect changed files
           fetch-depth: 0
-          persist-credentials: false
+          # Required so the commit step below can push
+          persist-credentials: true
+          # On PRs, check out the branch itself (not the detached merge commit) so it can be pushed
+          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
       - name: Super-Linter
         uses: super-linter/super-linter@v9.0.0
         env:
           # Lint only the files changed in the push/PR
           VALIDATE_ALL_CODEBASE: false
+          # Let linters fix formatting issues in the workspace
+          APPLY_FIXES: all
           DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Commit and push fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: apply Super-Linter fixes"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
