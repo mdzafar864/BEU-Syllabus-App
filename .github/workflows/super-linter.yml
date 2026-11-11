@@ -1,0 +1,35 @@
+---
+name: Super-Linter
+
+on:
+  push:
+  pull_request:
+
+permissions: {}
+
+jobs:
+  super-linter:
+    name: Lint
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: read
+      packages: read
+      # Needed only if you want Super-Linter to post status checks
+      statuses: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Full history is required so Super-Linter can detect changed files
+          fetch-depth: 0
+          persist-credentials: false
+
+      - name: Super-Linter
+        uses: super-linter/super-linter@v9.0.0
+        env:
+          # Lint only the files changed in the push/PR
+          VALIDATE_ALL_CODEBASE: false
+          DEFAULT_BRANCH: main
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
