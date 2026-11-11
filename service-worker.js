@@ -1,4 +1,4 @@
-const CACHE_NAME = "beu-pwa-v1.0.15";
+const CACHE_NAME = "beu-pwa-v1.0.16";
 
 // Base path = wherever this service worker is actually served from
 // (works on github.io/<repo>, a custom domain, localhost, any sub-folder).
