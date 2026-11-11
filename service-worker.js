@@ -21,7 +21,7 @@ const ASSETS = [
   `${BASE}/manifest.json`,
   `${BASE}/css/style.css`,
   `${BASE}/js/app.js`,
-  SYLLABUS_URL,
+  `${BASE}/js/data.js`,
   `${BASE}/assets/icon-192.png`,
   `${BASE}/assets/icon-512.png`,
   `${BASE}/assets/icon-maskable-192.png`,
