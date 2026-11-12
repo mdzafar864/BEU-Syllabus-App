@@ -35,6 +35,7 @@ jobs:
         uses: super-linter/super-linter@v9.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SAVE_SUPER_LINTER_SUMMARY: true
           DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: false
           LINTER_RULES_PATH: .github/linters
@@ -47,7 +48,6 @@ jobs:
           VALIDATE_YAML: true
           VALIDATE_XML: true
           VALIDATE_EDITORCONFIG: true
-          VALIDATE_NATURAL_LANGUAGE: false
 
   auto-fix-main:
     name: Auto-fix and commit on main
@@ -68,6 +68,7 @@ jobs:
         uses: super-linter/super-linter@v9.0.0
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          SAVE_SUPER_LINTER_SUMMARY: true
           DEFAULT_BRANCH: main
           VALIDATE_ALL_CODEBASE: false
           LINTER_RULES_PATH: .github/linters
@@ -90,7 +91,6 @@ jobs:
           VALIDATE_YAML: true
           VALIDATE_XML: true
           VALIDATE_EDITORCONFIG: true
-          VALIDATE_NATURAL_LANGUAGE: false
 
       - name: Commit and push auto-fixes
         uses: stefanzweifel/git-auto-commit-action@v5
