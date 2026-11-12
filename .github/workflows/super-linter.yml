@@ -1,66 +1,36 @@
-name: Super-Linter
+name: Lint HTML, CSS, JS, and YAML
 
 on:
   push:
+    branches: [main]
   pull_request:
 
-permissions: {}
+permissions:
+  contents: read
+  statuses: write
 
 jobs:
-  super-linter:
-    name: Lint
+  build:
+    name: Lint Codebase
     runs-on: ubuntu-latest
 
-    permissions:
-      contents: write
-      packages: read
-      statuses: write
-      pull-requests: write
-
     steps:
-      - name: Checkout code
+      - name: Checkout Code
         uses: actions/checkout@v4
         with:
-          # Full history is required so Super-Linter can detect changed files
+          # Full git history is required for Super-Linter to detect changed files
           fetch-depth: 0
-          # PAT used for the push made by the commit step below
-          token: ${{ secrets.ACTIONS_TOKEN }}
-          # Required so the commit step below can push
-          persist-credentials: true
-          # On PRs, check out the branch itself (not the detached merge commit) so it can be pushed
-          ref: ${{ github.event.pull_request.head.ref || github.ref_name }}
 
-      - name: Prettier format
-        uses: creyD/prettier_action@v4.3
-        with:
-          # Only format here; the final commit step below pushes all changes
-          dry: true
-          prettier_options: "--write **/*.{js,css,html}"
-
-      - name: Super-Linter
-        uses: super-linter/super-linter@v9.0.0
+      - name: Lint Code Base
+        uses: super-linter/super-linter@v7
         env:
-          # Lint only the files changed in the push/PR
-          VALIDATE_ALL_CODEBASE: false
-          # Let linters fix formatting issues in the workspace
-          APPLY_FIXES: all
-
-          # Per-language auto-fix switches (HTML, CSS, JavaScript)
-          # HTML: Prettier formatting
-          FIX_HTML_PRETTIER: true
-          # CSS: Stylelint rule fixes + Prettier formatting
-          FIX_CSS: true
-          FIX_CSS_PRETTIER: true
-          # JavaScript: ESLint fixes (syntax/style rules) + Prettier formatting
-          FIX_JAVASCRIPT_ES: true
-          FIX_JAVASCRIPT_PRETTIER: true
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: main
-          REPO_TOKEN: ${{ secrets.ACTIONS_TOKEN }} 
+          # Set to true on initial setup to scan everything, or false to scan only changed files
+          VALIDATE_ALL_CODEBASE: false
 
-      - name: Commit and push fixes
-        uses: stefanzweifel/git-auto-commit-action@v5
-        with:
-          commit_message: "chore: apply Super-Linter fixes"
-          commit_user_name: "github-actions[bot]"
-          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          # Enable only the desired languages (opt-in mode)
+          VALIDATE_HTML: true
+          VALIDATE_CSS: true
+          VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_YAML: true
