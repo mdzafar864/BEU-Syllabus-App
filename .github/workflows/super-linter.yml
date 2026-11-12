@@ -27,7 +27,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: main
           # Set to true on initial setup to scan everything, or false to scan only changed files
-          VALIDATE_ALL_CODEBASE: true
+          VALIDATE_ALL_CODEBASE: false
 
           # Enable only the desired languages (opt-in mode)
           VALIDATE_HTML: true
