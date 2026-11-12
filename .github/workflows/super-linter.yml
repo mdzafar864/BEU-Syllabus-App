@@ -1,4 +1,4 @@
-name: BEU Syllabus - Super Linter & Auto Format
+name: Super-Linter - BEU Syllabus
 
 on:
   push:
@@ -9,56 +9,36 @@ on:
       - main
   workflow_dispatch:
 
-permissions:
-  contents: write
-  pull-requests: read
+permissions: {}
 
 concurrency:
-  group: beu-syllabus-quality-${{ github.ref }}
+  group: beu-super-linter-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
+# Pull requests are checked with read-only access. No commits are pushed to PRs.
 jobs:
-  code-quality:
-    name: Format, Auto-Commit & Lint
+  lint-pull-request:
+    name: Validate pull request
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      statuses: write
 
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          ref: ${{ github.head_ref || github.ref_name }}
+          fetch-depth: 0
 
-      - name: Set up Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: 22
-
-      - name: Format HTML, CSS, JavaScript and JSON
-        run: |
-          npx --yes prettier@3.6.2 --write \
-            "index.html" \
-            "css/**/*.css" \
-            "js/**/*.js" \
-            "service-worker.js" \
-            "manifest.json"
-
-      - name: Commit formatting changes
-        if: github.event_name != 'pull_request'
-        uses: stefanzweifel/git-auto-commit-action@v6
-        with:
-          commit_message: "style: automatically format website code"
-          commit_user_name: github-actions[bot]
-          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
-          file_pattern: "index.html css/**/*.css js/**/*.js service-worker.js manifest.json"
-
-      - name: Run Super-Linter
-        uses: super-linter/super-linter@v7
+      - name: Super-Linter (check only)
+        uses: super-linter/super-linter@v9.0.0
         env:
-          DEFAULT_BRANCH: main
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          VALIDATE_ALL_CODEBASE: true
+          DEFAULT_BRANCH: main
+          VALIDATE_ALL_CODEBASE: false
           LINTER_RULES_PATH: .github/linters
-          ESLINT_CONFIG_FILE: .github/linters/eslint.config.mjs
+          JAVASCRIPT_ES_CONFIG_FILE: eslint.config.mjs
           VALIDATE_HTML: true
           VALIDATE_CSS: true
           VALIDATE_JAVASCRIPT_ES: true
@@ -66,4 +46,56 @@ jobs:
           VALIDATE_MARKDOWN: true
           VALIDATE_YAML: true
           VALIDATE_XML: true
+          VALIDATE_EDITORCONFIG: true
           VALIDATE_NATURAL_LANGUAGE: false
+
+  auto-fix-main:
+    name: Auto-fix and commit on main
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main' || github.event_name == 'workflow_dispatch' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+      statuses: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          persist-credentials: true
+
+      - name: Super-Linter (auto-fix)
+        uses: super-linter/super-linter@v9.0.0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          DEFAULT_BRANCH: main
+          VALIDATE_ALL_CODEBASE: false
+          LINTER_RULES_PATH: .github/linters
+          JAVASCRIPT_ES_CONFIG_FILE: eslint.config.mjs
+
+          # HTML formatting
+          FIX_HTML_PRETTIER: true
+
+          # CSS lint fixes and formatting
+          FIX_CSS: true
+          FIX_CSS_PRETTIER: true
+
+          # JavaScript ESLint fixes and formatting
+          FIX_JAVASCRIPT_ES: true
+          FIX_JAVASCRIPT_PRETTIER: true
+
+          # Validate supporting project files
+          VALIDATE_JSON: true
+          VALIDATE_MARKDOWN: true
+          VALIDATE_YAML: true
+          VALIDATE_XML: true
+          VALIDATE_EDITORCONFIG: true
+          VALIDATE_NATURAL_LANGUAGE: false
+
+      - name: Commit and push auto-fixes
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: apply Super-Linter auto-fixes"
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "41898282+github-actions[bot]@users.noreply.github.com"
+          file_pattern: "*.html *.css *.js *.json *.md *.yml *.yaml *.xml"
