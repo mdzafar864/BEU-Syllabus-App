@@ -84,7 +84,7 @@ jobs:
 
           # CSS lint fixes and formatting
           FIX_CSS: true
-          FIX_CSS_PRETTIER: true
+          FIX_CSS_PRETTIER: false
 
           # JavaScript ESLint fixes and formatting
           FIX_JAVASCRIPT_ES: true
