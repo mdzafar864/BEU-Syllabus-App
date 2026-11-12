@@ -57,7 +57,7 @@ jobs:
           FIX_JAVASCRIPT_PRETTIER: true
 
           DEFAULT_BRANCH: main
-          GITHUB_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
+          REPO_TOKEN: ${{ secrets.ACTIONS_TOKEN }}
 
       - name: Commit and push fixes
         uses: stefanzweifel/git-auto-commit-action@v5
