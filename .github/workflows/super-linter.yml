@@ -1,4 +1,3 @@
----
 name: Super-Linter
 
 on:
@@ -15,8 +14,8 @@ jobs:
     permissions:
       contents: write
       packages: read
-      # Needed only if you want Super-Linter to post status checks
       statuses: write
+      pull-requests: write
 
     steps:
       - name: Checkout code
