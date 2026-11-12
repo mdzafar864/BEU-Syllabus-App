@@ -20,7 +20,7 @@ const syllabus = {
       ECE: "https://drive.google.com/file/d/14cLD5aiYQp_2U3qKN16pa7U4fowBMg3J/preview",
       ME: "https://drive.google.com/file/d/1mjC8PqyEFIc1_27QQxtAb3V1i3ota7y_/preview",
       AI: "https://drive.google.com/file/d/10jbUuttq5qN0Tv7LTkk4dWCrZGgbUZ10/preview",
-      EEE: "https://drive.google.com/file/d/1ln6j3gvoi1NlDzsIcNIJqX_j3Vntt6og/preview"
+      EEE: "https://drive.google.com/file/d/1ln6j3gvoi1NlDzsIcNIJqX_j3Vntt6og/preview",
     },
 
     "2026-2030": {
@@ -82,7 +82,7 @@ const syllabus = {
       ECE: "https://drive.google.com/file/d/1THqchJygHP7BVVQjj-kf4YmMHBrjfA_x/preview",
       ME: "https://drive.google.com/file/d/1m_OdT4lGAZxSXuQUwwk_xvxHagzdrZR7/preview",
       AI: "https://drive.google.com/file/d/10jbUuttq5qN0Tv7LTkk4dWCrZGgbUZ10/preview",
-      EEE: "https://drive.google.com/file/d/1bITJj9vnRPaB3SZjvzzuT1RwWXxuQDoE/preview"
+      EEE: "https://drive.google.com/file/d/1bITJj9vnRPaB3SZjvzzuT1RwWXxuQDoE/preview",
     },
   },
 
@@ -103,7 +103,7 @@ const syllabus = {
       ECE: "https://drive.google.com/file/d/1kWy1_zhggLM9U4jrkTzGWNdLcE-4QXMr/preview",
       ME: "https://drive.google.com/file/d/1UFZLtpjIdwiyE9b6BNWfvStfHQztmr1a/preview",
       AI: "https://drive.google.com/file/d/1psBOKvD7xHSEOkzAjiFmJ8giSeJu6hxM/preview",
-      EEE: "https://drive.google.com/file/d/18IodWCERPmSl0w1JvD38IuOBy0ec18sw/preview"
+      EEE: "https://drive.google.com/file/d/18IodWCERPmSl0w1JvD38IuOBy0ec18sw/preview",
     },
   },
 
@@ -122,7 +122,7 @@ const syllabus = {
       EE: "https://drive.google.com/file/d/1BCJ8zrbXmVMS69iAWu7wncgcpxWsqZHy/preview",
       ECE: "",
       ME: "",
-      EEE: "https://drive.google.com/file/d/1yu4YGubPYEGud6TL0wPyNaHKMz12BFzo/preview"
+      EEE: "https://drive.google.com/file/d/1yu4YGubPYEGud6TL0wPyNaHKMz12BFzo/preview",
     },
   },
 
@@ -141,7 +141,7 @@ const syllabus = {
       EE: "https://drive.google.com/file/d/1MA_tDBF7Fuvg8OGgn8bzg4mHSUTmQ-dC/preview",
       ECE: "https://drive.google.com/file/d/1MHmOfqd7MgTA6qw2qCFLUkBpau_iXk90/preview",
       ME: "https://drive.google.com/file/d/1aBKZP3P9Ttni0RPa-HWK6yi1vND1_KlL/preview",
-      EEE: "https://drive.google.com/file/d/1gMpqxR1k5W9FxumGN94-yJ196XtXp3N1/preview"
+      EEE: "https://drive.google.com/file/d/1gMpqxR1k5W9FxumGN94-yJ196XtXp3N1/preview",
     },
   },
 
@@ -160,7 +160,7 @@ const syllabus = {
       EE: "https://drive.google.com/file/d/1obhgEQmyRzDg1XPG7Gc6u5SyMugXN9bn/preview",
       ECE: "https://drive.google.com/file/d/1reUmWqura-4UnEx7tpjv6wANADxvW_lc/preview",
       ME: "https://drive.google.com/file/d/1QCpGOtY_LtwM8ZAnwQLStXTYc6q53tCc/preview",
-      EEE: "https://drive.google.com/file/d/1JLMI0iZj1VmuLWGb8AeSEPH3WS-5w2cg/preview"
+      EEE: "https://drive.google.com/file/d/1JLMI0iZj1VmuLWGb8AeSEPH3WS-5w2cg/preview",
     },
   },
 
@@ -179,7 +179,7 @@ const syllabus = {
       EE: "https://drive.google.com/file/d/1ey1jhsveL-eO0gc0FgwlNs7U05qRQHp5/preview",
       ECE: "https://drive.google.com/file/d/1aDSSzOz8kWsmO0oJV7Z5CZ2lnCXReEqq/preview",
       ME: "https://drive.google.com/file/d/11YjrIW6xbq2fP4RMOIDfYjs6IWj5egYN/preview",
-      EEE: "https://drive.google.com/file/d/1DRdr-0sIwWWGZrHpjvwX-RZnNkpwHqBY/preview"
+      EEE: "https://drive.google.com/file/d/1DRdr-0sIwWWGZrHpjvwX-RZnNkpwHqBY/preview",
     },
   },
 
@@ -194,7 +194,7 @@ const syllabus = {
       EE: "https://drive.google.com/file/d/1BwL_f3KCmWzuEulEth3G3hQw5sxLvBOy/preview",
       ME: "https://drive.google.com/file/d/17kkis9xvs3GVZP9ZODKwTrwhC0c8ES56/preview",
       CE: "https://drive.google.com/file/d/1DV6rPVbPYfuPehfUlg6sKlaw-VkcwEuq/preview",
-      EEE: "https://drive.google.com/file/d/1XgV-odcAmj6gy74t4w8O-6W6O8wNor5C/preview"
+      EEE: "https://drive.google.com/file/d/1XgV-odcAmj6gy74t4w8O-6W6O8wNor5C/preview",
     },
   },
 };
