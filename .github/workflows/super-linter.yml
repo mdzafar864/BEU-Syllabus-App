@@ -74,6 +74,11 @@ jobs:
           LINTER_RULES_PATH: .github/linters
           JAVASCRIPT_ES_CONFIG_FILE: eslint.config.mjs
 
+          # Validation must be enabled for every linter that can apply fixes.
+          VALIDATE_HTML: true
+          VALIDATE_CSS: true
+          VALIDATE_JAVASCRIPT_ES: true
+
           # HTML formatting
           FIX_HTML_PRETTIER: true
 
