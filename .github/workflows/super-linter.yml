@@ -1,36 +1,69 @@
-name: Lint HTML, CSS, JS, and YAML
+name: BEU Syllabus - Super Linter & Auto Format
 
 on:
   push:
-    branches: [main]
+    branches:
+      - main
   pull_request:
+    branches:
+      - main
+  workflow_dispatch:
 
 permissions:
-  contents: read
-  statuses: write
+  contents: write
+  pull-requests: read
+
+concurrency:
+  group: beu-syllabus-quality-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  build:
-    name: Lint Codebase
+  code-quality:
+    name: Format, Auto-Commit & Lint
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout Code
+      - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          # Full git history is required for Super-Linter to detect changed files
-          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref_name }}
 
-      - name: Lint Code Base
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+
+      - name: Format HTML, CSS, JavaScript and JSON
+        run: |
+          npx --yes prettier@3.6.2 --write \
+            "index.html" \
+            "css/**/*.css" \
+            "js/**/*.js" \
+            "service-worker.js" \
+            "manifest.json"
+
+      - name: Commit formatting changes
+        if: github.event_name != 'pull_request'
+        uses: stefanzweifel/git-auto-commit-action@v6
+        with:
+          commit_message: "style: automatically format website code"
+          commit_user_name: github-actions[bot]
+          commit_user_email: 41898282+github-actions[bot]@users.noreply.github.com
+          file_pattern: "index.html css/**/*.css js/**/*.js service-worker.js manifest.json"
+
+      - name: Run Super-Linter
         uses: super-linter/super-linter@v7
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           DEFAULT_BRANCH: main
-          # Set to true on initial setup to scan everything, or false to scan only changed files
-          VALIDATE_ALL_CODEBASE: false
-
-          # Enable only the desired languages (opt-in mode)
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VALIDATE_ALL_CODEBASE: true
+          LINTER_RULES_PATH: .github/linters
+          ESLINT_CONFIG_FILE: .github/linters/eslint.config.mjs
           VALIDATE_HTML: true
           VALIDATE_CSS: true
           VALIDATE_JAVASCRIPT_ES: true
+          VALIDATE_JSON: true
+          VALIDATE_MARKDOWN: true
           VALIDATE_YAML: true
+          VALIDATE_XML: true
+          VALIDATE_NATURAL_LANGUAGE: false
