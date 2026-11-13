@@ -6,7 +6,7 @@ const syllabus = {
   "1st": {
     "2018-2023": {
       CE: "https://drive.google.com/file/d/1iRWghHRyCP6WPZ3Xoc0DdScIytir3xRn/preview",
-      CSE: "",
+      CSE: "https://drive.google.com/file/d/1EHpLPUo0_7086gFmk2WRZv2fMw93Jcdb/preview",
       EE: "https://drive.google.com/file/d/1BtS61CEIOidszDe5FLBVQUake_8RQZlK/preview",
       ECE: "https://drive.google.com/file/d/1t57gqcXtYajz6p5q6FXtcBVPb-mUgX1m/preview",
       ME: "https://drive.google.com/file/d/1gyWaJKhhcZNmSF9WlWfqRXfnTeA87hvY/preview",
