@@ -123,6 +123,7 @@ const syllabus = {
       CE: "",
       CECA:"https://drive.google.com/file/d/1YreInxuoPhNd29f3gBJeRKtO5_zAK-vB/preview",
       CSE: "",
+      CS: "https://drive.google.com/file/d/1OuA5RGlT16CQRU-DEnDzIDYHoQY7lmFB/preview",
       EE: "https://drive.google.com/file/d/1BCJ8zrbXmVMS69iAWu7wncgcpxWsqZHy/preview",
       ECE: "",
       ME: "",
