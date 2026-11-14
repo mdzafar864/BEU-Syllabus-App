@@ -498,12 +498,17 @@ if ("serviceWorker" in navigator) {
   // (Prevents a reload / dialog on the very first visit.)
   const hadController = !!navigator.serviceWorker.controller;
   let swRegistration = null;
-  let refreshing = false;
-  // Two independent update channels. Each has its own flag; the only
-  // coordination is "a pending app reload already delivers fresh syllabus data".
-  let newVersionPrompted = false;
-  let newVersionPending = false; // version popup shown/queued and not yet dismissed
-  let syllabusPrompted = false;
+
+  // Two independent update channels:
+  //   version  <- set ONLY by a version signal (version.json "version" changed)
+  //   data     <- decided on the PAGE by comparing a fingerprint of js/data.js
+  //               with the one this phone/browser last showed (localStorage)
+  // processUpdates() is the single place that decides which popup is shown.
+  const updateState = {
+    versionAvailable: false, // a newer app version exists
+    versionPrompted: false, //  its popup has already been shown this page load
+    popupOpen: false, //        a popup is on screen right now
+  };
 
   const SYNC_TAG = "sync-syllabus";
 
@@ -561,7 +566,8 @@ if ("serviceWorker" in navigator) {
         // textContent keeps the text safe (no HTML injection)
         titleEl.textContent = title;
         msgEl.textContent = message;
-        subEl.textContent = sub;
+        subEl.textContent = sub || "";
+        subEl.hidden = !sub;
         okBtn.textContent = confirmText;
 
         const finish = (result) => {
@@ -593,13 +599,27 @@ if ("serviceWorker" in navigator) {
     return popupQueue;
   }
 
-  // ----- Channel 1: app version ("New Version Available") -----
-  function promptNewVersion() {
-    if (newVersionPrompted) {
+  // ----- Dispatcher: version check FIRST, data check second -----
+  // Called whenever a flag changes or a popup closes. Only one popup at a time.
+  function processUpdates() {
+    if (updateState.popupOpen) {
       return;
     }
-    newVersionPrompted = true;
-    newVersionPending = true;
+
+    if (updateState.versionAvailable && !updateState.versionPrompted) {
+      // Priority 1: a new app version. Its reload also loads fresh data.js.
+      promptNewVersion();
+    } else if (pendingData && pendingData.hash !== promptedDataHash) {
+      // Priority 2: only new syllabus data, the app version is unchanged.
+      promptSyllabusUpdate(pendingData);
+    }
+    // else: nothing to announce
+  }
+
+  // ----- Channel 1: app version ("New Version Available") -----
+  function promptNewVersion() {
+    updateState.versionPrompted = true;
+    updateState.popupOpen = true;
 
     showUpdatePopup({
       icon: ICON_REFRESH,
@@ -608,33 +628,112 @@ if ("serviceWorker" in navigator) {
       sub: "A newer version of the app is ready with the latest improvements.",
       confirmText: "Update Now",
     }).then((ok) => {
-      newVersionPending = false;
-      if (!ok) {
-        return;
-      } // dismissed: don't nag again until the next page load
+      updateState.popupOpen = false;
 
-      // The new worker already skipped waiting and claimed this page, so a
-      // plain reload loads the new build. (Nudge a waiting worker just in case.)
-      const waiting = swRegistration && swRegistration.waiting;
-      if (waiting) {
-        waiting.postMessage({ type: "SKIP_WAITING" });
+      if (ok) {
+        // The new worker already skipped waiting and claimed this page, so a
+        // plain reload loads the new build. (Nudge a waiting worker just in case.)
+        hardReload();
+      } else {
+        // "Later": don't nag about the version again until the next page load,
+        // but a pending data update may still be announced.
+        processUpdates();
       }
-      refreshing = true;
-      window.location.reload();
     });
   }
 
   // ----- Channel 2: syllabus data ("New Syllabus Added") -----
-  function promptSyllabusUpdate() {
-    if (syllabusPrompted) {
+  // Why this lives on the page and not in the service worker:
+  // on a phone the app is normally cold-started. The service worker serves
+  // data.js network-first, so a cold start already loads the NEW data and a
+  // worker-side "old vs new" comparison either finds no difference (missed
+  // update) or fires on every cache refresh (false update).
+  // So the page remembers, in localStorage, the fingerprint of the data it
+  // last showed. Any difference at start-up (or while the app is open)
+  // means new syllabus was added since the user last saw the app.
+  const SEEN_DATA_KEY = "beu_syllabus_seen_data_hash";
+  const DATA_PAGE_URL = new URL(`${BASE}/js/data.js`, location.origin).href;
+  let loadedDataHash = null; //   fingerprint of the data this page is running
+  let pendingData = null; //      { kind: "info" | "refresh", hash }
+  let promptedDataHash = null; // last hash a popup was already shown for
+
+  function hashText(text) {
+    // FNV-1a 32 bit + length: tiny, fast, no secure-context requirement
+    let h = 0x811c9dc5;
+    for (let i = 0; i < text.length; i++) {
+      h ^= text.charCodeAt(i);
+      h = Math.imul(h, 0x01000193);
+    }
+    return (h >>> 0).toString(36) + "-" + text.length.toString(36);
+  }
+
+  function readSeenHash() {
+    try {
+      return localStorage.getItem(SEEN_DATA_KEY);
+    } catch {
+      return null;
+    }
+  }
+
+  function writeSeenHash(hash) {
+    try {
+      localStorage.setItem(SEEN_DATA_KEY, hash);
+    } catch {
+      // storage blocked (private mode): the popup then just won't repeat
+    }
+  }
+
+  async function fetchDataHash() {
+    const res = await fetch(`${DATA_PAGE_URL}?_=${Date.now()}`, {
+      cache: "no-store",
+    });
+    if (!res.ok) {
+      throw new Error("data fetch failed: " + res.status);
+    }
+    return hashText(await res.text());
+  }
+
+  // Runs once per page load.
+  async function initDataWatcher() {
+    try {
+      const hash = await fetchDataHash();
+      loadedDataHash = hash;
+
+      const seen = readSeenHash();
+      writeSeenHash(hash);
+
+      // First ever visit (seen === null) is NOT an update: just remember it.
+      if (seen && seen !== hash) {
+        // New syllabus was added since the last visit. It is already loaded.
+        pendingData = { kind: "info", hash };
+        processUpdates();
+      }
+    } catch {
+      // offline / server error: try again on the next check
+    }
+  }
+
+  // Runs while the app is open (resume, timer, back online, SW signal).
+  async function checkDataNow() {
+    if (!loadedDataHash) {
+      await initDataWatcher();
       return;
     }
-    // An app update is already on screen: its reload re-runs js/data.js from
-    // the network, so a second popup would only duplicate it.
-    if (newVersionPending) {
-      return;
+    try {
+      const hash = await fetchDataHash();
+      if (hash !== loadedDataHash) {
+        pendingData = { kind: "refresh", hash };
+        processUpdates();
+      }
+    } catch {
+      // offline: nothing to announce
     }
-    syllabusPrompted = true;
+  }
+
+  function promptSyllabusUpdate(notice) {
+    promptedDataHash = notice.hash;
+    pendingData = null;
+    updateState.popupOpen = true;
 
     showUpdatePopup({
       icon: ICON_BOOK,
@@ -643,11 +742,41 @@ if ("serviceWorker" in navigator) {
       sub: "Fresh syllabus content has been downloaded. Refresh to see it.",
       confirmText: "Refresh Now",
     }).then((ok) => {
+      updateState.popupOpen = false;
+
       if (ok) {
-        refreshing = true;
-        window.location.reload();
-      } // re-runs js/data.js (already fresh in cache)
+        writeSeenHash(notice.hash);
+        hardReload();
+      } else {
+        processUpdates();
+      }
     });
+  }
+
+  // Reload so the freshly cached data.js and shell are used.
+  function hardReload() {
+    const waiting = swRegistration && swRegistration.waiting;
+    if (waiting) {
+      waiting.postMessage({ type: "SKIP_WAITING" });
+    }
+    window.location.reload();
+  }
+
+  // ----- Signals from the service worker: each only flips ITS OWN flag -----
+  function onVersionSignal() {
+    // Ignore on first install (nothing to "update" from). Only hadController
+    // is trusted: navigator.serviceWorker.controller becomes truthy on the
+    // first visit too (clients.claim()).
+    if (!hadController) {
+      return;
+    }
+    updateState.versionAvailable = true;
+    processUpdates();
+  }
+
+  function onDataSignal() {
+    // The worker noticed a change: let the page confirm against what it shows.
+    checkDataNow();
   }
 
   // Ask for a Background Sync (fires when connection is back, even if offline now).
@@ -664,6 +793,22 @@ if ("serviceWorker" in navigator) {
     }
   }
 
+  // "Is there new syllabus data?" check, done by the page itself so it works
+  // in every browser (Background Sync only fires once and is not on iOS).
+  // Used when the app is resumed, on a timer, and when back online.
+  const DATA_CHECK_MIN_GAP_MS = 60 * 1000;
+  const DATA_CHECK_INTERVAL_MS = 5 * 60 * 1000;
+  let lastDataCheck = 0;
+
+  function requestDataCheck(force) {
+    const now = Date.now();
+    if (!force && now - lastDataCheck < DATA_CHECK_MIN_GAP_MS) {
+      return;
+    }
+    lastDataCheck = now;
+    checkDataNow();
+  }
+
   function postManualSync() {
     const sw =
       navigator.serviceWorker.controller ||
@@ -678,28 +823,25 @@ if ("serviceWorker" in navigator) {
     const type = event.data && event.data.type;
 
     if (type === "NEW_VERSION" || type === "VERSION_UPDATED") {
-      // Ignore on first install (nothing to "update" from).
-      // Only hadController is trusted: navigator.serviceWorker.controller
-      // becomes truthy on the first visit too (clients.claim()), which
-      // used to cause a false "New version available" popup.
-      if (hadController) {
-        promptNewVersion();
-      }
+      onVersionSignal();
     } else if (type === "SYLLABUS_UPDATED") {
-      promptSyllabusUpdate();
+      onDataSignal();
     }
   });
 
   window.addEventListener("load", () => {
+    initDataWatcher();
+
     navigator.serviceWorker
       .register(`${BASE}/service-worker.js`)
       .then((registration) => {
         console.log("✅ SW Registered");
         swRegistration = registration;
 
-        // A new version may already be waiting (user dismissed earlier)
+        // A waiting worker is only a new BUILD, not necessarily a new
+        // VERSION. Let the version check (version.json) decide.
         if (registration.waiting && hadController) {
-          promptNewVersion();
+          lastVersionCheck = 0;
         }
 
         // Queue a sync now; it runs as soon as the network is available.
@@ -732,23 +874,35 @@ if ("serviceWorker" in navigator) {
   document.addEventListener("visibilitychange", () => {
     if (document.visibilityState === "visible") {
       requestVersionCheck();
+      requestDataCheck(false);
     }
   });
 
-  // Connection restored -> refresh the cache and re-check the app version
+  // Phones restore pages from the back/forward cache without a reload.
+  window.addEventListener("pageshow", (event) => {
+    if (event.persisted) {
+      requestVersionCheck();
+      requestDataCheck(true);
+    }
+  });
+
+  // While the app stays open, keep looking for new syllabus data.
+  setInterval(() => {
+    if (document.visibilityState === "visible" && navigator.onLine) {
+      requestDataCheck(false);
+    }
+  }, DATA_CHECK_INTERVAL_MS);
+
+  // Connection restored -> refresh the cache and re-check version + data
   window.addEventListener("online", () => {
     requestSyllabusSync();
+    requestDataCheck(true);
     lastVersionCheck = 0;
     requestVersionCheck();
   });
 
-  // The new worker activates immediately (skipWaiting + clients.claim), which
-  // fires this. Never reload silently: ask through the version popup (deduped
-  // with the VERSION_UPDATED message). Skipped on the very first install.
-  navigator.serviceWorker.addEventListener("controllerchange", () => {
-    if (!hadController || refreshing) {
-      return;
-    }
-    promptNewVersion();
-  });
+  // NOTE: there is deliberately no "controllerchange" popup. That event fires
+  // for every new worker (also a data-only deploy), so it cannot tell a new
+  // version from new data. Only the service worker's VERSION_UPDATED message,
+  // which compares version.json "version", may raise the version popup.
 }
