@@ -13,7 +13,7 @@ const syllabus = {
     },
 
     "2024-2028": {
-      CE: "https://drive.google.com/file/d/1Qd3X732fBWyEax1GTudkBWn7fpe57CgA/preview",
+      CE: "https://drive.google.com/file/d/14NN8F3swGfjkbsOGurURSkiE-hsR2j-o/preview",
       CECA:"https://drive.google.com/file/d/1-Cfb84lO8dRtFGo1gt3cnQYL_TTBxAul/preview",
       CSE: "https://drive.google.com/file/d/1Zp-UAEgj72UstczPS_wSIBtlPU48USal/preview",
       IOT: "https://drive.google.com/file/d/1TldGBNBWl1hfn7faKNgBK12BjDjXV7hE/preview",
@@ -76,7 +76,7 @@ const syllabus = {
     },
 
     "2024-2028": {
-      CE: "https://drive.google.com/file/d/13q_AFXP9e2AWyHHtHWp_Fm4bRgtME3qv/preview",
+      CE: "https://drive.google.com/file/d/1ZkNFpkEOTMNInIv4ghkzbs2zbuzCzTqY/preview",
       CECA:"https://drive.google.com/file/d/1TATbnKe4bf4JEMDGC5BjJ_TG8TdMgsj8/preview",
       CSE: "https://drive.google.com/file/d/15Y2Vsq8xe3Cl2Sc4BcXtL4XQMsqwKIFh/preview",
       IOT: "https://drive.google.com/file/d/1iRpJ1SB_KyGgn84MqLZMutHnCHNTsYWk/preview",
@@ -98,7 +98,7 @@ const syllabus = {
     },
 
     "2024-2028": {
-      CE: "https://drive.google.com/file/d/1GzMwwCkUrHPmc5fgyWOxOSsPof9dQZO8/preview",
+      CE: "https://drive.google.com/file/d/1ZVvgt57PZxEjMz-9JG_d-98uOQ-wD0DK/preview",
       CECA:"https://drive.google.com/file/d/13y_SZNeQHPYssRGGGcblMfw0gKJH6VKi/preview",
       CSE: "https://drive.google.com/file/d/18tjQnI2qGtbSzRWEp08KqKY4gDvE25em/preview",
       IOT: "https://drive.google.com/file/d/1DyoqlnntdtG-RA0ET1wH4FrR-DOB3mtF/preview",
@@ -120,7 +120,7 @@ const syllabus = {
     },
 
     "2024-2028": {
-      CE: "",
+      CE: "https://drive.google.com/file/d/1AOACuILpQMndXZupNww7GZPwfQjBBRxO/preview",
       CECA:"https://drive.google.com/file/d/1YreInxuoPhNd29f3gBJeRKtO5_zAK-vB/preview",
       CSE: "",
       CS: "https://drive.google.com/file/d/1OuA5RGlT16CQRU-DEnDzIDYHoQY7lmFB/preview",
