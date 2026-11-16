@@ -79,7 +79,7 @@ body {
      so mobile address bars, TV overscan and rubber-band scrolling can't
      push content off the top or bottom. */
   position: fixed;
-  hight: 100dvh;
+  inset: 0;
   width: 100%;
   overflow: hidden;
   overscroll-behavior: none;
