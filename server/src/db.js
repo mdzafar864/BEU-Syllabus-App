@@ -16,8 +16,13 @@ function connect(config) {
       serverSelectionTimeoutMS: 5000,
       appName: "beu-syllabus-api",
     });
-
-    clientPromise = client.connect();
+    clientPromise = client.connect().catch((err) => {
+      clientPromise = null; // allow a retry on the next request
+      throw err;
+    });
+  }
+  return clientPromise;
+}
 
 // On the first call of each server instance, an empty database is set up
 // automatically (collections, indexes, default documents). Concurrent first
