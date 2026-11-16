@@ -8,7 +8,7 @@
 //          The same origin must also be listed in connect-src in index.html.
 
 window.BEU_CONFIG = {
-  apiBase: "beu-syllabus-app-beu-syllabus.vercel.app",
+  apiBase: "https://beu-syllabus-app-beu-syllabus.vercel.app",
 
   // How often (ms) the page tells the server "I'm still here" (Active users).
   heartbeatMs: 60000,
