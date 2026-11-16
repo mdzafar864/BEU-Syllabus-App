@@ -88,7 +88,7 @@ body {
   align-items: center;
 
   /* top + sides respect notches; bottom reserves the WhatsApp button */
-  padding: calc(0.6rem + var(--safe-top)) calc(1rem + var(--safe-right))
+  padding: calc(0rem + var(--safe-top)) calc(1rem + var(--safe-right))
     var(--reserve-bottom) calc(1rem + var(--safe-left));
 }
 
