@@ -12,7 +12,8 @@ function connect(config) {
     // Loaded lazily so tests can run without the driver installed.
     const { MongoClient } = require("mongodb");
     const client = new MongoClient(config.mongoUri, {
-      maxPoolSize: 5,
+      maxPoolSize: 2,
+      minPoolSize: 0,
       serverSelectionTimeoutMS: 5000,
       appName: "beu-syllabus-api",
     });
