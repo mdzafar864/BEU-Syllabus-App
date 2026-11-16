@@ -11,10 +11,10 @@ window.BEU_CONFIG = {
   apiBase: "https://beu-syllabus-app.vercel.app",
 
   // How often (ms) the page tells the server "I'm still here" (Active users).
-  heartbeatMs: 60000,
+  heartbeatMs: 5000,
 
   // How often (ms) the stats bar refreshes while the app is open.
-  statsRefreshMs: 60000,
+  statsRefreshMs: 5000,
 
   // Also send each click / dropdown change to Google Analytics 4 as
   // ui_click / ui_select_change (the existing GA4 events are always kept).
