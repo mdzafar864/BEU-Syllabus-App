@@ -1,25 +1,16 @@
 /* ==========================================================================
-   Stats bar
-
-   Loads AFTER style.css. Styles only the three-column stats bar; all type
-   scaling comes from the root font-size defined in style.css, so everything
-   here is in rem. Markup this expects:
-
-     <div class="stats-bar" id="stats-bar">
-       <div class="stat stat-live">
-         <span class="stat-value">..</span><span class="stat-label">..</span>
-       </div> x3
-     </div>
+   Stats bar  (REDESIGNED)
    ========================================================================== */
 
-/* Container: three equal columns on a tinted surface (no outline). */
 .stats-bar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   margin-top: 0.6rem;
   padding: 0.55rem 0.2rem;
-  background: var(--surface);
-  border-radius: 0.9rem; /* no outline: tint + dividers only */
+  background: linear-gradient(180deg, #f7f9fd, #eff3fb);
+  border: 1px solid #e3e9f4;
+  border-radius: 0.9rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 80%);
 }
 
 .stat {
@@ -29,7 +20,7 @@
 }
 
 .stat + .stat {
-  box-shadow: inset 1px 0 0 var(--line);
+  box-shadow: inset 1px 0 0 #dde5f2;
 }
 
 .stat-value {
@@ -39,10 +30,9 @@
   line-height: 1.2;
   color: var(--navy-900);
   font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
 }
 
-/* Sentence case rather than all caps: easier to read at small sizes.
-   nowrap + ellipsis keeps long labels on one line so the bar never grows. */
 .stat-label {
   display: block;
   margin-top: 0.15rem;
@@ -52,14 +42,9 @@
   line-height: 1.2;
   white-space: nowrap;
   text-overflow: ellipsis;
-  color: var(--ink-soft);
+  color: var(--ink-muted);
 }
 
-/* ---- Icons: one per stat, drawn in CSS so no HTML change is needed ----
-   Each icon is an SVG used as a CSS mask on the ::before box: the SVG only
-   supplies the SHAPE, and `background` supplies the colour. That is why the
-   path has no fill and the colour is changed via `background`, not `fill`.
-   Swap the --stat-icon values below to match what each stat really shows. */
 .stat-label::before {
   content: "";
   display: inline-block;
@@ -67,36 +52,28 @@
   height: 0.8rem;
   margin-right: 0.3rem;
   vertical-align: -0.1rem;
-  background: var(--navy-700);
+  background: var(--navy-600);
   mask: var(--stat-icon) center / contain no-repeat;
-
-  /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-mask: var(--stat-icon) center / contain no-repeat;
 }
 
 .stat:nth-child(2) {
-  /* download */
   --stat-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M11 3h2v9.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4 3.6 3.6V3zM5 19h14v2H5z'/></svg>");
 }
 
 .stat:nth-child(3) {
-  /* document */
   --stat-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 2h8l6 6v14H6V2zm7 1.5V9h5.5L13 3.5zM8.5 13h7v1.5h-7V13zm0 3.5h7V18h-7v-1.5z'/></svg>");
 }
 
-/* The live stat shows a pulsing green dot instead of an icon. Same ::before
-   box, so we drop the mask and make it a circle. Specificity (0,2,1) beats
-   the generic `.stat-label::before` rule above. */
 .stat-live .stat-label::before {
-  width: 0.45rem;
-  height: 0.45rem;
+  width: 0.5rem;
+  height: 0.5rem;
   margin-right: 0.35rem;
   vertical-align: 0.05rem;
   border-radius: 50%;
   background: var(--success);
+  box-shadow: 0 0 0 3px rgb(22 163 74 / 18%);
   mask: none;
-
-  /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-mask: none;
   animation: stat-pulse 2s ease-in-out infinite;
 }
@@ -105,17 +82,14 @@
   0%,
   100% {
     opacity: 1;
+    box-shadow: 0 0 0 3px rgb(22 163 74 / 18%);
   }
-
   50% {
-    opacity: 0.35;
+    opacity: 0.55;
+    box-shadow: 0 0 0 5px rgb(22 163 74 / 8%);
   }
 }
 
-/* ---- Loading state: shimmer bar instead of a "-" placeholder ----
-   Applies when .stat-value is empty, or while it has class="is-loading".
-   The shimmer is a 200%-wide gradient whose position is animated across the
-   bar (see @keyframes stat-shimmer). */
 .stat-value:empty::before,
 .stat-value.is-loading::before {
   content: "";
@@ -130,7 +104,7 @@
 }
 
 .stat-value.is-loading {
-  font-size: 0; /* hides a leftover "-" while loading */
+  font-size: 0;
 }
 
 @keyframes stat-shimmer {
@@ -139,13 +113,6 @@
   }
 }
 
-/* The html font-size fit formula lives ONLY in style.css (--fit-rem and
-   --fit-rem-land). Do not redefine it here: this file loads last, so a copy
-   would silently override style.css and make tuning there have no effect. */
-
-/* Short landscape (phone on its side): style.css turns the card into a grid.
-   The bar is placed on its own row (6) under Developer / Install, and sizes
-   shrink to keep the card inside the screen height. */
 @media (orientation: landscape) and (height <= 540px) {
   .header-center {
     grid-row: 1 / span 6;
@@ -173,12 +140,11 @@
   }
 
   .stat-live .stat-label::before {
-    width: 0.35rem;
-    height: 0.35rem;
+    width: 0.4rem;
+    height: 0.4rem;
   }
 }
 
-/* Very narrow screens (320px phones): tighter padding so three columns fit. */
 @media (width <= 340px) {
   .stat {
     padding: 0 0.15rem;
