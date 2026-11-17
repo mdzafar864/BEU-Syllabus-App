@@ -37,6 +37,10 @@
   /* Font scale for modals (they scroll internally, so they use a
      gentler scale than the fit-to-height main screen) */
   --modal-fs: clamp(15px, 0.9vw + 6px, 40px);
+
+  /* Fit-to-height divisor: number of rem the card + footer need.
+     Calibrate with the console snippet if the card still overflows. */
+  --fit-rem: 41.5;
 }
 
 html {
@@ -49,13 +53,13 @@ html {
   overscroll-behavior: none;
   touch-action: manipulation; /* no double-tap zoom shifting the layout */
 
-  /* Fit-to-height scale. 41.5 ≈ number of rem the card + footer need.
+  /* Fit-to-height scale. --fit-rem ≈ number of rem the card + footer need.
      Fallback first (older browsers without dvh), then the dvh version. */
   font-size: 14px;
   font-size: clamp(
     9px,
     min(
-      calc((100vh - var(--reserve-bottom) - var(--safe-top)) / 41.5),
+      calc((100vh - var(--reserve-bottom) - var(--safe-top)) / var(--fit-rem)),
       1.6vw + 9px
     ),
     56px
@@ -63,7 +67,7 @@ html {
   font-size: clamp(
     9px,
     min(
-      calc((100dvh - var(--reserve-bottom) - var(--safe-top)) / 41.5),
+      calc((100dvh - var(--reserve-bottom) - var(--safe-top)) / var(--fit-rem)),
       1.6vw + 9px
     ),
     56px
@@ -75,12 +79,12 @@ body {
   background: var(--bg);
   color: var(--ink);
 
-  /* Fixed layout: body is pinned to the visible viewport on every device,
-     so mobile address bars, TV overscan and rubber-band scrolling can't
-     push content off the top or bottom. */
-  position: fixed;
-  inset: 0;
+  /* Body height comes from the SAME unit (dvh) as the html font-size
+     calculation, so layout and scale always agree. (position: fixed; inset: 0
+     used the layout viewport and could disagree with dvh on mobile browsers.) */
   width: 100%;
+  height: 100vh;
+  height: 100dvh;
   overflow: hidden;
   overscroll-behavior: none;
   display: flex;
@@ -94,6 +98,17 @@ body {
 
 [hidden] {
   display: none !important;
+}
+
+/* Long subject/session names must wrap, never stretch the layout */
+#msg,
+.app-title,
+option {
+  overflow-wrap: anywhere;
+}
+
+.box > * {
+  min-width: 0;
 }
 
 /* ===================== Card ===================== */
@@ -1130,6 +1145,8 @@ a:hover {
   border-top: 4px solid var(--navy-700);
   border-radius: 16px;
   text-align: center;
+  white-space: normal;
+  overflow-wrap: break-word;
   box-shadow:
     0 1px 2px rgb(11 30 58 / 6%),
     0 20px 48px rgb(11 30 58 / 28%);
