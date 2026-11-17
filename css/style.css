@@ -336,8 +336,11 @@ button:focus-visible {
 }
 
 /* ---- Primary CTA: Open Syllabus ----
-   Dark ink on gold = ~8:1 contrast. Hover darkens the ink and lightens the
-   gold; active compresses + deepens the shadow. Ripple on click. */
+   Mirrors #dev-btn exactly:
+   - same transition property list (background, box-shadow, transform, color)
+   - same ripple layer + btn-ripple keyframes
+   - same hover/active shape (lift on hover, compress + inset shadow on active)
+   - only the color tokens differ (gold), so the ink stays dark for ~8:1 contrast. */
 #open-btn {
   background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-600) 100%);
   color: var(--gold-ink);
@@ -345,9 +348,10 @@ button:focus-visible {
   letter-spacing: 0.01em;
   text-shadow: 0 1px 0 rgb(255 255 255 / 35%);
   box-shadow:
-    0 4px 14px rgb(245 166 35 / 40%),
-    inset 0 1px 0 rgb(255 255 255 / 55%),
-    inset 0 -2px 0 rgb(154 91 0 / 22%);
+    0 3px 10px rgb(245 166 35 / 30%),
+    inset 0 1px 0 rgb(255 255 255 / 45%);
+  position: relative;
+  overflow: hidden;
   animation: cta-enter 0.6s var(--ease-spring) 0.15s backwards;
   transition:
     background var(--dur-med) ease,
@@ -376,26 +380,19 @@ button:focus-visible {
     background: linear-gradient(135deg, #ffb63a 0%, #e89a12 100%);
     color: var(--gold-ink-soft);
     box-shadow:
-      0 8px 22px rgb(245 166 35 / 50%),
-      inset 0 1px 0 rgb(255 255 255 / 65%),
-      inset 0 -2px 0 rgb(154 91 0 / 28%);
-    transform: translateY(-2px);
+      0 6px 16px rgb(245 166 35 / 40%),
+      inset 0 1px 0 rgb(255 255 255 / 55%);
+    transform: translateY(-1px);
   }
 }
 
 #open-btn:active {
-  color: var(--gold-ink);
-  transform: translateY(0) scale(0.96);
+  background: linear-gradient(135deg, #e89a12 0%, #c9820c 100%);
+  color: #fff;
+  transform: translateY(0) scale(0.975);
   box-shadow:
-    0 2px 8px rgb(245 166 35 / 42%),
-    inset 0 2px 4px rgb(154 91 0 / 30%);
-  animation: cta-press 0.28s var(--ease-out);
-}
-
-@keyframes cta-press {
-  0%   { transform: scale(0.96); }
-  45%  { transform: scale(1.02); }
-  100% { transform: scale(0.97); }
+    0 1px 4px rgb(245 166 35 / 35%),
+    inset 0 2px 4px rgb(0 0 0 / 18%);
 }
 
 #open-btn:focus-visible {
@@ -403,7 +400,6 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* ripple layer */
 #open-btn::after {
   content: "";
   position: absolute;
@@ -420,12 +416,7 @@ button:focus-visible {
 }
 
 #open-btn:active::after {
-  animation: cta-ripple 0.5s ease-out;
-}
-
-@keyframes cta-ripple {
-  0%   { opacity: 0.6; transform: scale(0.4); }
-  100% { opacity: 0;   transform: scale(1.6); }
+  animation: btn-ripple 0.5s ease-out;
 }
 
 /* ---- Developer Info: solid deep-blue, white ink ---- */
