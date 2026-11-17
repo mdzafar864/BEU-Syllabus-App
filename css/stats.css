@@ -1,14 +1,3 @@
-/* stats.css
-   Styles for the stats bar under the Install / "App Mode Active" button.
-   Loaded AFTER style.css so style.css itself stays untouched.
-
-   The app scales its whole UI so the card fits the screen height with no
-   scrolling: font-size = (viewport height - reserved space) / N, where N is
-   "how many rem the card + footer need". The bar adds ~4.1rem (portrait) /
-   ~2.4rem (landscape), so N is raised by the same amount below. If you change
-   the bar's height, change these two numbers with it. */
-
-/* ===================== Stats bar ===================== */
 .stats-bar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -76,45 +65,14 @@
   }
 }
 
-/* ===================== Keep the card fitting the screen ===================== */
-/* Same formula as style.css (41.5 -> 45.6: +4.1rem for the bar). */
-html {
-  font-size: 14px;
-  font-size: clamp(
-    9px,
-    min(
-      calc((100vh - var(--reserve-bottom) - var(--safe-top)) / 45.6),
-      1.6vw + 9px
-    ),
-    56px
-  );
-  font-size: clamp(
-    9px,
-    min(
-      calc((100dvh - var(--reserve-bottom) - var(--safe-top)) / 45.6),
-      1.6vw + 9px
-    ),
-    56px
-  );
-}
+/* NOTE: the html font-size fit formula now lives ONLY in style.css
+   (--fit-rem / --fit-rem-land). It used to be duplicated here with hard-coded
+   45.6 / 23.4, and because this file loads last it silently overrode
+   style.css - so tuning style.css had no effect. */
 
 /* Short landscape (phone on its side): two-column grid, bar gets its own row
    under Developer / Install. Formula as in style.css (21 -> 23.4). */
 @media (orientation: landscape) and (height <= 540px) {
-  html {
-    font-size: 12px;
-    font-size: clamp(
-      8px,
-      calc((100vh - var(--reserve-bottom) - var(--safe-top)) / 23.4),
-      22px
-    );
-    font-size: clamp(
-      8px,
-      calc((100dvh - var(--reserve-bottom) - var(--safe-top)) / 23.4),
-      22px
-    );
-  }
-
   .header-center {
     grid-row: 1 / span 6;
   }
