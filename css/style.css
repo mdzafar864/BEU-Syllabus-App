@@ -1,51 +1,104 @@
+/* ==========================================================================
+   Syllabus app: main stylesheet
+   ========================================================================== */
+
+/*
+   Contents
+   1.  Reset
+   2.  Design tokens (:root)
+   3.  Base: viewport lock, fit-to-height type scale, wrapping rules
+   4.  Card + header
+   5.  Dropdowns + buttons
+   6.  Instruction card (#msg)
+   7.  Modals (viewer, About)
+   8.  Footer
+   9.  WhatsApp dock
+   10. Responsive + display-mode overrides
+   11. Update popup
+
+   Sizing model: the main screen is sized in rem, and the root font-size is
+   computed from the viewport height (section 3) so the whole card scales to
+   fit without scrolling. Modals use em instead and scale from --modal-fs.
+   stats.css loads after this file and styles the stats bar only.
+*/
+
+/* ==========================================================================
+   1. Reset
+   ========================================================================== */
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
 }
 
+/* ==========================================================================
+   2. Design tokens
+   ========================================================================== */
+
 :root {
+  /* ---- Brand palette ---- */
   --navy-900: #0b1e3a;
   --navy-800: #14265a;
   --navy-700: #16215c;
-  --gold-500: #f5a623;
+  --gold-500: #f5a623; /* fills (buttons) */
   --gold-600: #d98d10;
+  --gold-700: #9a5b00; /* gold for TEXT on white (5.4:1) */
+
+  /* ---- Surfaces, text and borders ---- */
   --bg: #f2f5fb;
   --card: #fff;
-  --ink: #0b1e3a;
-  --ink-soft: #4a5a72;
+  --surface: #f6f8fc; /* form fields, stats bar */
+  --msg-bg: #eef4ff; /* instruction card */
   --line: #d9e2ef;
-  --msg-bg: #eef4ff;
+  --ink: #0b1e3a;
+  --ink-soft: #4a5a72; /* secondary text */
+
+  /* ---- Status + WhatsApp ---- */
   --success: #16a34a;
+  --wa-green: #0e7c6b; /* white text on this is 5.1:1 */
+  --wa-green-dark: #0a6a5b; /* hover */
 
-  /* Floating WhatsApp button geometry (shared by button + body padding) */
-  --wa-size: 52px;
-  --wa-gap: 14px;
-
-  /* approx. width of the pill (icon + 'Send Syllabus'), used for side clearance in landscape */
-  --wa-pill-w: calc(var(--wa-size) * 3.6);
+  /* ---- Safe areas (notches, home indicator); 0 where unsupported ---- */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
 
-  /* vertical room kept free at the bottom for the button */
+  /* ---- WhatsApp dock geometry (shared by the dock and the body padding) ---- */
+  --wa-size: 48px;
+  --wa-gap: 12px;
+
+  /* Approx. width of the compact pill (icon + "Send Syllabus"). Only used in
+     landscape, where the pill sits beside the card and the body reserves
+     this much space on the right. */
+  --wa-pill-w: calc(var(--wa-size) * 3.6);
+
+  /* Vertical room the body keeps free at the bottom for the dock:
+     button height + a gap above and below + the home-indicator inset. */
   --reserve-bottom: calc(
     var(--wa-size) + (var(--wa-gap) * 2) + var(--safe-bottom)
   );
 
-  /* Font scale for modals (they scroll internally, so they use a
-     gentler scale than the fit-to-height main screen) */
+  /* ---- Type scale ---- */
+
+  /* Modals scroll internally, so they scale more gently than the main screen. */
   --modal-fs: clamp(15px, 0.9vw + 6px, 40px);
 
-  /* Fit-to-height divisor: number of rem the card + footer need.
-     Calibrate with the console snippet if the card still overflows. */
-  /* Syllabus card = PYQ card + a 3rd select (#session) + the stats bar,
-     so it needs more rem than PYQ's 41.5. */
-  --fit-rem: 50; /* portrait divisor (45.6 + room for a 3-line #msg) */
-  --fit-rem-land: 26; /* landscape divisor (23.4 + room for a 2-line #msg) */
+  /* Fit-to-height divisors: roughly how many rem the card + footer need.
+     The root font-size is (available height / divisor), so a larger number
+     means smaller text. Raise it if the card overflows; lower it if there is
+     spare room. The syllabus card is taller than the PYQ card (41.5) because
+     it adds a third select (#session) and the stats bar. */
+  --fit-rem: 50; /* portrait (45.6 + room for a 3-line #msg) */
+  --fit-rem-land: 26; /* landscape (23.4 + room for a 2-line #msg) */
 }
 
+/* ==========================================================================
+   3. Base
+   ========================================================================== */
+
+/* Root element: fixed to the viewport, no page-level scrolling, and the
+   fit-to-height font-size that every rem value in this file hangs off. */
 html {
   /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-text-size-adjust: 100%;
@@ -56,8 +109,16 @@ html {
   overscroll-behavior: none; /* no pull-to-refresh / bounce chaining */
   touch-action: manipulation; /* no double-tap zoom shifting the layout */
 
-  /* Fit-to-height scale. --fit-rem ≈ number of rem the card + footer need.
-     Fallback first (older browsers without dvh), then the dvh version. */
+  /* Fit-to-height scale:
+       font-size = min( (viewport height - reserved space) / --fit-rem,
+                        1.6vw + 9px )
+     clamped to 9px-56px.
+     - The height term makes the card shrink on short screens instead of
+       scrolling; the width term stops text getting huge on wide, short ones.
+     - Declared three times on purpose: a plain px fallback, then a vh
+       version, then a dvh version. Browsers drop declarations they can't
+       parse, so each one falls back to the previous. dvh tracks the mobile
+       address bar showing/hiding; vh does not. */
   font-size: 14px;
   font-size: clamp(
     9px,
@@ -78,15 +139,18 @@ html {
 }
 
 body {
-  font-family: "Segoe UI", Roboto, system-ui, sans-serif;
-  background: var(--bg);
+  font-family:
+    system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+  -webkit-font-smoothing: antialiased;
+  background: linear-gradient(180deg, #e8edf9 0%, var(--bg) 45%);
   color: var(--ink);
 
-  /* Scroll lock: body is pinned to the viewport so the PAGE can never
-     scroll or rubber-band (iOS Safari / Android Chrome ignore overflow:hidden
-     on html/body alone). Height uses the SAME dvh unit as the html font-size
-     calculation, so layout and scale agree. top/left/right are set instead of
-     `inset` so the explicit height is not overridden by `bottom: 0`. */
+  /* Scroll lock: iOS Safari and Android Chrome ignore overflow:hidden on
+     html/body alone, so the body is pinned with position:fixed.
+     - Height uses the same dvh unit as the html font-size, so layout and
+       type scale agree about how tall the screen is.
+     - top/left/right are set instead of `inset`, because `bottom: 0` would
+       override the explicit height. */
   position: fixed;
   top: 0;
   left: 0;
@@ -101,27 +165,32 @@ body {
   flex-direction: column;
   align-items: center;
 
-  /* top + sides respect notches; bottom reserves the WhatsApp button */
+  /* Top and sides respect notches; the bottom reserves the WhatsApp dock. */
   padding: calc(0.6rem + var(--safe-top)) calc(1rem + var(--safe-right))
     var(--reserve-bottom) calc(1rem + var(--safe-left));
 }
 
+/* Make the `hidden` attribute win over any display value set elsewhere. */
 [hidden] {
   display: none !important;
 }
 
-/* Long subject/session names must wrap, never stretch the layout */
+/* Long subject/session names must wrap, never stretch the layout. */
 #msg,
 .app-title,
 option {
   overflow-wrap: anywhere;
 }
 
+/* Lets grid/flex children shrink below their content width (needed for the
+   landscape grid and for ellipsis on long <option> text). */
 .box > * {
   min-width: 0;
 }
 
-/* ===================== Card ===================== */
+/* ==========================================================================
+   4. Card + header
+   ========================================================================== */
 .box {
   background: var(--card);
   width: 100%;
@@ -134,9 +203,11 @@ option {
   margin: 0 auto;
   flex: 0 1 auto;
   min-height: 0;
-  padding: 1.3rem 1.4rem 1.5rem;
-  border-radius: 1.8rem;
-  box-shadow: 0 0.8rem 2.6rem rgb(11 30 58 / 12%);
+  padding: 1.3rem 1.3rem 1.4rem;
+  border-radius: 1.6rem;
+  box-shadow:
+    0 1px 2px rgb(11 30 58 / 6%),
+    0 0.9rem 2.2rem rgb(11 30 58 / 9%);
 
   /* last-resort safety net for extremely small windows; never
      triggers at normal phone/tablet/laptop/TV sizes */
@@ -164,129 +235,202 @@ option {
   width: 5.6rem;
   height: 5.6rem;
   object-fit: cover;
-  border-radius: 1.4rem;
-  box-shadow: 0 0.35rem 1rem rgb(0 0 0 / 10%);
+  border-radius: 1.3rem;
+  box-shadow: 0 2px 8px rgb(11 30 58 / 12%);
   display: block;
 }
 
 .app-title {
   text-align: center;
-  font-weight: 700;
-  font-size: 1.9rem;
+  font-weight: 800;
+  font-size: 1.8rem;
   line-height: 1.15;
+  letter-spacing: -0.02em;
   color: var(--navy-900);
-  margin-top: 0.6rem;
+  margin-top: 0.65rem;
 }
 
 .app-title .sub {
-  color: var(--gold-600);
-  font-weight: 700;
+  color: var(--gold-700);
+  font-weight: 800;
 }
 
 .app-tagline {
-  margin-top: 0.25rem;
-  font-size: 0.8rem;
-  font-weight: 700;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--gold-600);
+  margin-top: 0.3rem;
+  font-size: 0.88rem;
+  font-weight: 600;
+  letter-spacing: 0.01em;
+  color: var(--ink-soft);
 }
 
-/* ===================== Selects + buttons ===================== */
+/* ==========================================================================
+   5. Dropdowns + buttons
+   ========================================================================== */
 select,
 button {
   width: 100%;
-  padding: 0.8rem 0.9rem;
-  margin-top: 0.6rem;
-  font-size: 1.05rem;
-  line-height: 1.25;
-  border-radius: 1rem;
-  border: 1px solid var(--line);
-  background: white;
-  font-weight: 500;
+  min-height: 2.9rem;
+  padding: 0.7rem 1rem;
+  margin-top: 0.55rem;
+  font-size: 1rem;
+  line-height: 1.3;
+  font-weight: 600;
   font-family: inherit;
-  transition: 0.2s;
+  border-radius: 0.9rem;
+  border: 1px solid transparent;
+  transition:
+    background-color 0.15s,
+    border-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.15s;
 }
 
+/* Dropdowns: soft filled field, one quiet border, navy chevron.
+   (The open list itself is drawn by the OS on phones.) */
 select {
   appearance: none;
 
   /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-appearance: none;
+  color-scheme: light;
+  color: var(--ink);
+  background-color: var(--surface);
+  border-color: #d3dcea;
   text-overflow: ellipsis;
-  padding-right: 2.4rem;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'><path d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%230b1e3a' stroke-width='1.6' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  padding-right: 2.8rem;
+  cursor: pointer;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'><path d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%2316215c' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-repeat: no-repeat;
-  background-position: right 0.85rem center;
+  background-position: right 1rem center;
   background-size: 1.1rem;
 }
 
+/* placeholder option ("Select branch" etc.) reads as a hint, not a value */
+select:has(option[value=""]:checked) {
+  color: var(--ink-soft);
+  font-weight: 500;
+}
+
+option {
+  color: var(--ink);
+  background: #fff;
+  font-weight: 500;
+}
+
 select:focus {
-  border-color: var(--navy-700);
   outline: none;
-  box-shadow: 0 0 0 3px rgb(22 33 92 / 12%);
+  background-color: #fff;
+  border-color: var(--navy-700);
+  box-shadow: 0 0 0 3px rgb(22 33 92 / 16%);
 }
 
 select:disabled {
-  background-color: #f5f7fb;
-  color: #98a2b8;
+  color: #66728a;
+  background-color: #eff2f8;
+  border-color: #e3e8f1;
   cursor: not-allowed;
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'><path d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%239aa6bb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
 
 button {
   background: var(--navy-700);
-  color: white;
-  font-weight: 600;
-  border: none;
+  color: #fff;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgb(22 33 92 / 22%);
-  transition: 0.15s;
+  box-shadow: 0 1px 2px rgb(11 30 58 / 20%);
 }
 
-button:hover {
-  background: var(--navy-800);
-  transform: scale(0.98);
+@media (hover: hover) {
+  select:hover:not(:disabled) {
+    background-color: #fff;
+    border-color: #aebbd2;
+  }
+
+  button:hover {
+    background: var(--navy-800);
+  }
+}
+
+button:active {
+  transform: scale(0.985);
 }
 
 button:focus-visible {
-  outline: 3px solid var(--gold-500);
+  outline: 3px solid var(--navy-700);
   outline-offset: 2px;
 }
 
+/* One clear primary action; the other two are tonal so they don't compete */
 #open-btn {
   background: var(--gold-500);
   color: var(--navy-900);
-  box-shadow: 0 4px 12px rgb(245 166 35 / 35%);
-}
-
-#open-btn:hover {
-  background: var(--gold-600);
-  color: white;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgb(245 166 35 / 35%);
 }
 
 #dev-btn {
-  background: #2d3b4f;
+  background: #e9eef8;
+  color: var(--navy-800);
   box-shadow: none;
 }
 
 #install-btn {
-  background: var(--success);
-  box-shadow: 0 4px 12px rgb(22 163 74 / 30%);
+  background: #e4f5ea;
+  color: #0b6b34;
+  box-shadow: none;
 }
 
-/* ===================== Message strip ===================== */
+@media (hover: hover) {
+  #open-btn:hover {
+    background: #eb9a0f;
+    color: var(--navy-900);
+  }
+
+  #dev-btn:hover {
+    background: #dbe4f4;
+  }
+
+  #install-btn:hover {
+    background: #d3eddd;
+  }
+}
+
+/* ==========================================================================
+   6. Instruction card (#msg)
+   ========================================================================== */
+/* Tinted surface + small info glyph instead of a heavy left bar */
 #msg {
+  position: relative;
   margin: 0.8rem 0 0.2rem;
+  padding: 0.7rem 0.95rem 0.7rem 2.6rem;
   background: var(--msg-bg);
-  padding: 0.65rem 0.9rem;
-  border-radius: 1rem;
-  font-size: 0.95rem;
-  line-height: 1.35;
-  border-left: 0.3rem solid var(--navy-700);
+  border-radius: 0.9rem;
+  font-size: 0.92rem;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--navy-800);
   transition: 0.2s;
 }
 
-/* ===================== Modals ===================== */
+#msg::before {
+  content: "";
+  position: absolute;
+  top: 0.78rem;
+  left: 0.95rem;
+  width: 1.1rem;
+  height: 1.1rem;
+  background: var(--navy-700);
+  mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>") center / contain no-repeat;
+
+  /* stylelint-disable-next-line property-no-vendor-prefix */
+  -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>") center / contain no-repeat;
+}
+
+/* ==========================================================================
+   7. Modals
+   ========================================================================== */
+
+/* Full-screen overlay. Everything inside is sized in em, so the whole
+   modal scales from the single --modal-fs value set below. */
 .modal {
   position: fixed;
   inset: 0;
@@ -416,12 +560,14 @@ button:focus-visible {
   border: 0;
   background: #525659;
 }
+
 #share-pdf-btn,
 #download-pdf-btn {
   background: var(--navy-700);
   color: #fff;
   box-shadow: none;
 }
+
 #share-pdf-btn:hover,
 #download-pdf-btn:hover {
   background: var(--gold-500);
@@ -429,9 +575,7 @@ button:focus-visible {
   transform: none;
 }
 
-/* ============================================================
-   ABOUT MODAL
-============================================================ */
+/* About modal (developer card), part of section 7. */
 .developer-modal {
   max-width: 28em;
   height: auto;
@@ -455,12 +599,11 @@ button:focus-visible {
   position: relative;
 }
 
-/* NOTE: this button used `font-size: 0` to hide its text, but every `em`
-   value on the element itself (top, right, width, height) is relative to
-   the element's OWN font-size, so they all resolved to 0 and the global
-   `button` padding then turned it into a small oval jammed in the corner.
-   Fix: size/position with the modal's font-size variable instead, and
-   reset the inherited global button padding/width. */
+/* Close button for the About modal.
+   Its label is hidden with `font-size: 0`, which would also zero every `em`
+   length on the element itself. So size and position use the modal font-size
+   variable (--dc-unit) instead, and the global `button` padding and width are
+   reset below. The "X" is drawn by ::before/::after. */
 .dev-close {
   --dc-unit: var(--modal-fs);
   position: absolute;
@@ -501,6 +644,7 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
+/* The X is two thin bars crossed at +/-45 degrees, centred in the circle. */
 .dev-close::before,
 .dev-close::after {
   content: "";
@@ -701,7 +845,9 @@ button:focus-visible {
   margin-top: 0.4em;
 }
 
-/* ===================== Footer ===================== */
+/* ==========================================================================
+   8. Footer
+   ========================================================================== */
 footer {
   flex: 0 0 auto;
   animation: footer-fade-up 1.3s ease-out forwards;
@@ -711,7 +857,7 @@ footer {
   font-size: 0.8rem;
   line-height: 1.3;
   color: var(--ink-soft);
-  margin-top: 1rem;
+  margin-top: 0.9rem;
   margin-bottom: auto; /* soaks up any spare height below the footer, not above the card */
   opacity: 0;
 }
@@ -727,175 +873,126 @@ footer {
   }
 }
 
-/* ===================== Floating WhatsApp button ===================== */
+/* ==========================================================================
+   9. WhatsApp dock
+   ========================================================================== */
+
+/* A bar the same width and centre line as the card, sitting in the bottom
+   gutter, so it reads as part of the layout rather than a floating bubble.
+   Short landscape switches to a compact pill on the right (see the end of
+   this section).
+
+   The three-selector list (base, :link, :visited) is deliberate: the global
+   `a:link` colour rule has higher specificity than a bare `a.wa-float`, and
+   would otherwise recolour the label. Every override of this block, including
+   the landscape one, must repeat the same list to win. */
 a.wa-float,
 a.wa-float:link,
 a.wa-float:visited {
   position: fixed;
-  right: calc(var(--wa-gap) + var(--safe-right));
+  left: calc(1rem + var(--safe-left));
+  right: calc(1rem + var(--safe-right));
   bottom: calc(var(--wa-gap) + var(--safe-bottom));
+  /* With left AND right set, max-width + auto side margins centre the bar
+     under the card. 40rem matches .box (see the width overrides below). */
+  max-width: 40rem;
+  margin: 0 auto;
   height: var(--wa-size);
-  padding: 0 calc(var(--wa-size) * 0.4) 0 calc(var(--wa-size) * 0.22);
-  gap: calc(var(--wa-size) * 0.16);
-  border-radius: 999px;
-  background: linear-gradient(135deg, #4ff08a 0%, #25d366 45%, #128c7e 100%);
+  padding: 0 1.2rem;
+  gap: 0.6rem;
+  border-radius: 0.9rem;
+  background: var(--wa-green);
   color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   white-space: nowrap;
-  font-weight: 800;
-  font-size: calc(var(--wa-size) * 0.3);
-  letter-spacing: 0.2px;
+  font-weight: 700;
+  font-size: max(1rem, calc(var(--wa-size) * 0.32));
   line-height: 1;
-  text-shadow: 0 1px 2px rgb(0 0 0 / 25%);
-  border: 1.5px solid rgb(255 255 255 / 35%);
-  box-shadow:
-    0 8px 22px rgb(18 140 126 / 45%),
-    0 2px 6px rgb(0 0 0 / 20%),
-    inset 0 1px 0 rgb(255 255 255 / 35%);
-  z-index: 900; /* above the page, below the modals (9999) */
   text-decoration: none;
-  overflow: visible;
-  isolation: isolate;
+  box-shadow: 0 6px 18px rgb(14 124 107 / 28%);
+  z-index: 900; /* above the page, below the modals (9999) */
   -webkit-tap-highlight-color: transparent;
   transition:
-    transform 0.2s ease,
-    box-shadow 0.2s ease,
-    filter 0.2s ease;
+    background-color 0.15s,
+    box-shadow 0.15s,
+    transform 0.15s;
 
-  /* slide in from the right, then gently float */
-  animation:
-    wa-enter 0.7s cubic-bezier(0.2, 1.2, 0.3, 1) 0.6s both,
-    wa-bob 3.2s ease-in-out 1.5s infinite;
-}
-
-/* pulsing ring behind the button */
-a.wa-float::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: #25d366;
-  z-index: -1;
-  animation: wa-pulse 2.2s ease-out 1.5s infinite;
-}
-
-/* light shine sweeping across the button */
-a.wa-float::after {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  background: linear-gradient(
-    110deg,
-    transparent 35%,
-    rgb(255 255 255 / 55%) 50%,
-    transparent 65%
-  );
-  background-size: 250% 100%;
-  background-position: 160% 0;
-  pointer-events: none;
-  animation: wa-shine 3.6s ease-in-out 2s infinite;
+  /* one quiet slide-up on load; no looping motion */
+  animation: wa-enter 0.45s ease-out 0.5s backwards;
 }
 
 a.wa-float:hover {
   color: #fff;
-  filter: brightness(1.06) saturate(1.1);
-  transform: translateY(-3px) scale(1.05);
-  box-shadow:
-    0 14px 30px rgb(18 140 126 / 55%),
-    0 3px 8px rgb(0 0 0 / 22%),
-    inset 0 1px 0 rgb(255 255 255 / 40%);
+  background: var(--wa-green-dark);
 }
 
 a.wa-float:active {
-  transform: scale(0.95);
-  filter: brightness(0.96);
+  transform: scale(0.985);
 }
 
 a.wa-float:focus-visible {
-  outline: 3px solid var(--gold-500);
+  outline: 3px solid var(--navy-700);
   outline-offset: 3px;
 }
 
 a.wa-float svg {
-  width: calc(var(--wa-size) * 0.58);
-  height: calc(var(--wa-size) * 0.58);
+  width: calc(var(--wa-size) * 0.5);
+  height: calc(var(--wa-size) * 0.5);
   flex: none;
   fill: currentcolor;
   display: block;
-  filter: drop-shadow(0 1px 2px rgb(0 0 0 / 25%));
-  transform-origin: 50% 80%;
-  animation: wa-ring 4s ease-in-out 2.5s infinite;
 }
 
 @keyframes wa-enter {
   from {
     opacity: 0;
-    transform: translateX(60px) scale(0.8);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
-    transform: translateX(0) scale(1);
+    transform: none;
   }
 }
 
-@keyframes wa-bob {
-  0%,
-  100% {
-    translate: 0 0;
-  }
-  50% {
-    translate: 0 -5px;
-  }
-}
-
-@keyframes wa-pulse {
-  0% {
-    transform: scale(1);
-    opacity: 0.55;
-  }
-  80%,
-  100% {
-    transform: scale(1.35, 1.7);
-    opacity: 0;
+/* Keep the dock the same width as the card at larger sizes (mirrors the
+   .box max-width overrides in section 10). */
+@media (width >= 1400px) {
+  a.wa-float,
+  a.wa-float:link,
+  a.wa-float:visited {
+    max-width: 44rem;
   }
 }
 
-@keyframes wa-shine {
-  0%,
-  55% {
-    background-position: 160% 0;
-  }
-  100% {
-    background-position: -60% 0;
+@media (width >= 2200px) and (height >= 1000px) {
+  a.wa-float,
+  a.wa-float:link,
+  a.wa-float:visited {
+    max-width: 50rem;
   }
 }
 
-@keyframes wa-ring {
-  0%,
-  70%,
-  100% {
-    transform: rotate(0);
-  }
-  74% {
-    transform: rotate(-16deg);
-  }
-  78% {
-    transform: rotate(14deg);
-  }
-  82% {
-    transform: rotate(-12deg);
-  }
-  86% {
-    transform: rotate(10deg);
-  }
-  90% {
-    transform: rotate(-5deg);
+/* Short landscape: the card fills the width, so the dock becomes a compact
+   pill on the right; section 10 reserves --wa-pill-w for it on the body. */
+@media (orientation: landscape) and (height <= 540px) {
+  a.wa-float,
+  a.wa-float:link,
+  a.wa-float:visited {
+    left: auto;
+    right: calc(var(--wa-gap) + var(--safe-right));
+    max-width: none;
+    margin: 0;
+    padding: 0 calc(var(--wa-size) * 0.4) 0 calc(var(--wa-size) * 0.22);
+    gap: calc(var(--wa-size) * 0.16);
+    border-radius: 999px;
+    font-size: calc(var(--wa-size) * 0.3);
   }
 }
 
+/* Default link colours. More specific rules (.youtube-btn, a.wa-float,
+   .dev-card a) override these where needed. */
 a:link,
 a:visited {
   color: var(--navy-700);
@@ -905,7 +1002,9 @@ a:hover {
   color: var(--gold-600);
 }
 
-/* ===================== Responsive ===================== */
+/* ==========================================================================
+   10. Responsive + display-mode overrides
+   ========================================================================== */
 
 /* Modal sizing on larger screens */
 @media (width >= 900px) {
@@ -941,8 +1040,9 @@ a:hover {
 }
 
 /* ---- Installed PWA (standalone / fullscreen / minimal-ui) ----
-   No browser toolbar, so the viewport is taller. Top-anchor the layout
-   and add a gentle, capped offset so it doesn't hug the status bar. */
+   No browser toolbar, so the viewport is taller. Top-anchor the layout and
+   add a small offset (2.5% of height, capped at 1.6rem) so the card doesn't
+   hug the status bar. */
 @media (display-mode: standalone),
   (display-mode: fullscreen),
   (display-mode: minimal-ui) {
@@ -982,8 +1082,20 @@ a:hover {
 }
 
 /* ---- Short landscape (phones on their side, small windows) ----
-   Two columns: logo/title left, controls right. The button now sits
-   beside the card, so clearance moves from the bottom to the right. */
+   The card becomes a 3-column grid; the header spans every row on the left:
+
+     +----------+---------------+---------------+
+     |          | #branch (row 1, spans 2 cols) |
+     |  logo    | #sem (r2)     | #session (r2) |
+     |  title   | #open-btn (row 3, spans 2)    |
+     |  tagline | #msg (row 4, spans 2)         |
+     |          | #dev-btn (r5) | #install (r5) |
+     |          | stats bar (row 6, spans 2)    |
+     +----------+---------------+---------------+
+
+   The WhatsApp pill now sits beside the card, so its clearance moves from
+   the bottom (--reserve-bottom shrinks) to the right (body padding-right).
+   Font-size uses --fit-rem-land, with no width term since width is plentiful. */
 @media (orientation: landscape) and (height <= 540px) {
   :root {
     --wa-size: 46px;
@@ -1071,6 +1183,7 @@ a:hover {
 
   select,
   button {
+    min-height: 0;
     margin-top: 0.4rem;
     padding: 0.55rem 0.8rem;
   }
@@ -1078,7 +1191,14 @@ a:hover {
   #msg {
     grid-row: 4;
     margin: 0.5rem 0 0.1rem;
-    padding: 0.45rem 0.8rem;
+    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+  }
+
+  #msg::before {
+    top: 0.5rem;
+    left: 0.75rem;
+    width: 0.95rem;
+    height: 0.95rem;
   }
 
   #logo {
@@ -1133,7 +1253,12 @@ a:hover {
   }
 }
 
-/* ===================== Update popup (new version / new syllabus) ===================== */
+/* ==========================================================================
+   11. Update popup (new version / new syllabus)
+   ========================================================================== */
+
+/* Uses fixed px sizes on purpose: it must look the same regardless of the
+   app's scaling root font-size. */
 .upd-overlay {
   position: fixed;
   inset: 0;
