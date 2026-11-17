@@ -40,7 +40,10 @@
 
   /* Fit-to-height divisor: number of rem the card + footer need.
      Calibrate with the console snippet if the card still overflows. */
-  --fit-rem: 41.5;
+  /* Syllabus card = PYQ card + a 3rd select (#session) + the stats bar,
+     so it needs more rem than PYQ's 41.5. */
+  --fit-rem: 52; /* portrait divisor */
+  --fit-rem-land: 27; /* landscape divisor (was a hard-coded 21) */
 }
 
 html {
@@ -992,12 +995,12 @@ a:hover {
     font-size: 12px;
     font-size: clamp(
       8px,
-      calc((100vh - var(--reserve-bottom) - var(--safe-top)) / 21),
+      calc((100vh - var(--reserve-bottom) - var(--safe-top)) / var(--fit-rem-land)),
       22px
     );
     font-size: clamp(
       8px,
-      calc((100dvh - var(--reserve-bottom) - var(--safe-top)) / 21),
+      calc((100dvh - var(--reserve-bottom) - var(--safe-top)) / var(--fit-rem-land)),
       22px
     );
   }
@@ -1021,7 +1024,7 @@ a:hover {
 
   .header-center {
     grid-column: 1;
-    grid-row: 1 / span 5;
+    grid-row: 1 / span 6;
     margin: 0;
   }
   .box > select,
@@ -1051,6 +1054,14 @@ a:hover {
   #dev-btn {
     grid-column: 2;
     grid-row: 5;
+  }
+
+  /* Stats bar was unplaced in landscape -> auto-placed into an extra row
+     and pushed the card past the screen height. */
+  #stats-bar {
+    grid-column: 2 / span 2;
+    grid-row: 6;
+    margin-top: 0.4rem;
   }
 
   #install-btn {
