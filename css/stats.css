@@ -1,7 +1,18 @@
 /* ==========================================================================
-   Stats bar  (REDESIGNED)
+   Stats bar
+   Loads AFTER style.css. All type scaling comes from the root font-size
+   defined in style.css, so everything here is in rem.
+
+   Markup expected:
+
+     <div class="stats-bar" id="stats-bar">
+       <div class="stat stat-live">
+         <span class="stat-value">..</span><span class="stat-label">..</span>
+       </div> x3
+     </div>
    ========================================================================== */
 
+/* Container: three equal columns on a tinted surface (no outline). */
 .stats-bar {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -45,6 +56,7 @@
   color: var(--ink-muted);
 }
 
+/* ---- Icons: one per stat, drawn in CSS so no HTML change is needed ---- */
 .stat-label::before {
   content: "";
   display: inline-block;
@@ -58,13 +70,16 @@
 }
 
 .stat:nth-child(2) {
+  /* download */
   --stat-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M11 3h2v9.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4 3.6 3.6V3zM5 19h14v2H5z'/></svg>");
 }
 
 .stat:nth-child(3) {
+  /* document */
   --stat-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 2h8l6 6v14H6V2zm7 1.5V9h5.5L13 3.5zM8.5 13h7v1.5h-7V13zm0 3.5h7V18h-7v-1.5z'/></svg>");
 }
 
+/* Live stat: pulsing green dot */
 .stat-live .stat-label::before {
   width: 0.5rem;
   height: 0.5rem;
@@ -90,6 +105,7 @@
   }
 }
 
+/* Loading shimmer */
 .stat-value:empty::before,
 .stat-value.is-loading::before {
   content: "";
@@ -113,6 +129,7 @@
   }
 }
 
+/* Short landscape (phone on its side): card becomes a grid in style.css. */
 @media (orientation: landscape) and (height <= 540px) {
   .header-center {
     grid-row: 1 / span 6;
@@ -145,6 +162,7 @@
   }
 }
 
+/* Very narrow screens */
 @media (width <= 340px) {
   .stat {
     padding: 0 0.15rem;
