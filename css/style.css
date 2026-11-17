@@ -1,26 +1,6 @@
 /* ==========================================================================
-   Syllabus app: main stylesheet
+   Syllabus app: main stylesheet  (REDESIGNED)
    ========================================================================== */
-
-/*
-   Contents
-   1.  Reset
-   2.  Design tokens (:root)
-   3.  Base: viewport lock, fit-to-height type scale, wrapping rules
-   4.  Card + header
-   5.  Dropdowns + buttons
-   6.  Instruction card (#msg)
-   7.  Modals (viewer, About)
-   8.  Footer
-   9.  WhatsApp dock
-   10. Responsive + display-mode overrides
-   11. Update popup
-
-   Sizing model: the main screen is sized in rem, and the root font-size is
-   computed from the viewport height (section 3) so the whole card scales to
-   fit without scrolling. Modals use em instead and scale from --modal-fs.
-   stats.css loads after this file and styles the stats bar only.
-*/
 
 /* ==========================================================================
    1. Reset
@@ -37,88 +17,70 @@
 
 :root {
   /* ---- Brand palette ---- */
-  --navy-900: #0b1e3a;
-  --navy-800: #14265a;
-  --navy-700: #16215c;
-  --gold-500: #f5a623; /* fills (buttons) */
+  --navy-900: #0a1a33;
+  --navy-800: #12244d;
+  --navy-700: #1a2e6b;
+  --navy-600: #27408f;
+  --gold-500: #f5a623;
   --gold-600: #d98d10;
-  --gold-700: #9a5b00; /* gold for TEXT on white (5.4:1) */
+  --gold-700: #9a5b00;
 
   /* ---- Surfaces, text and borders ---- */
-  --bg: #f2f5fb;
-  --card: #fff;
-  --surface: #f6f8fc; /* form fields, stats bar */
-  --msg-bg: #eef4ff; /* instruction card */
-  --line: #d9e2ef;
-  --ink: #0b1e3a;
-  --ink-soft: #4a5a72; /* secondary text */
+  --bg: #eef2fa;
+  --card: #ffffff;
+  --surface: #f5f8fd;
+  --msg-bg: #eaf1ff;
+  --line: #d7e0ee;
+  --ink: #0f2244;           /* primary text — deep navy, not black */
+  --ink-soft: #4d5f7a;      /* secondary text */
+  --ink-muted: #71809a;     /* tertiary text */
 
   /* ---- Status + WhatsApp ---- */
   --success: #16a34a;
-  --wa-green: #0e7c6b; /* white text on this is 5.1:1 */
-  --wa-green-dark: #0a6a5b; /* hover */
+  --success-dark: #128a3e;
+  --success-soft: #e4f5ea;
+  --wa-green: #0e7c6b;
+  --wa-green-dark: #0a6a5b;
 
-  /* ---- Safe areas (notches, home indicator); 0 where unsupported ---- */
+  /* ---- Safe areas ---- */
   --safe-top: env(safe-area-inset-top, 0px);
   --safe-right: env(safe-area-inset-right, 0px);
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
 
-  /* ---- WhatsApp dock geometry (shared by the dock and the body padding) ---- */
+  /* ---- WhatsApp dock geometry ---- */
   --wa-size: 48px;
   --wa-gap: 12px;
-
-  /* Approx. width of the compact pill (icon + "Send Syllabus"). Only used in
-     landscape, where the pill sits beside the card and the body reserves
-     this much space on the right. */
   --wa-pill-w: calc(var(--wa-size) * 3.6);
-
-  /* Vertical room the body keeps free at the bottom for the dock:
-     button height + a gap above and below + the home-indicator inset. */
   --reserve-bottom: calc(
     var(--wa-size) + (var(--wa-gap) * 2) + var(--safe-bottom)
   );
 
   /* ---- Type scale ---- */
-
-  /* Modals scroll internally, so they scale more gently than the main screen. */
   --modal-fs: clamp(15px, 0.9vw + 6px, 40px);
+  --fit-rem: 50;
+  --fit-rem-land: 26;
 
-  /* Fit-to-height divisors: roughly how many rem the card + footer need.
-     The root font-size is (available height / divisor), so a larger number
-     means smaller text. Raise it if the card overflows; lower it if there is
-     spare room. The syllabus card is taller than the PYQ card (41.5) because
-     it adds a third select (#session) and the stats bar. */
-  --fit-rem: 50; /* portrait (45.6 + room for a 3-line #msg) */
-  --fit-rem-land: 26; /* landscape (23.4 + room for a 2-line #msg) */
+  /* ---- Motion tokens ---- */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 0.15s;
+  --dur-med: 0.25s;
+  --dur-slow: 0.4s;
 }
 
 /* ==========================================================================
    3. Base
    ========================================================================== */
-
-/* Root element: fixed to the viewport, no page-level scrolling, and the
-   fit-to-height font-size that every rem value in this file hangs off. */
 html {
-  /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-text-size-adjust: 100%;
   text-size-adjust: 100%;
   width: 100%;
   height: 100%;
   overflow: hidden;
-  overscroll-behavior: none; /* no pull-to-refresh / bounce chaining */
-  touch-action: manipulation; /* no double-tap zoom shifting the layout */
+  overscroll-behavior: none;
+  touch-action: manipulation;
 
-  /* Fit-to-height scale:
-       font-size = min( (viewport height - reserved space) / --fit-rem,
-                        1.6vw + 9px )
-     clamped to 9px-56px.
-     - The height term makes the card shrink on short screens instead of
-       scrolling; the width term stops text getting huge on wide, short ones.
-     - Declared three times on purpose: a plain px fallback, then a vh
-       version, then a dvh version. Browsers drop declarations they can't
-       parse, so each one falls back to the previous. dvh tracks the mobile
-       address bar showing/hiding; vh does not. */
   font-size: 14px;
   font-size: clamp(
     9px,
@@ -140,17 +102,15 @@ html {
 
 body {
   font-family:
-    system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif;
+    "Inter", system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans",
+    sans-serif;
   -webkit-font-smoothing: antialiased;
-  background: linear-gradient(180deg, #e8edf9 0%, var(--bg) 45%);
+  -moz-osx-font-smoothing: grayscale;
+  background: linear-gradient(180deg, #e3eaf8 0%, var(--bg) 45%);
   color: var(--ink);
+  font-weight: 500;
+  letter-spacing: -0.005em;
 
-  /* Scroll lock: iOS Safari and Android Chrome ignore overflow:hidden on
-     html/body alone, so the body is pinned with position:fixed.
-     - Height uses the same dvh unit as the html font-size, so layout and
-       type scale agree about how tall the screen is.
-     - top/left/right are set instead of `inset`, because `bottom: 0` would
-       override the explicit height. */
   position: fixed;
   top: 0;
   left: 0;
@@ -164,26 +124,20 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-
-  /* Top and sides respect notches; the bottom reserves the WhatsApp dock. */
   padding: calc(0.6rem + var(--safe-top)) calc(1rem + var(--safe-right))
     var(--reserve-bottom) calc(1rem + var(--safe-left));
 }
 
-/* Make the `hidden` attribute win over any display value set elsewhere. */
 [hidden] {
   display: none !important;
 }
 
-/* Long subject/session names must wrap, never stretch the layout. */
 #msg,
 .app-title,
 option {
   overflow-wrap: anywhere;
 }
 
-/* Lets grid/flex children shrink below their content width (needed for the
-   landscape grid and for ellipsis on long <option> text). */
 .box > * {
   min-width: 0;
 }
@@ -195,25 +149,19 @@ option {
   background: var(--card);
   width: 100%;
   max-width: 40rem;
-
-  /* Anchored to the top. The old `margin: auto` split ALL spare height
-     above and below the card, so in standalone/PWA mode (taller viewport,
-     no browser toolbar) the card floated down and the footer was pushed
-     to the bottom, under the WhatsApp button. */
   margin: 0 auto;
   flex: 0 1 auto;
   min-height: 0;
   padding: 1.3rem 1.3rem 1.4rem;
   border-radius: 1.6rem;
+  border: 1px solid rgb(255 255 255 / 60%);
   box-shadow:
-    0 1px 2px rgb(11 30 58 / 6%),
-    0 0.9rem 2.2rem rgb(11 30 58 / 9%);
-
-  /* last-resort safety net for extremely small windows; never
-     triggers at normal phone/tablet/laptop/TV sizes */
+    0 1px 2px rgb(10 26 51 / 6%),
+    0 0.9rem 2.4rem rgb(10 26 51 / 10%),
+    inset 0 1px 0 rgb(255 255 255 / 90%);
   overflow-x: hidden;
   overflow-y: auto;
-  overscroll-behavior: contain; /* scrolling the card never scrolls the page */
+  overscroll-behavior: contain;
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
@@ -236,8 +184,15 @@ option {
   height: 5.6rem;
   object-fit: cover;
   border-radius: 1.3rem;
-  box-shadow: 0 2px 8px rgb(11 30 58 / 12%);
+  box-shadow:
+    0 2px 8px rgb(10 26 51 / 14%),
+    0 0 0 3px rgb(255 255 255 / 80%);
   display: block;
+  transition: transform var(--dur-med) var(--ease-out);
+}
+
+#logo:hover {
+  transform: scale(1.03) rotate(-1deg);
 }
 
 .app-title {
@@ -245,13 +200,16 @@ option {
   font-weight: 800;
   font-size: 1.8rem;
   line-height: 1.15;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   color: var(--navy-900);
   margin-top: 0.65rem;
 }
 
 .app-title .sub {
-  color: var(--gold-700);
+  background: linear-gradient(135deg, var(--gold-600), var(--gold-700));
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
   font-weight: 800;
 }
 
@@ -259,8 +217,8 @@ option {
   margin-top: 0.3rem;
   font-size: 0.88rem;
   font-weight: 600;
-  letter-spacing: 0.01em;
-  color: var(--ink-soft);
+  letter-spacing: 0.015em;
+  color: var(--ink-muted);
 }
 
 /* ==========================================================================
@@ -279,35 +237,31 @@ button {
   border-radius: 0.9rem;
   border: 1px solid transparent;
   transition:
-    background-color 0.15s,
-    border-color 0.15s,
-    box-shadow 0.15s,
-    transform 0.15s;
+    background-color var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) ease;
 }
 
-/* Dropdowns: soft filled field, one quiet border, navy chevron.
-   (The open list itself is drawn by the OS on phones.) */
 select {
   appearance: none;
-
-  /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-appearance: none;
   color-scheme: light;
   color: var(--ink);
   background-color: var(--surface);
-  border-color: #d3dcea;
+  border-color: #cbd6e8;
   text-overflow: ellipsis;
   padding-right: 2.8rem;
   cursor: pointer;
-  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'><path d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%2316215c' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
+  background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'><path d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%231a2e6b' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
   background-repeat: no-repeat;
   background-position: right 1rem center;
   background-size: 1.1rem;
 }
 
-/* placeholder option ("Select branch" etc.) reads as a hint, not a value */
 select:has(option[value=""]:checked) {
-  color: var(--ink-soft);
+  color: var(--ink-muted);
   font-weight: 500;
 }
 
@@ -320,38 +274,47 @@ option {
 select:focus {
   outline: none;
   background-color: #fff;
-  border-color: var(--navy-700);
-  box-shadow: 0 0 0 3px rgb(22 33 92 / 16%);
+  border-color: var(--navy-600);
+  box-shadow: 0 0 0 3px rgb(39 64 143 / 18%);
 }
 
 select:disabled {
-  color: #66728a;
-  background-color: #eff2f8;
-  border-color: #e3e8f1;
+  color: #7a869e;
+  background-color: #eef1f7;
+  border-color: #e1e7f0;
   cursor: not-allowed;
   background-image: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'><path d='M5.5 7.5l4.5 4.5 4.5-4.5' stroke='%239aa6bb' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/></svg>");
 }
 
+/* ---- Base button ---- */
 button {
   background: var(--navy-700);
   color: #fff;
   cursor: pointer;
-  box-shadow: 0 1px 2px rgb(11 30 58 / 20%);
+  box-shadow: 0 2px 6px rgb(10 26 51 / 18%);
+  position: relative;
+  overflow: hidden;
+  -webkit-tap-highlight-color: transparent;
+  user-select: none;
 }
 
 @media (hover: hover) {
   select:hover:not(:disabled) {
     background-color: #fff;
-    border-color: #aebbd2;
+    border-color: #a9b8d3;
+    box-shadow: 0 1px 4px rgb(10 26 51 / 6%);
   }
 
   button:hover {
     background: var(--navy-800);
+    box-shadow: 0 4px 12px rgb(10 26 51 / 22%);
+    transform: translateY(-1px);
   }
 }
 
 button:active {
-  transform: scale(0.985);
+  transform: translateY(0) scale(0.975);
+  box-shadow: 0 1px 3px rgb(10 26 51 / 18%);
 }
 
 button:focus-visible {
@@ -359,56 +322,164 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* One clear primary action; the other two are tonal so they don't compete */
+/* ---- Primary CTA: Open Syllabus ----
+   Engaging entrance + ripple-style click feedback. */
 #open-btn {
-  background: var(--gold-500);
+  background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-600) 100%);
   color: var(--navy-900);
-  font-weight: 700;
-  box-shadow: 0 2px 8px rgb(245 166 35 / 35%);
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  box-shadow:
+    0 4px 14px rgb(245 166 35 / 38%),
+    inset 0 1px 0 rgb(255 255 255 / 45%);
+  animation: cta-enter 0.6s var(--ease-spring) 0.15s backwards;
+  transition:
+    background var(--dur-med) ease,
+    box-shadow var(--dur-med) ease,
+    transform var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) ease;
 }
 
-#dev-btn {
-  background: #e9eef8;
-  color: var(--navy-800);
-  box-shadow: none;
-}
-
-#install-btn {
-  background: #e4f5ea;
-  color: #0b6b34;
-  box-shadow: none;
+@keyframes cta-enter {
+  0% {
+    opacity: 0;
+    transform: translateY(14px) scale(0.94);
+  }
+  60% {
+    opacity: 1;
+    transform: translateY(-2px) scale(1.02);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 @media (hover: hover) {
   #open-btn:hover {
-    background: #eb9a0f;
+    background: linear-gradient(135deg, #ffb63a 0%, #e89a12 100%);
     color: var(--navy-900);
+    box-shadow:
+      0 8px 22px rgb(245 166 35 / 48%),
+      inset 0 1px 0 rgb(255 255 255 / 55%);
+    transform: translateY(-2px);
   }
+}
 
+#open-btn:active {
+  transform: translateY(0) scale(0.96);
+  box-shadow:
+    0 2px 8px rgb(245 166 35 / 40%),
+    inset 0 2px 4px rgb(154 91 0 / 25%);
+  animation: cta-press 0.28s var(--ease-out);
+}
+
+@keyframes cta-press {
+  0%   { transform: scale(0.96); }
+  45%  { transform: scale(1.02); }
+  100% { transform: scale(0.97); }
+}
+
+/* click ripple layer */
+#open-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    rgb(255 255 255 / 70%) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+}
+
+#open-btn:active::after {
+  animation: cta-ripple 0.5s ease-out;
+}
+
+@keyframes cta-ripple {
+  0%   { opacity: 0.55; transform: scale(0.4); }
+  100% { opacity: 0;    transform: scale(1.6); }
+}
+
+/* ---- Secondary: Developer Info ---- */
+#dev-btn {
+  background: #eef2fb;
+  color: var(--navy-800);
+  box-shadow: inset 0 0 0 1px #d6def0;
+  transition:
+    background var(--dur-med) ease,
+    box-shadow var(--dur-med) ease,
+    transform var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) ease;
+}
+
+@media (hover: hover) {
   #dev-btn:hover {
-    background: #dbe4f4;
+    background: #e2e9f8;
+    color: var(--navy-900);
+    box-shadow:
+      inset 0 0 0 1px #b9c6e4,
+      0 4px 12px rgb(26 46 107 / 10%);
+    transform: translateY(-1px);
   }
+}
 
+#dev-btn:active {
+  background: #d8e2f5;
+  transform: translateY(0) scale(0.975);
+  box-shadow: inset 0 0 0 1px #b9c6e4;
+}
+
+/* ---- Success: Install ---- */
+#install-btn {
+  background: var(--success-soft);
+  color: #0b6b34;
+  box-shadow: inset 0 0 0 1px #c7e8d3;
+  transition:
+    background var(--dur-med) ease,
+    box-shadow var(--dur-med) ease,
+    transform var(--dur-fast) var(--ease-out),
+    color var(--dur-fast) ease;
+}
+
+@media (hover: hover) {
   #install-btn:hover {
     background: #d3eddd;
+    color: #095c2c;
+    box-shadow:
+      inset 0 0 0 1px #a8dab9,
+      0 4px 12px rgb(22 163 74 / 14%);
+    transform: translateY(-1px);
   }
+}
+
+#install-btn:active {
+  background: #c4e6d0;
+  transform: translateY(0) scale(0.975);
+  box-shadow: inset 0 0 0 1px #a8dab9;
 }
 
 /* ==========================================================================
    6. Instruction card (#msg)
    ========================================================================== */
-/* Tinted surface + small info glyph instead of a heavy left bar */
 #msg {
   position: relative;
   margin: 0.8rem 0 0.2rem;
   padding: 0.7rem 0.95rem 0.7rem 2.6rem;
   background: var(--msg-bg);
+  border: 1px solid #dbe6fb;
   border-radius: 0.9rem;
   font-size: 0.92rem;
   font-weight: 500;
-  line-height: 1.4;
+  line-height: 1.45;
   color: var(--navy-800);
-  transition: 0.2s;
+  transition:
+    background var(--dur-med) ease,
+    border-color var(--dur-med) ease;
 }
 
 #msg::before {
@@ -418,23 +489,18 @@ button:focus-visible {
   left: 0.95rem;
   width: 1.1rem;
   height: 1.1rem;
-  background: var(--navy-700);
+  background: var(--navy-600);
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>") center / contain no-repeat;
-
-  /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>") center / contain no-repeat;
 }
 
 /* ==========================================================================
    7. Modals
    ========================================================================== */
-
-/* Full-screen overlay. Everything inside is sized in em, so the whole
-   modal scales from the single --modal-fs value set below. */
 .modal {
   position: fixed;
   inset: 0;
-  background: rgb(11 30 58 / 55%);
+  background: rgb(10 26 51 / 58%);
   display: none;
   justify-content: center;
   align-items: center;
@@ -445,7 +511,8 @@ button:focus-visible {
   z-index: 9999;
   overscroll-behavior: contain;
   font-size: var(--modal-fs);
-  backdrop-filter: blur(0.267em);
+  backdrop-filter: blur(0.35em);
+  -webkit-backdrop-filter: blur(0.35em);
 }
 
 .modal.active {
@@ -459,28 +526,31 @@ button:focus-visible {
   height: 92dvh;
   max-height: 100%;
   background: #fff;
-  border-radius: 1.867em;
+  border-radius: 1.6em;
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  animation: popup 0.3s ease;
-  box-shadow: 0 2em 4em rgb(0 0 0 / 25%);
+  animation: popup var(--dur-med) var(--ease-out);
+  box-shadow:
+    0 2em 4em rgb(10 26 51 / 30%),
+    0 0 0 1px rgb(255 255 255 / 20%);
 }
 
 @keyframes popup {
   from {
-    transform: scale(0.94);
+    transform: scale(0.94) translateY(8px);
     opacity: 0;
   }
   to {
-    transform: scale(1);
+    transform: scale(1) translateY(0);
     opacity: 1;
   }
 }
 
 .modal-top {
   padding: 0.933em 1.2em;
-  background: #f1f4fb;
+  background: linear-gradient(180deg, #f4f7fc, #eef2fb);
+  border-bottom: 1px solid var(--line);
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -488,6 +558,7 @@ button:focus-visible {
   gap: 0.5em 0.667em;
   font-size: 1.133em;
   font-weight: 600;
+  color: var(--navy-900);
   flex-shrink: 0;
 }
 
@@ -503,8 +574,6 @@ button:focus-visible {
   white-space: nowrap;
 }
 
-/* Narrow phones: title on its own row, buttons share the full width,
-   so Close / Share / Download are always fully visible (320px and up). */
 @media (width <= 520px) {
   .modal-top {
     padding: 0.8em 0.9em;
@@ -537,13 +606,25 @@ button:focus-visible {
   font-size: 0.867em;
   margin-top: 0;
   width: auto;
+  transition:
+    background var(--dur-fast) ease,
+    color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
 }
 
-.close-btn:hover,
+@media (hover: hover) {
+  .close-btn:hover {
+    background: var(--gold-500);
+    color: var(--navy-900);
+    box-shadow: 0 4px 12px rgb(245 166 35 / 35%);
+  }
+}
+
 .close-btn:active {
   background: var(--gold-600);
-  color: #000;
-  transform: none;
+  color: var(--navy-900);
+  transform: scale(0.97);
 }
 
 #open-youtube-btn {
@@ -566,16 +647,29 @@ button:focus-visible {
   background: var(--navy-700);
   color: #fff;
   box-shadow: none;
+  transition:
+    background var(--dur-med) ease,
+    color var(--dur-med) ease,
+    transform var(--dur-fast) var(--ease-out);
 }
 
-#share-pdf-btn:hover,
-#download-pdf-btn:hover {
-  background: var(--gold-500);
-  color: var(--navy-900);
-  transform: none;
+@media (hover: hover) {
+  #share-pdf-btn:hover,
+  #download-pdf-btn:hover {
+    background: var(--gold-500);
+    color: var(--navy-900);
+  }
 }
 
-/* About modal (developer card), part of section 7. */
+#share-pdf-btn:active,
+#download-pdf-btn:active {
+  background: var(--gold-600);
+  transform: scale(0.97);
+}
+
+/* ==========================================================================
+   Developer modal — consistent "card" treatment
+   ========================================================================== */
 .developer-modal {
   max-width: 28em;
   height: auto;
@@ -584,26 +678,26 @@ button:focus-visible {
   max-height: min(90dvh, 100%);
   width: 100%;
   background: #fff;
-  border-radius: 1.867em;
+  border-radius: 1.6em;
   overflow-y: auto;
   overscroll-behavior: contain;
-  animation: popup 0.3s ease;
-  box-shadow: 0 2em 4em rgb(0 0 0 / 25%);
+  animation: popup var(--dur-med) var(--ease-out);
+  box-shadow:
+    0 2em 4em rgb(10 26 51 / 30%),
+    0 0 0 1px rgb(255 255 255 / 20%);
 }
 
 .dev-header {
   text-align: center;
   padding: 2.133em 1.467em 1.867em;
-  background: linear-gradient(135deg, var(--navy-700), var(--navy-900));
+  background:
+    radial-gradient(circle at 20% 0%, rgb(39 64 143 / 45%) 0%, transparent 60%),
+    linear-gradient(135deg, var(--navy-700), var(--navy-900));
   color: #fff;
   position: relative;
+  border-radius: 1.6em 1.6em 0 0;
 }
 
-/* Close button for the About modal.
-   Its label is hidden with `font-size: 0`, which would also zero every `em`
-   length on the element itself. So size and position use the modal font-size
-   variable (--dc-unit) instead, and the global `button` padding and width are
-   reset below. The "X" is drawn by ::before/::after. */
 .dev-close {
   --dc-unit: var(--modal-fs);
   position: absolute;
@@ -618,7 +712,7 @@ button:focus-visible {
   flex: none;
   border-radius: 50%;
   border: none;
-  background: rgb(255 255 255 / 20%);
+  background: rgb(255 255 255 / 16%);
   color: #fff;
   font-size: 0;
   line-height: 0;
@@ -628,15 +722,21 @@ button:focus-visible {
   justify-content: center;
   box-shadow: none;
   -webkit-tap-highlight-color: transparent;
+  transition:
+    background var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
 }
 
-.dev-close:hover {
-  background: rgb(255 255 255 / 32%);
-  transform: none;
+@media (hover: hover) {
+  .dev-close:hover {
+    background: rgb(255 255 255 / 30%);
+    transform: rotate(90deg);
+  }
 }
 
 .dev-close:active {
-  background: rgb(255 255 255 / 40%);
+  background: rgb(255 255 255 / 42%);
+  transform: rotate(90deg) scale(0.94);
 }
 
 .dev-close:focus-visible {
@@ -644,7 +744,6 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* The X is two thin bars crossed at +/-45 degrees, centred in the circle. */
 .dev-close::before,
 .dev-close::after {
   content: "";
@@ -672,7 +771,9 @@ button:focus-visible {
   border-radius: 50%;
   padding: 0.267em;
   background: white;
-  box-shadow: 0 0.533em 1.6em rgb(0 0 0 / 18%);
+  box-shadow:
+    0 0.533em 1.6em rgb(0 0 0 / 22%),
+    0 0 0 0.267em rgb(255 255 255 / 25%);
   overflow: hidden;
   display: flex;
   align-items: center;
@@ -691,14 +792,14 @@ button:focus-visible {
 .dev-header h2 {
   margin: 0.267em 0 0.133em;
   font-size: 1.6em;
-  font-weight: 700;
+  font-weight: 800;
   color: #fff;
   letter-spacing: -0.033em;
 }
 
 .dev-header .dev-title {
   font-size: 0.867em;
-  opacity: 0.85;
+  opacity: 0.88;
   font-weight: 500;
   letter-spacing: 0.02em;
 }
@@ -708,20 +809,28 @@ button:focus-visible {
   background: #fff;
 }
 
+/* info list as a cohesive card */
 .dev-info-item {
   display: flex;
   align-items: center;
   gap: 0.667em;
-  padding: 0.8em 0;
-  border-bottom: 1px solid #f0f2f5;
+  padding: 0.8em 0.9em;
+  border-radius: 0.7em;
+  transition: background var(--dur-fast) ease;
 }
 
-.dev-info-item:last-of-type {
-  border-bottom: none;
+.dev-info-item + .dev-info-item {
+  margin-top: 0.2em;
+}
+
+@media (hover: hover) {
+  .dev-info-item:hover {
+    background: var(--surface);
+  }
 }
 
 .dev-info-label {
-  font-weight: 600;
+  font-weight: 700;
   color: var(--navy-900);
   font-size: 0.933em;
   min-width: 4.667em;
@@ -734,40 +843,59 @@ button:focus-visible {
 }
 
 .dev-info-value a {
-  color: var(--navy-700);
+  color: var(--navy-600);
   text-decoration: none;
-  font-weight: 500;
+  font-weight: 600;
+  transition: color var(--dur-fast) ease;
 }
 
-.dev-info-value a:hover {
-  color: var(--gold-600);
-  text-decoration: underline;
+@media (hover: hover) {
+  .dev-info-value a:hover {
+    color: var(--gold-700);
+    text-decoration: underline;
+  }
 }
 
 .dev-info-value .version-tag {
   display: inline-block;
-  background: #e8edf5;
+  background: linear-gradient(135deg, #e8edf8, #dfe7f5);
   padding: 0.133em 0.933em;
   border-radius: 2.667em;
   font-size: 0.867em;
   color: var(--navy-900);
-  font-weight: 500;
+  font-weight: 600;
+  border: 1px solid #d3dcea;
 }
 
-/* Developer Cards */
+/* Developer cards */
 .dev-card {
-  background: #f8fafe;
-  border: 1px solid #e5edf8;
-  border-radius: 1.067em;
+  background: linear-gradient(180deg, #fafcff, #f4f8ff);
+  border: 1px solid #e2eaf7;
+  border-radius: 0.9em;
   padding: 0.933em 1.067em;
   margin-bottom: 0.933em;
+  transition:
+    border-color var(--dur-med) ease,
+    box-shadow var(--dur-med) ease,
+    transform var(--dur-fast) var(--ease-out);
+}
+
+@media (hover: hover) {
+  .dev-card:hover {
+    border-color: #c3d3ee;
+    box-shadow: 0 4px 14px rgb(26 46 107 / 8%);
+    transform: translateY(-1px);
+  }
 }
 
 .dev-card b {
   display: block;
-  font-size: 0.867em;
-  color: #6b7280;
+  font-size: 0.8em;
+  color: var(--ink-muted);
   margin-bottom: 0.4em;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 700;
 }
 
 .dev-card a,
@@ -777,13 +905,15 @@ button:focus-visible {
   color: var(--navy-900);
   text-decoration: none;
   word-break: break-word;
+  transition: color var(--dur-fast) ease;
 }
 
-.dev-card a:hover {
-  color: var(--gold-600);
+@media (hover: hover) {
+  .dev-card a:hover {
+    color: var(--gold-700);
+  }
 }
 
-/* Developer Role */
 .dev-role {
   display: block;
   font-size: 1em;
@@ -809,23 +939,30 @@ button:focus-visible {
   width: 100%;
   margin: 1.067em 0 0.933em;
   padding: 0.933em 1.333em;
-  background: #f00;
+  background: linear-gradient(135deg, #ff2a2a, #d40000);
   color: #fff !important;
   text-decoration: none;
   border-radius: 2.667em;
   font-size: 1em;
   font-weight: 700;
-  box-shadow: 0 0.4em 1.333em rgb(255 0 0 / 25%);
-  transition: all 0.25s ease;
+  box-shadow: 0 0.4em 1.333em rgb(255 0 0 / 28%);
+  transition: all var(--dur-med) var(--ease-out);
   border: none;
   cursor: pointer;
 }
 
-.youtube-btn:hover {
-  background: #c00;
-  transform: scale(1.02);
-  color: #fff !important;
-  box-shadow: 0 0.533em 1.867em rgb(255 0 0 / 35%);
+@media (hover: hover) {
+  .youtube-btn:hover {
+    background: linear-gradient(135deg, #ff4545, #e60000);
+    transform: translateY(-2px) scale(1.01);
+    color: #fff !important;
+    box-shadow: 0 0.533em 1.867em rgb(255 0 0 / 38%);
+  }
+}
+
+.youtube-btn:active {
+  transform: scale(0.98);
+  box-shadow: 0 0.2em 0.8em rgb(255 0 0 / 30%);
 }
 
 .youtube-btn svg {
@@ -841,7 +978,7 @@ button:focus-visible {
   font-size: 0.933em;
   line-height: 1.6;
   padding: 0.933em 0 0.267em;
-  border-top: 1px solid #f0f2f5;
+  border-top: 1px solid #eef1f6;
   margin-top: 0.4em;
 }
 
@@ -855,10 +992,12 @@ footer {
   text-align: center;
   padding: 0.2rem 0 0;
   font-size: 0.8rem;
-  line-height: 1.3;
-  color: var(--ink-soft);
+  line-height: 1.35;
+  color: var(--ink-muted);
+  font-weight: 500;
+  letter-spacing: 0.01em;
   margin-top: 0.9rem;
-  margin-bottom: auto; /* soaks up any spare height below the footer, not above the card */
+  margin-bottom: auto;
   opacity: 0;
 }
 
@@ -876,16 +1015,6 @@ footer {
 /* ==========================================================================
    9. WhatsApp dock
    ========================================================================== */
-
-/* A bar the same width and centre line as the card, sitting in the bottom
-   gutter, so it reads as part of the layout rather than a floating bubble.
-   Short landscape switches to a compact pill on the right (see the end of
-   this section).
-
-   The three-selector list (base, :link, :visited) is deliberate: the global
-   `a:link` colour rule has higher specificity than a bare `a.wa-float`, and
-   would otherwise recolour the label. Every override of this block, including
-   the landscape one, must repeat the same list to win. */
 a.wa-float,
 a.wa-float:link,
 a.wa-float:visited {
@@ -893,15 +1022,13 @@ a.wa-float:visited {
   left: calc(1rem + var(--safe-left));
   right: calc(1rem + var(--safe-right));
   bottom: calc(var(--wa-gap) + var(--safe-bottom));
-  /* With left AND right set, max-width + auto side margins centre the bar
-     under the card. 40rem matches .box (see the width overrides below). */
   max-width: 40rem;
   margin: 0 auto;
   height: var(--wa-size);
   padding: 0 1.2rem;
   gap: 0.6rem;
   border-radius: 0.9rem;
-  background: var(--wa-green);
+  background: linear-gradient(135deg, var(--wa-green), #0a8f7a);
   color: #fff;
   display: flex;
   align-items: center;
@@ -911,25 +1038,32 @@ a.wa-float:visited {
   font-size: max(1rem, calc(var(--wa-size) * 0.32));
   line-height: 1;
   text-decoration: none;
-  box-shadow: 0 6px 18px rgb(14 124 107 / 28%);
-  z-index: 900; /* above the page, below the modals (9999) */
+  box-shadow:
+    0 6px 18px rgb(14 124 107 / 30%),
+    inset 0 1px 0 rgb(255 255 255 / 20%);
+  z-index: 900;
   -webkit-tap-highlight-color: transparent;
   transition:
-    background-color 0.15s,
-    box-shadow 0.15s,
-    transform 0.15s;
-
-  /* one quiet slide-up on load; no looping motion */
-  animation: wa-enter 0.45s ease-out 0.5s backwards;
+    background var(--dur-med) ease,
+    box-shadow var(--dur-med) ease,
+    transform var(--dur-fast) var(--ease-out);
+  animation: wa-enter 0.55s var(--ease-spring) 0.5s backwards;
 }
 
-a.wa-float:hover {
-  color: #fff;
-  background: var(--wa-green-dark);
+@media (hover: hover) {
+  a.wa-float:hover {
+    color: #fff;
+    background: linear-gradient(135deg, var(--wa-green-dark), #086f5f);
+    box-shadow:
+      0 10px 24px rgb(14 124 107 / 38%),
+      inset 0 1px 0 rgb(255 255 255 / 25%);
+    transform: translateY(-2px);
+  }
 }
 
 a.wa-float:active {
-  transform: scale(0.985);
+  transform: scale(0.98) translateY(0);
+  box-shadow: 0 3px 10px rgb(14 124 107 / 35%);
 }
 
 a.wa-float:focus-visible {
@@ -948,16 +1082,14 @@ a.wa-float svg {
 @keyframes wa-enter {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(16px) scale(0.96);
   }
   to {
     opacity: 1;
-    transform: none;
+    transform: translateY(0) scale(1);
   }
 }
 
-/* Keep the dock the same width as the card at larger sizes (mirrors the
-   .box max-width overrides in section 10). */
 @media (width >= 1400px) {
   a.wa-float,
   a.wa-float:link,
@@ -974,8 +1106,6 @@ a.wa-float svg {
   }
 }
 
-/* Short landscape: the card fills the width, so the dock becomes a compact
-   pill on the right; section 10 reserves --wa-pill-w for it on the body. */
 @media (orientation: landscape) and (height <= 540px) {
   a.wa-float,
   a.wa-float:link,
@@ -991,22 +1121,18 @@ a.wa-float svg {
   }
 }
 
-/* Default link colours. More specific rules (.youtube-btn, a.wa-float,
-   .dev-card a) override these where needed. */
 a:link,
 a:visited {
-  color: var(--navy-700);
+  color: var(--navy-600);
 }
 
 a:hover {
-  color: var(--gold-600);
+  color: var(--gold-700);
 }
 
 /* ==========================================================================
    10. Responsive + display-mode overrides
    ========================================================================== */
-
-/* Modal sizing on larger screens */
 @media (width >= 900px) {
   .modal-box {
     max-width: 65em;
@@ -1020,7 +1146,6 @@ a:hover {
   }
 }
 
-/* Large laptops / desktops / TVs: bigger button, more breathing room */
 @media (width >= 1400px) {
   :root {
     --wa-size: 64px;
@@ -1039,10 +1164,6 @@ a:hover {
   }
 }
 
-/* ---- Installed PWA (standalone / fullscreen / minimal-ui) ----
-   No browser toolbar, so the viewport is taller. Top-anchor the layout and
-   add a small offset (2.5% of height, capped at 1.6rem) so the card doesn't
-   hug the status bar. */
 @media (display-mode: standalone),
   (display-mode: fullscreen),
   (display-mode: minimal-ui) {
@@ -1052,7 +1173,6 @@ a:hover {
   }
 }
 
-/* Very small phones: shave a little more height */
 @media (width <= 360px) {
   body {
     padding-left: calc(0.7rem + var(--safe-left));
@@ -1061,11 +1181,10 @@ a:hover {
 
   .box {
     padding: 1rem 1rem 1.2rem;
-    border-radius: 1.5rem;
+    border-radius: 1.4rem;
   }
 }
 
-/* Short portrait screens (small phones with browser bars) */
 @media (height <= 620px) and (orientation: portrait) {
   .app-tagline {
     display: none;
@@ -1081,21 +1200,7 @@ a:hover {
   }
 }
 
-/* ---- Short landscape (phones on their side, small windows) ----
-   The card becomes a 3-column grid; the header spans every row on the left:
-
-     +----------+---------------+---------------+
-     |          | #branch (row 1, spans 2 cols) |
-     |  logo    | #sem (r2)     | #session (r2) |
-     |  title   | #open-btn (row 3, spans 2)    |
-     |  tagline | #msg (row 4, spans 2)         |
-     |          | #dev-btn (r5) | #install (r5) |
-     |          | stats bar (row 6, spans 2)    |
-     +----------+---------------+---------------+
-
-   The WhatsApp pill now sits beside the card, so its clearance moves from
-   the bottom (--reserve-bottom shrinks) to the right (body padding-right).
-   Font-size uses --fit-rem-land, with no width term since width is plentiful. */
+/* ---- Short landscape grid ---- */
 @media (orientation: landscape) and (height <= 540px) {
   :root {
     --wa-size: 46px;
@@ -1168,8 +1273,6 @@ a:hover {
     grid-row: 5;
   }
 
-  /* Stats bar was unplaced in landscape -> auto-placed into an extra row
-     and pushed the card past the screen height. */
   #stats-bar {
     grid-column: 2 / span 2;
     grid-row: 6;
@@ -1215,14 +1318,12 @@ a:hover {
     margin-top: 0.1rem;
   }
 
-  /* modals get more height room */
   .modal-box {
     height: 96vh;
     height: 96dvh;
   }
 }
 
-/* ---- Very short screens (split-screen, tiny landscape) ---- */
 @media (height <= 360px) {
   .app-tagline {
     display: none;
@@ -1239,7 +1340,6 @@ a:hover {
   }
 }
 
-/* ---- Large TVs / 4K: keep the card readable from a distance ---- */
 @media (width >= 2200px) and (height >= 1000px) {
   .box {
     max-width: 50rem;
@@ -1247,18 +1347,17 @@ a:hover {
 }
 
 @media (prefers-reduced-motion: reduce) {
-  * {
+  *,
+  *::before,
+  *::after {
     animation: none !important;
     transition: none !important;
   }
 }
 
 /* ==========================================================================
-   11. Update popup (new version / new syllabus)
+   11. Update popup
    ========================================================================== */
-
-/* Uses fixed px sizes on purpose: it must look the same regardless of the
-   app's scaling root font-size. */
 .upd-overlay {
   position: fixed;
   inset: 0;
@@ -1269,12 +1368,10 @@ a:hover {
   padding: max(16px, env(safe-area-inset-top))
     max(16px, env(safe-area-inset-right)) max(16px, env(safe-area-inset-bottom))
     max(16px, env(safe-area-inset-left));
-  background: rgb(11 30 58 / 50%);
+  background: rgb(10 26 51 / 52%);
   backdrop-filter: blur(3px);
-
-  /* stylelint-disable-next-line property-no-vendor-prefix */
   -webkit-backdrop-filter: blur(3px);
-  font-size: 16px; /* fixed size: ignores the app's scaling root font */
+  font-size: 16px;
   animation: upd-fade 0.18s ease-out;
 }
 
@@ -1294,8 +1391,8 @@ a:hover {
   white-space: normal;
   overflow-wrap: break-word;
   box-shadow:
-    0 1px 2px rgb(11 30 58 / 6%),
-    0 20px 48px rgb(11 30 58 / 28%);
+    0 1px 2px rgb(10 26 51 / 6%),
+    0 20px 48px rgb(10 26 51 / 28%);
   animation: upd-pop 0.24s cubic-bezier(0.2, 0.8, 0.3, 1);
 }
 
@@ -1307,7 +1404,7 @@ a:hover {
   align-items: center;
   justify-content: center;
   color: var(--navy-700);
-  background: #e9efff;
+  background: linear-gradient(135deg, #edf2ff, #e2ebff);
   border: 1px solid #d3dffc;
   border-radius: 14px;
 }
@@ -1323,13 +1420,13 @@ a:hover {
   font-weight: 700;
   letter-spacing: 0.9px;
   text-transform: uppercase;
-  color: var(--gold-600);
+  color: var(--gold-700);
 }
 
 .upd-msg {
   margin: 0;
   font-size: 19px;
-  font-weight: 700;
+  font-weight: 800;
   line-height: 1.35;
   color: var(--navy-900);
 }
@@ -1354,29 +1451,33 @@ a:hover {
   padding: 12px 10px;
   min-height: 46px;
   font-size: 15px;
-  font-weight: 600;
+  font-weight: 700;
   border-radius: 10px;
   cursor: pointer;
   transition:
-    background 0.15s,
-    border-color 0.15s,
-    box-shadow 0.15s;
-}
-
-.upd-actions button:hover {
-  transform: none;
+    background var(--dur-fast) ease,
+    border-color var(--dur-fast) ease,
+    box-shadow var(--dur-fast) ease,
+    transform var(--dur-fast) var(--ease-out);
 }
 
 .upd-btn-primary {
   background: var(--navy-700);
   color: #fff;
   border: 1px solid var(--navy-700);
-  box-shadow: 0 2px 6px rgb(22 33 92 / 30%);
+  box-shadow: 0 2px 6px rgb(26 46 107 / 30%);
 }
 
-.upd-btn-primary:hover {
-  background: var(--navy-900);
-  border-color: var(--navy-900);
+@media (hover: hover) {
+  .upd-btn-primary:hover {
+    background: var(--navy-900);
+    border-color: var(--navy-900);
+    transform: translateY(-1px);
+  }
+}
+
+.upd-btn-primary:active {
+  transform: scale(0.97);
 }
 
 .upd-btn-secondary {
@@ -1385,10 +1486,17 @@ a:hover {
   border: 1px solid var(--line);
 }
 
-.upd-btn-secondary:hover {
-  background: #f4f7fc;
-  color: var(--ink);
-  border-color: #c3cfe2;
+@media (hover: hover) {
+  .upd-btn-secondary:hover {
+    background: #f4f7fc;
+    color: var(--ink);
+    border-color: #c3cfe2;
+    transform: translateY(-1px);
+  }
+}
+
+.upd-btn-secondary:active {
+  transform: scale(0.97);
 }
 
 .upd-actions button:focus-visible {
@@ -1397,12 +1505,8 @@ a:hover {
 }
 
 @keyframes upd-fade {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
 @keyframes upd-pop {
