@@ -42,8 +42,8 @@
      Calibrate with the console snippet if the card still overflows. */
   /* Syllabus card = PYQ card + a 3rd select (#session) + the stats bar,
      so it needs more rem than PYQ's 41.5. */
-  --fit-rem: 52; /* portrait divisor */
-  --fit-rem-land: 27; /* landscape divisor (was a hard-coded 21) */
+  --fit-rem: 50; /* portrait divisor (45.6 + room for a 3-line #msg) */
+  --fit-rem-land: 26; /* landscape divisor (23.4 + room for a 2-line #msg) */
 }
 
 html {
