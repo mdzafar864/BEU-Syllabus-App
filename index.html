@@ -135,6 +135,12 @@
     </script>
     <!-- ================= SEO Meta Tags End ================= -->
 
+    <!-- Font Awesome (for custom dropdown icons) -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css"
+    />
+
     <!-- PWA -->
     <link rel="manifest" href="manifest.json" />
     <meta name="theme-color" content="#0b1e3a" />
@@ -158,76 +164,174 @@
         <p class="app-tagline">Bihar Engineering University</p>
       </div>
 
-      <select id="branch" name="branch">
-        <option value="">Select Branch</option>
+      <!-- ===== CUSTOM DROPDOWN (replaces original <select id="branch">) ===== -->
+      <div class="custom-select" id="branchSelect">
+        <!-- Trigger button -->
+        <div
+          class="select-trigger"
+          role="combobox"
+          aria-haspopup="listbox"
+          aria-expanded="false"
+          tabindex="0"
+        >
+          <div class="trigger-text">
+            <i class="fas fa-code"></i>
+            <span class="trigger-label">Select Branch</span>
+          </div>
+          <i class="fas fa-chevron-down arrow"></i>
+        </div>
 
-        <option value="CSE">Computer Science &amp; Engineering (CSE)</option>
-        <option value="AI">Computer Science &amp; Engineering (AI)</option>
-        <option value="CS">
-          Computer Science &amp; Engineering (Cyber Security)
-        </option>
-        <option value="DS">
-          Computer Science &amp; Engineering (Data Science)
-        </option>
-        <option value="AIML">
-          Computer Science &amp; Engineering (AI &amp; ML)
-        </option>
-        <option value="IOT">Computer Science &amp; Engineering (IoT)</option>
-        <option value="IOTCS">
-          Computer Science &amp; Engineering (IoT &amp; Cyber Security including
-          Block Chain Technology)
-        </option>
-        <option value="NET">
-          Computer Science &amp; Engineering (Networks)
-        </option>
-        <option value="IT">Information Technology (IT)</option>
-        <option value="3DAG">3-D Animation &amp; Graphics</option>
-        <option value="MC">Mathematics &amp; Computing</option>
+        <!-- Options list (hidden by default) -->
+        <ul class="options-list" role="listbox" aria-label="Branch selection">
+          <li class="option" role="option" data-value="CSE" tabindex="0">
+            <i class="fas fa-laptop-code"></i>
+            <span>Computer Science &amp; Engineering (CSE)</span>
+          </li>
+          <li class="option" role="option" data-value="AI" tabindex="0">
+            <i class="fas fa-brain"></i>
+            <span>Computer Science &amp; Engineering (AI)</span>
+          </li>
+          <li class="option" role="option" data-value="CS" tabindex="0">
+            <i class="fas fa-shield-alt"></i>
+            <span>Computer Science &amp; Engineering (Cyber Security)</span>
+          </li>
+          <li class="option" role="option" data-value="DS" tabindex="0">
+            <i class="fas fa-chart-line"></i>
+            <span>Computer Science &amp; Engineering (Data Science)</span>
+          </li>
+          <li class="option" role="option" data-value="AIML" tabindex="0">
+            <i class="fas fa-robot"></i>
+            <span>Computer Science &amp; Engineering (AI &amp; ML)</span>
+          </li>
+          <li class="option" role="option" data-value="IOT" tabindex="0">
+            <i class="fas fa-microchip"></i>
+            <span>Computer Science &amp; Engineering (IoT)</span>
+          </li>
+          <li class="option" role="option" data-value="IOTCS" tabindex="0">
+            <i class="fas fa-link"></i>
+            <span
+              >Computer Science &amp; Engineering (IoT &amp; Cyber Security
+              including Block Chain Technology)</span
+            >
+          </li>
+          <li class="option" role="option" data-value="NET" tabindex="0">
+            <i class="fas fa-network-wired"></i>
+            <span>Computer Science &amp; Engineering (Networks)</span>
+          </li>
+          <li class="option" role="option" data-value="IT" tabindex="0">
+            <i class="fas fa-desktop"></i>
+            <span>Information Technology (IT)</span>
+          </li>
+          <li class="option" role="option" data-value="3DAG" tabindex="0">
+            <i class="fas fa-cube"></i>
+            <span>3-D Animation &amp; Graphics</span>
+          </li>
+          <li class="option" role="option" data-value="MC" tabindex="0">
+            <i class="fas fa-calculator"></i>
+            <span>Mathematics &amp; Computing</span>
+          </li>
 
-        <option value="EE">Electrical Engineering (EE)</option>
-        <option value="EEE">
-          Electrical &amp; Electronics Engineering (EEE)
-        </option>
-        <option value="ECE">
-          Electronics &amp; Communication Engineering (ECE)
-        </option>
-        <option value="ACT">
-          Electronics &amp; Communication Engineering (Advance Communication
-          Technology)
-        </option>
-        <option value="VLSI">
-          Electronics Engineering (VLSI Design &amp; Technology)
-        </option>
-        <option value="EIE">
-          Electronics &amp; Instrumentation Engineering
-        </option>
+          <li class="option" role="option" data-value="EE" tabindex="0">
+            <i class="fas fa-bolt"></i>
+            <span>Electrical Engineering (EE)</span>
+          </li>
+          <li class="option" role="option" data-value="EEE" tabindex="0">
+            <i class="fas fa-plug"></i>
+            <span>Electrical &amp; Electronics Engineering (EEE)</span>
+          </li>
+          <li class="option" role="option" data-value="ECE" tabindex="0">
+            <i class="fas fa-broadcast-tower"></i>
+            <span>Electronics &amp; Communication Engineering (ECE)</span>
+          </li>
+          <li class="option" role="option" data-value="ACT" tabindex="0">
+            <i class="fas fa-satellite-dish"></i>
+            <span
+              >Electronics &amp; Communication Engineering (Advance
+              Communication Technology)</span
+            >
+          </li>
+          <li class="option" role="option" data-value="VLSI" tabindex="0">
+            <i class="fas fa-microchip"></i>
+            <span>Electronics Engineering (VLSI Design &amp; Technology)</span>
+          </li>
+          <li class="option" role="option" data-value="EIE" tabindex="0">
+            <i class="fas fa-tachometer-alt"></i>
+            <span>Electronics &amp; Instrumentation Engineering</span>
+          </li>
 
-        <option value="ME">Mechanical Engineering (ME)</option>
-        <option value="MSME">
-          Mechanical &amp; Smart Manufacturing Engineering
-        </option>
-        <option value="RA">Robotics &amp; Automation</option>
+          <li class="option" role="option" data-value="ME" tabindex="0">
+            <i class="fas fa-cogs"></i>
+            <span>Mechanical Engineering (ME)</span>
+          </li>
+          <li class="option" role="option" data-value="MSME" tabindex="0">
+            <i class="fas fa-industry"></i>
+            <span>Mechanical &amp; Smart Manufacturing Engineering</span>
+          </li>
+          <li class="option" role="option" data-value="RA" tabindex="0">
+            <i class="fas fa-robot"></i>
+            <span>Robotics &amp; Automation</span>
+          </li>
 
-        <option value="CE">Civil Engineering (CE)</option>
-        <option value="CECA">
-          Civil Engineering with Computer Applications
-        </option>
+          <li class="option" role="option" data-value="CE" tabindex="0">
+            <i class="fas fa-building"></i>
+            <span>Civil Engineering (CE)</span>
+          </li>
+          <li class="option" role="option" data-value="CECA" tabindex="0">
+            <i class="fas fa-drafting-compass"></i>
+            <span>Civil Engineering with Computer Applications</span>
+          </li>
 
-        <option value="PE">Petrochemical Engineering</option>
-        <option value="CHLT">Chemical Engineering (Leather Technology)</option>
-        <option value="CHPP">
-          Chemical Engineering (Plastic &amp; Polymer)
-        </option>
-        <option value="WM">Waste Management</option>
-        <option value="AE">Aeronautical Engineering</option>
-        <option value="BRE">Biomedical &amp; Robotics Engineering</option>
-        <option value="MTE">Mechatronics Engineering</option>
-        <option value="MIN">Mining Engineering</option>
-        <option value="CHE">Chemical Engineering</option>
-        <option value="FTS">Fire Technology &amp; Safety</option>
-        <option value="FPP">Food Processing &amp; Preservation</option>
-        <option value="FTM">Food Technology &amp; Management</option>
-      </select>
+          <li class="option" role="option" data-value="PE" tabindex="0">
+            <i class="fas fa-oil-can"></i>
+            <span>Petrochemical Engineering</span>
+          </li>
+          <li class="option" role="option" data-value="CHLT" tabindex="0">
+            <i class="fas fa-flask"></i>
+            <span>Chemical Engineering (Leather Technology)</span>
+          </li>
+          <li class="option" role="option" data-value="CHPP" tabindex="0">
+            <i class="fas fa-recycle"></i>
+            <span>Chemical Engineering (Plastic &amp; Polymer)</span>
+          </li>
+          <li class="option" role="option" data-value="WM" tabindex="0">
+            <i class="fas fa-trash-alt"></i>
+            <span>Waste Management</span>
+          </li>
+          <li class="option" role="option" data-value="AE" tabindex="0">
+            <i class="fas fa-plane"></i>
+            <span>Aeronautical Engineering</span>
+          </li>
+          <li class="option" role="option" data-value="BRE" tabindex="0">
+            <i class="fas fa-heartbeat"></i>
+            <span>Biomedical &amp; Robotics Engineering</span>
+          </li>
+          <li class="option" role="option" data-value="MTE" tabindex="0">
+            <i class="fas fa-robot"></i>
+            <span>Mechatronics Engineering</span>
+          </li>
+          <li class="option" role="option" data-value="MIN" tabindex="0">
+            <i class="fas fa-mountain"></i>
+            <span>Mining Engineering</span>
+          </li>
+          <li class="option" role="option" data-value="CHE" tabindex="0">
+            <i class="fas fa-flask"></i>
+            <span>Chemical Engineering</span>
+          </li>
+          <li class="option" role="option" data-value="FTS" tabindex="0">
+            <i class="fas fa-fire-extinguisher"></i>
+            <span>Fire Technology &amp; Safety</span>
+          </li>
+          <li class="option" role="option" data-value="FPP" tabindex="0">
+            <i class="fas fa-apple-alt"></i>
+            <span>Food Processing &amp; Preservation</span>
+          </li>
+          <li class="option" role="option" data-value="FTM" tabindex="0">
+            <i class="fas fa-utensils"></i>
+            <span>Food Technology &amp; Management</span>
+          </li>
+        </ul>
+      </div>
+      <!-- ===== END CUSTOM DROPDOWN ===== -->
 
       <select id="sem" disabled>
         <option value="">Select Semester</option>
@@ -401,5 +505,167 @@
     <script src="js/config.js"></script>
     <script src="js/tracker.js"></script>
     <script src="js/stats.js"></script>
+
+    <!-- ===== CUSTOM DROPDOWN SCRIPT ===== -->
+    <script>
+      (function () {
+        var customSelect = document.getElementById('branchSelect');
+        if (!customSelect) return;
+
+        var trigger = customSelect.querySelector('.select-trigger');
+        var optionsList = customSelect.querySelector('.options-list');
+        var triggerLabel = trigger.querySelector('.trigger-label');
+        var options = customSelect.querySelectorAll('.option');
+
+        var selectedValue = '';
+
+        function toggleDropdown() {
+          var isOpen = optionsList.classList.contains('open');
+          if (isOpen) {
+            closeDropdown();
+          } else {
+            openDropdown();
+          }
+        }
+
+        function openDropdown() {
+          optionsList.classList.add('open');
+          trigger.classList.add('active');
+          trigger.setAttribute('aria-expanded', 'true');
+        }
+
+        function closeDropdown() {
+          optionsList.classList.remove('open');
+          trigger.classList.remove('active');
+          trigger.setAttribute('aria-expanded', 'false');
+        }
+
+        function selectOption(option) {
+          var value = option.dataset.value;
+          var label = option.querySelector('span').textContent.trim();
+          var iconClass = option.querySelector('i').className;
+
+          triggerLabel.textContent = label;
+          var triggerIcon = trigger.querySelector('.trigger-text i');
+          triggerIcon.className = iconClass;
+
+          options.forEach(function (opt) {
+            opt.classList.remove('selected');
+          });
+          option.classList.add('selected');
+
+          selectedValue = value;
+
+          // Dispatch a native change event so existing app.js can react.
+          var hiddenInput = document.getElementById('branch');
+          if (hiddenInput && hiddenInput.value !== value) {
+            hiddenInput.value = value;
+            var evt = document.createEvent('HTMLEvents');
+            evt.initEvent('change', true, false);
+            hiddenInput.dispatchEvent(evt);
+          }
+
+          closeDropdown();
+          trigger.focus();
+        }
+
+        trigger.addEventListener('click', toggleDropdown);
+
+        trigger.addEventListener('keydown', function (e) {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            toggleDropdown();
+          }
+          if (e.key === 'Escape') {
+            closeDropdown();
+          }
+        });
+
+        options.forEach(function (option) {
+          option.addEventListener('click', function (e) {
+            e.stopPropagation();
+            selectOption(option);
+          });
+
+          option.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' || e.key === ' ') {
+              e.preventDefault();
+              selectOption(option);
+            }
+          });
+        });
+
+        document.addEventListener('click', function (e) {
+          if (!customSelect.contains(e.target)) {
+            closeDropdown();
+          }
+        });
+
+        document.addEventListener('keydown', function (e) {
+          if (e.key === 'Escape') {
+            closeDropdown();
+          }
+        });
+
+        // Expose a programmatic reset for app.js if needed.
+        customSelect.resetBranch = function () {
+          selectedValue = '';
+          triggerLabel.textContent = 'Select Branch';
+          trigger.querySelector('.trigger-text i').className = 'fas fa-code';
+          options.forEach(function (opt) {
+            opt.classList.remove('selected');
+          });
+          var hiddenInput = document.getElementById('branch');
+          if (hiddenInput) {
+            hiddenInput.value = '';
+            var evt = document.createEvent('HTMLEvents');
+            evt.initEvent('change', true, false);
+            hiddenInput.dispatchEvent(evt);
+          }
+          closeDropdown();
+        };
+      })();
+    </script>
+    <!-- ===== END CUSTOM DROPDOWN SCRIPT ===== -->
+
+    <!-- Hidden native select kept for app.js compatibility -->
+    <select id="branch" name="branch" hidden aria-hidden="true">
+      <option value=""></option>
+      <option value="CSE"></option>
+      <option value="AI"></option>
+      <option value="CS"></option>
+      <option value="DS"></option>
+      <option value="AIML"></option>
+      <option value="IOT"></option>
+      <option value="IOTCS"></option>
+      <option value="NET"></option>
+      <option value="IT"></option>
+      <option value="3DAG"></option>
+      <option value="MC"></option>
+      <option value="EE"></option>
+      <option value="EEE"></option>
+      <option value="ECE"></option>
+      <option value="ACT"></option>
+      <option value="VLSI"></option>
+      <option value="EIE"></option>
+      <option value="ME"></option>
+      <option value="MSME"></option>
+      <option value="RA"></option>
+      <option value="CE"></option>
+      <option value="CECA"></option>
+      <option value="PE"></option>
+      <option value="CHLT"></option>
+      <option value="CHPP"></option>
+      <option value="WM"></option>
+      <option value="AE"></option>
+      <option value="BRE"></option>
+      <option value="MTE"></option>
+      <option value="MIN"></option>
+      <option value="CHE"></option>
+      <option value="FTS"></option>
+      <option value="FPP"></option>
+      <option value="FTM"></option>
+    </select>
+    <!-- ===== END HIDDEN NATIVE SELECT ===== -->
   </body>
 </html>
