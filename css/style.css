@@ -1,5 +1,5 @@
 /* ==========================================================================
-   Syllabus app: main stylesheet  (REDESIGNED)
+   Syllabus app: main stylesheet  (UPDATED)
    ========================================================================== */
 
 /* ==========================================================================
@@ -31,9 +31,9 @@
   --surface: #f5f8fd;
   --msg-bg: #eaf1ff;
   --line: #d7e0ee;
-  --ink: #0f2244;           /* primary text — deep navy, not black */
-  --ink-soft: #4d5f7a;      /* secondary text */
-  --ink-muted: #71809a;     /* tertiary text */
+  --ink: #0f2244;
+  --ink-soft: #4d5f7a;
+  --ink-muted: #71809a;
 
   /* ---- Status + WhatsApp ---- */
   --success: #16a34a;
@@ -41,6 +41,19 @@
   --success-soft: #e4f5ea;
   --wa-green: #0e7c6b;
   --wa-green-dark: #0a6a5b;
+
+  /* ---- Contrast-safe button tokens ---- */
+  --gold-ink: #3a2200;        /* ~8.1:1 on #f5a623 */
+  --gold-ink-soft: #5a3600;
+  --dev-bg: #1e3a8a;          /* solid deep blue */
+  --dev-bg-hover: #16306f;
+  --dev-bg-active: #10244f;
+  --install-bg: #15803d;      /* solid green */
+  --install-bg-hover: #126c34;
+  --install-bg-active: #0e562a;
+
+  /* ---- Ripple ---- */
+  --ripple-color: rgb(255 255 255 / 55%);
 
   /* ---- Safe areas ---- */
   --safe-top: env(safe-area-inset-top, 0px);
@@ -323,15 +336,18 @@ button:focus-visible {
 }
 
 /* ---- Primary CTA: Open Syllabus ----
-   Engaging entrance + ripple-style click feedback. */
+   Dark ink on gold = ~8:1 contrast. Hover darkens the ink and lightens the
+   gold; active compresses + deepens the shadow. Ripple on click. */
 #open-btn {
   background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-600) 100%);
-  color: var(--navy-900);
+  color: var(--gold-ink);
   font-weight: 800;
   letter-spacing: 0.01em;
+  text-shadow: 0 1px 0 rgb(255 255 255 / 35%);
   box-shadow:
-    0 4px 14px rgb(245 166 35 / 38%),
-    inset 0 1px 0 rgb(255 255 255 / 45%);
+    0 4px 14px rgb(245 166 35 / 40%),
+    inset 0 1px 0 rgb(255 255 255 / 55%),
+    inset 0 -2px 0 rgb(154 91 0 / 22%);
   animation: cta-enter 0.6s var(--ease-spring) 0.15s backwards;
   transition:
     background var(--dur-med) ease,
@@ -358,19 +374,21 @@ button:focus-visible {
 @media (hover: hover) {
   #open-btn:hover {
     background: linear-gradient(135deg, #ffb63a 0%, #e89a12 100%);
-    color: var(--navy-900);
+    color: var(--gold-ink-soft);
     box-shadow:
-      0 8px 22px rgb(245 166 35 / 48%),
-      inset 0 1px 0 rgb(255 255 255 / 55%);
+      0 8px 22px rgb(245 166 35 / 50%),
+      inset 0 1px 0 rgb(255 255 255 / 65%),
+      inset 0 -2px 0 rgb(154 91 0 / 28%);
     transform: translateY(-2px);
   }
 }
 
 #open-btn:active {
+  color: var(--gold-ink);
   transform: translateY(0) scale(0.96);
   box-shadow:
-    0 2px 8px rgb(245 166 35 / 40%),
-    inset 0 2px 4px rgb(154 91 0 / 25%);
+    0 2px 8px rgb(245 166 35 / 42%),
+    inset 0 2px 4px rgb(154 91 0 / 30%);
   animation: cta-press 0.28s var(--ease-out);
 }
 
@@ -380,7 +398,12 @@ button:focus-visible {
   100% { transform: scale(0.97); }
 }
 
-/* click ripple layer */
+#open-btn:focus-visible {
+  outline: 3px solid var(--navy-900);
+  outline-offset: 2px;
+}
+
+/* ripple layer */
 #open-btn::after {
   content: "";
   position: absolute;
@@ -388,7 +411,7 @@ button:focus-visible {
   border-radius: inherit;
   background: radial-gradient(
     circle at center,
-    rgb(255 255 255 / 70%) 0%,
+    var(--ripple-color) 0%,
     transparent 60%
   );
   opacity: 0;
@@ -401,15 +424,20 @@ button:focus-visible {
 }
 
 @keyframes cta-ripple {
-  0%   { opacity: 0.55; transform: scale(0.4); }
-  100% { opacity: 0;    transform: scale(1.6); }
+  0%   { opacity: 0.6; transform: scale(0.4); }
+  100% { opacity: 0;   transform: scale(1.6); }
 }
 
-/* ---- Secondary: Developer Info ---- */
+/* ---- Developer Info: solid deep-blue, white ink ---- */
 #dev-btn {
-  background: #eef2fb;
-  color: var(--navy-800);
-  box-shadow: inset 0 0 0 1px #d6def0;
+  background: var(--dev-bg);
+  color: #fff;
+  font-weight: 700;
+  box-shadow:
+    0 3px 10px rgb(30 58 138 / 28%),
+    inset 0 1px 0 rgb(255 255 255 / 18%);
+  position: relative;
+  overflow: hidden;
   transition:
     background var(--dur-med) ease,
     box-shadow var(--dur-med) ease,
@@ -419,26 +447,63 @@ button:focus-visible {
 
 @media (hover: hover) {
   #dev-btn:hover {
-    background: #e2e9f8;
-    color: var(--navy-900);
+    background: var(--dev-bg-hover);
+    color: #fff;
     box-shadow:
-      inset 0 0 0 1px #b9c6e4,
-      0 4px 12px rgb(26 46 107 / 10%);
+      0 6px 16px rgb(30 58 138 / 36%),
+      inset 0 1px 0 rgb(255 255 255 / 22%);
     transform: translateY(-1px);
   }
 }
 
 #dev-btn:active {
-  background: #d8e2f5;
+  background: var(--dev-bg-active);
+  color: #fff;
   transform: translateY(0) scale(0.975);
-  box-shadow: inset 0 0 0 1px #b9c6e4;
+  box-shadow:
+    0 1px 4px rgb(30 58 138 / 32%),
+    inset 0 2px 4px rgb(0 0 0 / 22%);
 }
 
-/* ---- Success: Install ---- */
+#dev-btn:focus-visible {
+  outline: 3px solid var(--navy-900);
+  outline-offset: 2px;
+}
+
+#dev-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    var(--ripple-color) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+}
+
+#dev-btn:active::after {
+  animation: btn-ripple 0.5s ease-out;
+}
+
+@keyframes btn-ripple {
+  0%   { opacity: 0.5; transform: scale(0.4); }
+  100% { opacity: 0;   transform: scale(1.6); }
+}
+
+/* ---- Install / App Mode: solid green, white ink ---- */
 #install-btn {
-  background: var(--success-soft);
-  color: #0b6b34;
-  box-shadow: inset 0 0 0 1px #c7e8d3;
+  background: var(--install-bg);
+  color: #fff;
+  font-weight: 700;
+  box-shadow:
+    0 3px 10px rgb(21 128 61 / 28%),
+    inset 0 1px 0 rgb(255 255 255 / 18%);
+  position: relative;
+  overflow: hidden;
   transition:
     background var(--dur-med) ease,
     box-shadow var(--dur-med) ease,
@@ -448,50 +513,89 @@ button:focus-visible {
 
 @media (hover: hover) {
   #install-btn:hover {
-    background: #d3eddd;
-    color: #095c2c;
+    background: var(--install-bg-hover);
+    color: #fff;
     box-shadow:
-      inset 0 0 0 1px #a8dab9,
-      0 4px 12px rgb(22 163 74 / 14%);
+      0 6px 16px rgb(21 128 61 / 36%),
+      inset 0 1px 0 rgb(255 255 255 / 22%);
     transform: translateY(-1px);
   }
 }
 
 #install-btn:active {
-  background: #c4e6d0;
+  background: var(--install-bg-active);
+  color: #fff;
   transform: translateY(0) scale(0.975);
-  box-shadow: inset 0 0 0 1px #a8dab9;
+  box-shadow:
+    0 1px 4px rgb(21 128 61 / 32%),
+    inset 0 2px 4px rgb(0 0 0 / 22%);
+}
+
+#install-btn:focus-visible {
+  outline: 3px solid var(--navy-900);
+  outline-offset: 2px;
+}
+
+#install-btn::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    var(--ripple-color) 0%,
+    transparent 60%
+  );
+  opacity: 0;
+  transform: scale(0.4);
+  pointer-events: none;
+}
+
+#install-btn:active::after {
+  animation: btn-ripple 0.5s ease-out;
 }
 
 /* ==========================================================================
-   6. Instruction card (#msg)
+   6. Instruction card (#msg) — prominent notification
    ========================================================================== */
 #msg {
   position: relative;
   margin: 0.8rem 0 0.2rem;
-  padding: 0.7rem 0.95rem 0.7rem 2.6rem;
-  background: var(--msg-bg);
-  border: 1px solid #dbe6fb;
+  padding: 0.85rem 1rem 0.85rem 2.9rem;
+  background: linear-gradient(135deg, #e6efff 0%, #dbe8ff 100%);
+  border: 1.5px solid #b9cdf5;
+  border-left: 4px solid var(--navy-600);
   border-radius: 0.9rem;
-  font-size: 0.92rem;
-  font-weight: 500;
+  font-size: 0.95rem;
+  font-weight: 600;
   line-height: 1.45;
-  color: var(--navy-800);
+  color: var(--navy-900);
+  box-shadow:
+    0 2px 8px rgb(26 46 107 / 8%),
+    inset 0 1px 0 rgb(255 255 255 / 70%);
   transition:
     background var(--dur-med) ease,
-    border-color var(--dur-med) ease;
+    border-color var(--dur-med) ease,
+    box-shadow var(--dur-med) ease;
 }
 
 #msg::before {
   content: "";
   position: absolute;
-  top: 0.78rem;
-  left: 0.95rem;
-  width: 1.1rem;
-  height: 1.1rem;
+  top: 50%;
+  left: 1rem;
+  transform: translateY(-50%);
+  width: 1.2rem;
+  height: 1.2rem;
   background: var(--navy-600);
   mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>") center / contain no-repeat;
   -webkit-mask: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M12 2a10 10 0 100 20 10 10 0 000-20zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z'/></svg>") center / contain no-repeat;
+  animation: msg-pulse 2.4s ease-in-out infinite;
+}
+
+@keyframes msg-pulse {
+  0%, 100% { opacity: 1; }
+  50%      { opacity: 0.55; }
 }
 
 /* ==========================================================================
@@ -668,7 +772,7 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   Developer modal — consistent "card" treatment
+   Developer modal
    ========================================================================== */
 .developer-modal {
   max-width: 28em;
@@ -809,7 +913,6 @@ button:focus-visible {
   background: #fff;
 }
 
-/* info list as a cohesive card */
 .dev-info-item {
   display: flex;
   align-items: center;
@@ -867,7 +970,6 @@ button:focus-visible {
   border: 1px solid #d3dcea;
 }
 
-/* Developer cards */
 .dev-card {
   background: linear-gradient(180deg, #fafcff, #f4f8ff);
   border: 1px solid #e2eaf7;
@@ -930,7 +1032,6 @@ button:focus-visible {
   line-height: 1.5;
 }
 
-/* YouTube button */
 .youtube-btn {
   display: flex;
   align-items: center;
@@ -1048,6 +1149,28 @@ a.wa-float:visited {
     box-shadow var(--dur-med) ease,
     transform var(--dur-fast) var(--ease-out);
   animation: wa-enter 0.55s var(--ease-spring) 0.5s backwards;
+}
+
+/* Subtle attention pulse behind the dock */
+a.wa-float::before {
+  content: "";
+  position: absolute;
+  inset: -6px;
+  border-radius: inherit;
+  background: radial-gradient(
+    circle at center,
+    rgb(14 124 107 / 35%) 0%,
+    transparent 70%
+  );
+  opacity: 0;
+  z-index: -1;
+  pointer-events: none;
+  animation: wa-pulse 3s ease-in-out 1.2s infinite;
+}
+
+@keyframes wa-pulse {
+  0%, 100% { opacity: 0; transform: scale(0.98); }
+  50%      { opacity: 1; transform: scale(1.06); }
 }
 
 @media (hover: hover) {
@@ -1294,14 +1417,15 @@ a:hover {
   #msg {
     grid-row: 4;
     margin: 0.5rem 0 0.1rem;
-    padding: 0.45rem 0.8rem 0.45rem 2.2rem;
+    padding: 0.6rem 0.8rem 0.6rem 2.4rem;
   }
 
   #msg::before {
-    top: 0.5rem;
-    left: 0.75rem;
-    width: 0.95rem;
-    height: 0.95rem;
+    top: 50%;
+    left: 0.8rem;
+    width: 1rem;
+    height: 1rem;
+    transform: translateY(-50%);
   }
 
   #logo {
