@@ -50,7 +50,7 @@ html {
   width: 100%;
   height: 100%;
   overflow: hidden;
-  overscroll-behavior: none;
+  overscroll-behavior: none; /* no pull-to-refresh / bounce chaining */
   touch-action: manipulation; /* no double-tap zoom shifting the layout */
 
   /* Fit-to-height scale. --fit-rem ≈ number of rem the card + footer need.
@@ -79,12 +79,19 @@ body {
   background: var(--bg);
   color: var(--ink);
 
-  /* Body height comes from the SAME unit (dvh) as the html font-size
-     calculation, so layout and scale always agree. (position: fixed; inset: 0
-     used the layout viewport and could disagree with dvh on mobile browsers.) */
+  /* Scroll lock: body is pinned to the viewport so the PAGE can never
+     scroll or rubber-band (iOS Safari / Android Chrome ignore overflow:hidden
+     on html/body alone). Height uses the SAME dvh unit as the html font-size
+     calculation, so layout and scale agree. top/left/right are set instead of
+     `inset` so the explicit height is not overridden by `bottom: 0`. */
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
   height: 100vh;
   height: 100dvh;
+  max-height: 100%;
   overflow: hidden;
   overscroll-behavior: none;
   display: flex;
@@ -130,8 +137,11 @@ option {
 
   /* last-resort safety net for extremely small windows; never
      triggers at normal phone/tablet/laptop/TV sizes */
+  overflow-x: hidden;
   overflow-y: auto;
-  overscroll-behavior: contain;
+  overscroll-behavior: contain; /* scrolling the card never scrolls the page */
+  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
 }
 
