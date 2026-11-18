@@ -276,7 +276,7 @@ function createPaymentsHandlers({
 
       const receipt = `don_${now().toString(36)}_${crypto.randomBytes(4).toString("hex")}`; // <= 40 chars
       const order = await getRazorpay().orders.create({
-        amount: rupees * 100, // paise, computed here, never taken from the client
+        amount: rupees, // paise, computed here, never taken from the client
         currency: "INR",
         receipt,
         notes: { purpose: "donation", app: "beu-syllabus", donor: donorName },
