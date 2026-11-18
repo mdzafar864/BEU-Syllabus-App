@@ -131,15 +131,11 @@
 
 /* Short landscape (phone on its side): card becomes a grid in style.css. */
 @media (orientation: landscape) and (height <= 540px) {
-  .header-center {
-    grid-row: 1 / span 8;
-  }
-
   .box > .stats-bar {
     grid-column: 2 / span 2;
     grid-row: 6;
-    margin-top: 0.4rem;
-    padding: 0.3rem 0.2rem;
+    margin-top: 0.3rem;
+    padding: 0.25rem 0.2rem;
   }
 
   .stat {
