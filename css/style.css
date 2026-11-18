@@ -1,8 +1,4 @@
 /* ==========================================================================
-   Syllabus app: main stylesheet  (UPDATED)
-   ========================================================================== */
-
-/* ==========================================================================
    1. Reset
    ========================================================================== */
 * {
@@ -1328,6 +1324,14 @@ a:hover {
 @media (width <= 340px) {
   .donate-icon {
     display: none;
+  }
+}
+
+/* Donate button: tighter padding + smaller text so the label stays on one line */
+@media (width <= 600px) {
+  #donate-btn {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.8rem;
   }
 }
 
