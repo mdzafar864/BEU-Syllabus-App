@@ -86,7 +86,7 @@
   // ---- amount picker ------------------------------------------------------
   var chips = Array.prototype.slice.call(document.querySelectorAll(".donate-chip"));
   var custom = document.getElementById("donate-amount");
-  var selected = 50;
+  var selected = 10;
 
   function selectChip(amount) {
     selected = amount;
