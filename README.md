@@ -23,6 +23,7 @@
   <img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=flat-square&logo=javascript&logoColor=black" alt="JavaScript">
   <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js">
   <img src="https://img.shields.io/badge/MongoDB%20Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white" alt="MongoDB Atlas">
+  <img src="https://img.shields.io/badge/Razorpay-0C2451?style=flat-square&logo=razorpay&logoColor=white" alt="Razorpay">
   <img src="https://img.shields.io/badge/GitHub%20Pages-222?style=flat-square&logo=github&logoColor=white" alt="GitHub Pages">
 </p>
 
@@ -40,6 +41,7 @@
 - [Getting Started](#-getting-started)
 - [Deployment (CI/CD)](#-deployment-cicd)
 - [Stats Bar & Usage Tracking](#-stats-bar--usage-tracking)
+- [Donations (Razorpay)](#-donations-razorpay)
 - [Archive Folder](#-archive-folder)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
@@ -63,6 +65,7 @@
 | 📱 Mobile & desktop friendly | 🌐 Installable PWA (works like an app) |
 | ⚡ Fast loading with service worker cache | 🔄 Auto-update on every deploy |
 | 📊 Live stats bar (Total / Active users, Downloads) | 🔒 Anonymous tracking, no personal data |
+| 💙 Support the project with **Razorpay** (UPI, cards, netbanking) | 🛟 UPI fallback if online payment is unavailable |
 
 ---
 
@@ -70,7 +73,7 @@
 
 | Version | Type | Location | Notes |
 | --- | --- | --- | --- |
-| **Current (v1.0.x+)** | Static frontend + analytics API | [`/`](./) (root) + [`/server`](./server) | Stats bar, click tracking, MongoDB Atlas |
+| **Current (v1.0.x+)** | Static frontend + analytics & payments API | [`/`](./) (root) + [`/server`](./server) | Stats bar, click tracking, Razorpay donations, MongoDB Atlas |
 | **v1.0 (archive)** | ⚡ **Serverless** (frontend only) | [`/archive/v1.0`](./archive/v1.0) | No backend, no database, no stats bar. Only GitHub Pages |
 
 > Want the simplest possible version with zero backend? Use the [serverless v1.0 archive](./archive/v1.0).
@@ -93,24 +96,31 @@
                     │  index.html • css • js • PWA  │
                     └───────────────┬───────────────┘
                                     │
-              ┌─────────────────────┴─────────────────────┐
-              │                                           │
-   Syllabus data (js/data.js)                  tracker.js / stats.js
-   semester → session → branch → PDF                      │
-                                              POST /api/track
-                                              GET  /api/stats
-                                                          │
-                                              ┌───────────▼───────────┐
-                                              │  server/ (Node API)   │
-                                              │  Vercel / Render ...  │
-                                              └───────────┬───────────┘
-                                                          │
-                                              ┌───────────▼───────────┐
-                                              │    MongoDB Atlas      │
-                                              │ events•visitors•counters│
-                                              └───────────────────────┘
+        ┌───────────────────────────┼───────────────────────────┐
+        │                           │                           │
+ Syllabus data (js/data.js)   tracker.js / stats.js         donate.js
+ semester → session →               │                           │
+ branch → PDF                POST /api/track          POST /api/create-order
+                             GET  /api/stats          POST /api/verify-payment
+                                    │                           │
+                                    │                           │ ◄── Razorpay Checkout modal
+                                    │                           │     (loaded only on Donate click)
+                          ┌─────────▼───────────────────────────▼─────────┐
+                          │             server/ (Node API)                │
+                          │             Vercel / Render ...               │
+                          │  api/ → src/app.js (analytics)                │
+                          │       → src/payments.js (donations)           │
+                          └───────┬───────────────────────────┬───────────┘
+                                  │                           │
+                       ┌──────────▼──────────┐       ┌────────▼─────────┐
+                       │    MongoDB Atlas    │       │     Razorpay     │
+                       │ events • visitors • │       │ orders, payments │
+                       │ counters • donations│       └────────┬─────────┘
+                       └─────────────────────┘                │
+                                  ▲   POST /api/razorpay-webhook (signed)
+                                  └───────────────────────────┘
 
-   archive/v1.0  →  old serverless build (frontend only, no API / DB)
+   archive/v1.0  →  old serverless build (frontend only, no API / DB / payments)
 ```
 
 **How it works**
@@ -119,6 +129,7 @@
 2. Syllabus links live in `js/data.js` as `syllabus[semester][session][branch] = pdfLink`.
 3. `service-worker.js` caches the app for offline-friendly, fast loading. `scripts/build-sw.js` stamps a fresh build id on every deploy so users always get updates.
 4. `tracker.js` and `stats.js` talk to the **`server/`** API, which stores anonymous usage data in **MongoDB Atlas**. A static site cannot connect to Atlas directly (the password would be public), so the API sits in between.
+5. `donate.js` handles donations. The browser only suggests an amount; the **`server/`** API creates the Razorpay order, verifies the payment signature and records the result in the `donations` collection. The Razorpay **key secret never reaches the browser**.
 
 ---
 
@@ -144,7 +155,8 @@ BEU-Syllabus-App
 │   ├── analytics.js           # Google Analytics 4
 │   ├── config.js              # API URL + tracking settings
 │   ├── tracker.js             # Click / action tracking → MongoDB + GA4
-│   └── stats.js               # Stats bar (Total, Active, Downloads)
+│   ├── stats.js               # Stats bar (Total, Active, Downloads)
+│   └── donate.js              # Razorpay donations (amount picker, Checkout, verify)
 │
 ├── assets/
 │   ├── logo.png, Developer.png
@@ -152,12 +164,20 @@ BEU-Syllabus-App
 │   ├── favicon.ico / .svg / -96x96.png
 │   └── screenshots/           # README screenshots
 │
-├── server/                    # Analytics API (Node.js + MongoDB Atlas)
-│   ├── api/                   # Vercel functions: track.js, stats.js, health.js
-│   ├── src/                   # app, config, db, seed, validate, instance
+├── server/                    # Analytics + payments API (Node.js + MongoDB Atlas)
+│   ├── api/                   # Vercel functions
+│   │   ├── track.js, stats.js, health.js     # analytics
+│   │   ├── create-order.js                   # Razorpay: create order
+│   │   ├── verify-payment.js                 # Razorpay: verify signature + payment
+│   │   └── razorpay-webhook.js               # Razorpay: signed webhook (raw body)
+│   ├── src/                   # app, config, db, seed, validate, instance,
+│   │                          # payments (donation logic), payments-instance
+│   ├── test/
+│   │   └── payments.test.js   # Payment tests (no network needed)
 │   ├── scripts/seed.js        # Manual DB seed
-│   ├── server.js              # Local / Node host entry
-│   ├── .env.example           # Environment variable template
+│   ├── server.js              # Local / Node host entry (analytics + payment routes)
+│   ├── package.json           # Dependencies (mongodb, razorpay)
+│   ├── .env.example           # Environment variable template (MongoDB + Razorpay)
 │   └── README.md              # API documentation
 │
 ├── scripts/
@@ -215,12 +235,13 @@ npx serve .
 
 ```bash
 cd server
-cp .env.example .env      # add your MongoDB Atlas details
+cp .env.example .env      # add your MongoDB Atlas + Razorpay TEST details
 npm install
+npm test                  # payment tests, no network needed
 npm run dev
 ```
 
-Check it at `http://localhost:3000/api/health`.
+Check it at `http://localhost:3000/api/health`. The donation routes (`/api/create-order`, `/api/verify-payment`, `/api/razorpay-webhook`) run on the same server.
 
 ### Use the serverless version (no backend)
 
@@ -237,7 +258,7 @@ Pushing to `main` runs [`.github/workflows/deploy.yml`](./.github/workflows/depl
 
 1. Checks out the repo and sets up Node 22.
 2. Runs `node scripts/build-sw.js` to stamp a fresh **build id** into `service-worker.js` and `version.json` (deployed copy only, nothing is committed back).
-3. Removes `scripts`, `.github` and `.git` from the published output.
+3. Removes `scripts`, `.github` and `.git` from the published output. (`js/donate.js` is part of the hashed, cached app shell like the other scripts.)
 4. Uploads and deploys to **GitHub Pages**.
 
 Bump the patch version when releasing:
@@ -263,7 +284,7 @@ Browser (GitHub Pages) ──► server/ API (Vercel / Render / ...) ──► M
 2. **Deploy `server/`** to Vercel (Root Directory = `server`) or any Node host, using the variables from [`server/.env.example`](./server/.env.example). Open `https://YOUR-API/api/health` to verify.
 3. **Point the app at it** (same URL in both places):
    - `js/config.js` → `apiBase: "https://YOUR-API"`
-   - `index.html` → add the same origin to `connect-src` in the Content Security Policy.
+   - `index.html` → add the same origin to `connect-src` in the Content Security Policy. (The Razorpay hosts are already allowed there for donations.)
 4. Push. Until `apiBase` is set, tracking is off and the bar shows `—`.
 
 The API creates its collections, indexes and default documents automatically on first connection to an empty database. More details: [`server/README.md`](./server/README.md).
@@ -275,6 +296,7 @@ The API creates its collections, indexes and default documents automatically on 
 | `events` | One row per click / change / action (`type`, `name`, `data`, `visitorId`, `sessionId`, time). Auto-deleted after `EVENT_TTL_DAYS` (default 180). |
 | `visitors` | One row per anonymous browser id: first / last seen, language, screen. Powers Total and Active users. |
 | `counters` | Running Downloads total (kept even after old events expire). |
+| `donations` | One row per Razorpay order (see [Donations](#-donations-razorpay)). Not deleted automatically. |
 
 - **Total users** = distinct anonymous browser ids.
 - **Active users** = visitors whose page is open and in the foreground. A heartbeat every 20 s (`heartbeatMs`) keeps them counted; closing or backgrounding the page removes them immediately. `ACTIVE_WINDOW_MINUTES` (default 1) is the safety net for crashed tabs or lost connections.
@@ -282,6 +304,60 @@ The API creates its collections, indexes and default documents automatically on 
 - 🔒 **Privacy:** no names, emails or IP addresses are stored. The id is a random value in `localStorage`; clearing site data creates a new one.
 - Event types in `events`: `click`, `change`, `action` (mirrored GA4 events), `page_view`, `session_start`.
 - Raw clicks and dropdown changes also go to GA4 as `ui_click` / `ui_select_change`. Set `mirrorUiEventsToGA: false` in `js/config.js` to turn that off.
+
+---
+
+## 💙 Donations (Razorpay)
+
+The **Donate** button opens Razorpay Checkout (UPI, cards, netbanking, wallets). If the API or Razorpay script is unreachable, it falls back to the original UPI flow.
+
+```text
+Donate click → POST /api/create-order → Razorpay Checkout modal
+             → POST /api/verify-payment → "Thank you" message
+                       (Razorpay webhook confirms in the background)
+```
+
+### API routes
+
+| Route | Called by | What it does |
+| --- | --- | --- |
+| `POST /api/create-order` | Browser | Validates the amount (whole ₹, within limits), converts to paise **on the server**, creates the Razorpay order, stores it as `created`, returns `{ orderId, amount, currency, keyId }`. |
+| `POST /api/verify-payment` | Browser | Checks the HMAC signature, confirms the order is ours, fetches the payment from Razorpay and matches amount / currency / status, then marks the donation `paid`. Safe to call twice. |
+| `POST /api/razorpay-webhook` | Razorpay | Signed with the webhook secret and verified against the **raw** body. Settles donors who paid but closed the tab. Handles `payment.captured`, `order.paid`, `payment.failed`. |
+
+### Setup
+
+1. **Install (backend only):** `cd server && npm install razorpay --ignore-scripts`, then commit `package-lock.json`. Run `npm audit --omit=dev`.
+2. **Environment variables** (Vercel → Settings → Environment Variables, or `server/.env` locally):
+
+   | Variable | Value |
+   | --- | --- |
+   | `RAZORPAY_KEY_ID` | `rzp_test_...` first, `rzp_live_...` later |
+   | `RAZORPAY_KEY_SECRET` | From Razorpay Dashboard → API Keys (shown once) |
+   | `RAZORPAY_WEBHOOK_SECRET` | Long random string you choose (`openssl rand -hex 32`) |
+   | `DONATION_MIN_INR` / `DONATION_MAX_INR` | Optional limits, default ₹1 / ₹50,000 |
+   | `DONATION_RATE_LIMIT_PER_MIN` | Optional per-IP limit, default 20 |
+
+3. **Webhook:** Razorpay Dashboard → Settings → Webhooks → URL `https://YOUR-API/api/razorpay-webhook`, same secret as above, events `payment.captured`, `order.paid`, `payment.failed`.
+4. **Test with test keys** and check that the `donations` document becomes `paid`. Keep your browser console open for any CSP message on the first payment.
+5. **Go live:** complete Razorpay activation, switch to `rzp_live_` keys, redeploy, make one small real payment.
+
+### `donations` collection
+
+| Field | Meaning |
+| --- | --- |
+| `_id` | Razorpay order id |
+| `status` | `created` → `authorized` or `paid` |
+| `amount`, `currency` | In paise and `INR` |
+| `paymentId`, `method` | Set once the payment is verified (`paymentId` is unique) |
+| `donorName` | Optional, sanitized |
+| `createdAt`, `verifiedAt` | Timestamps |
+
+### Security rules
+
+- 🔐 The **key secret and webhook secret live only in server environment variables.** Never put them in `js/`, `index.html`, this README or git. Rotate the secret immediately if it leaks.
+- The browser is never trusted for the amount or for "payment success". Only the server's signature check plus a Razorpay payment lookup marks a donation paid.
+- Signatures are compared in constant time, routes are rate limited, CORS is limited to `ALLOWED_ORIGINS`, and responses are `Cache-Control: no-store`.
 
 ---
 
