@@ -161,7 +161,7 @@
       theme: { color: "#1e3a8a" },
       modal: {
         ondismiss: function () {
-          track("donate_dismissed", { amount_inr: order.amount / 100 });
+          track("donate_dismissed", { amount_inr: order.amount });
           finish();
         },
       },
