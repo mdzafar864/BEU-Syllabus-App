@@ -356,7 +356,6 @@ function buildUpiLink() {
     `pa=${encodeURIComponent(UPI_ID)}`,
     `pn=${encodeURIComponent(UPI_NAME)}`,
     `tn=${encodeURIComponent(UPI_NOTE)}`,
-    "am=1",
     "cu=INR",
   ];
   return `upi://pay?${params.join("&")}`;
