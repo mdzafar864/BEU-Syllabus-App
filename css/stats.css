@@ -1,0 +1,174 @@
+/* ==========================================================================
+   Stats bar
+   Loads AFTER style.css. All type scaling comes from the root font-size
+   defined in style.css, so everything here is in rem.
+
+   Markup expected:
+
+     <div class="stats-bar" id="stats-bar">
+       <div class="stat stat-live">
+         <span class="stat-value">..</span><span class="stat-label">..</span>
+       </div> x3
+     </div>
+   ========================================================================== */
+
+/* Container: three equal columns on a tinted surface (no outline). */
+.stats-bar {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-top: 0.6rem;
+  padding: 0.55rem 0.2rem;
+  background: linear-gradient(180deg, #f7f9fd, #eff3fb);
+  border: 1px solid #e3e9f4;
+  border-radius: 0.9rem;
+  box-shadow: inset 0 1px 0 rgb(255 255 255 / 80%);
+}
+
+.stat {
+  min-width: 0;
+  padding: 0 0.3rem;
+  text-align: center;
+}
+
+.stat + .stat {
+  box-shadow: inset 1px 0 0 #dde5f2;
+}
+
+.stat-value {
+  display: block;
+  font-size: 1.2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  color: var(--navy-900);
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.01em;
+}
+
+.stat-label {
+  display: block;
+  margin-top: 0.15rem;
+  overflow: hidden;
+  font-size: 0.75rem;
+  font-weight: 600;
+  line-height: 1.2;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  color: var(--ink-muted);
+}
+
+/* ---- Icons: one per stat, drawn in CSS so no HTML change is needed ---- */
+.stat-label::before {
+  content: "";
+  display: inline-block;
+  width: 0.8rem;
+  height: 0.8rem;
+  margin-right: 0.3rem;
+  vertical-align: -0.1rem;
+  background: var(--navy-600);
+  mask: var(--stat-icon) center / contain no-repeat;
+  -webkit-mask: var(--stat-icon) center / contain no-repeat;
+}
+
+.stat:nth-child(2) {
+  /* download */
+  --stat-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M11 3h2v9.2l3.6-3.6 1.4 1.4-6 6-6-6 1.4-1.4 3.6 3.6V3zM5 19h14v2H5z'/></svg>");
+}
+
+.stat:nth-child(3) {
+  /* document */
+  --stat-icon: url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'><path d='M6 2h8l6 6v14H6V2zm7 1.5V9h5.5L13 3.5zM8.5 13h7v1.5h-7V13zm0 3.5h7V18h-7v-1.5z'/></svg>");
+}
+
+/* Live stat: pulsing green dot */
+.stat-live .stat-label::before {
+  width: 0.5rem;
+  height: 0.5rem;
+  margin-right: 0.35rem;
+  vertical-align: 0.05rem;
+  border-radius: 50%;
+  background: var(--success);
+  box-shadow: 0 0 0 3px rgb(22 163 74 / 18%);
+  mask: none;
+  -webkit-mask: none;
+  animation: stat-pulse 2s ease-in-out infinite;
+}
+
+@keyframes stat-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    box-shadow: 0 0 0 3px rgb(22 163 74 / 18%);
+  }
+  50% {
+    opacity: 0.55;
+    box-shadow: 0 0 0 5px rgb(22 163 74 / 8%);
+  }
+}
+
+/* Loading shimmer */
+.stat-value:empty::before,
+.stat-value.is-loading::before {
+  content: "";
+  display: block;
+  width: 2.2rem;
+  height: 0.85rem;
+  margin: 0.17rem auto;
+  border-radius: 0.4rem;
+  background: linear-gradient(90deg, #e3e9f3 25%, #f1f4fa 50%, #e3e9f3 75%);
+  background-size: 200% 100%;
+  animation: stat-shimmer 1.4s linear infinite;
+}
+
+.stat-value.is-loading {
+  font-size: 0;
+}
+
+@keyframes stat-shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+/* Short landscape (phone on its side): card becomes a grid in style.css. */
+@media (orientation: landscape) and (height <= 540px) {
+  .header-center {
+    grid-row: 1 / span 8;
+  }
+
+  .box > .stats-bar {
+    grid-column: 2 / span 2;
+    grid-row: 6;
+    margin-top: 0.4rem;
+    padding: 0.3rem 0.2rem;
+  }
+
+  .stat {
+    padding: 0 0.15rem;
+  }
+
+  .stat-label {
+    font-size: 0.68rem;
+  }
+
+  .stat-label::before {
+    width: 0.7rem;
+    height: 0.7rem;
+    margin-right: 0.2rem;
+  }
+
+  .stat-live .stat-label::before {
+    width: 0.4rem;
+    height: 0.4rem;
+  }
+}
+
+/* Very narrow screens */
+@media (width <= 340px) {
+  .stat {
+    padding: 0 0.15rem;
+  }
+
+  .stat-label {
+    font-size: 0.7rem;
+  }
+}
