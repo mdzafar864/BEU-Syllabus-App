@@ -117,8 +117,14 @@ body {
   font-weight: 500;
   letter-spacing: -0.005em;
 
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
   width: 100%;
-  height: 100%;
+  height: 100vh;
+  height: 100dvh;
+  max-height: 100%;
   overflow: hidden;
   overscroll-behavior: none;
   display: flex;
