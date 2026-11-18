@@ -39,12 +39,12 @@
   --wa-green-dark: #0a6a5b;
 
   /* ---- Contrast-safe button tokens ---- */
-  --gold-ink: #3a2200;        /* ~8.1:1 on #f5a623 */
+  --gold-ink: #3a2200;
   --gold-ink-soft: #5a3600;
-  --dev-bg: #1e3a8a;          /* solid deep blue */
+  --dev-bg: #1e3a8a;
   --dev-bg-hover: #16306f;
   --dev-bg-active: #10244f;
-  --install-bg: #15803d;      /* solid green */
+  --install-bg: #15803d;
   --install-bg-hover: #126c34;
   --install-bg-active: #0e562a;
 
@@ -57,10 +57,15 @@
   --safe-bottom: env(safe-area-inset-bottom, 0px);
   --safe-left: env(safe-area-inset-left, 0px);
 
-  /* ---- Page bottom reserve (WhatsApp button now lives inside the card) ---- */
+  /* ---- Page bottom reserve (WhatsApp button lives inside the card) ---- */
   --wa-size: 48px;
   --wa-gap: 12px;
   --reserve-bottom: calc(var(--wa-gap) + var(--safe-bottom));
+
+  /* ---- Usable vertical space (single source of truth) ---- */
+  --fit-usable: calc(
+    100dvh - var(--safe-top) - var(--safe-bottom) - var(--wa-gap)
+  );
 
   /* ---- Type scale ---- */
   --modal-fs: clamp(15px, 0.9vw + 6px, 40px);
@@ -90,18 +95,7 @@ html {
   font-size: 14px;
   font-size: clamp(
     9px,
-    min(
-      calc((100vh - var(--reserve-bottom) - var(--safe-top)) / var(--fit-rem)),
-      1.6vw + 9px
-    ),
-    56px
-  );
-  font-size: clamp(
-    9px,
-    min(
-      calc((100dvh - var(--reserve-bottom) - var(--safe-top)) / var(--fit-rem)),
-      1.6vw + 9px
-    ),
+    min(calc(var(--fit-usable) / var(--fit-rem)), 1.6vw + 9px),
     56px
   );
 }
@@ -118,20 +112,19 @@ body {
   letter-spacing: -0.005em;
 
   position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
+  inset: 0;
   width: 100%;
-  height: 100vh;
   height: 100dvh;
-  max-height: 100%;
+  max-height: 100dvh;
   overflow: hidden;
   overscroll-behavior: none;
+
   display: flex;
   flex-direction: column;
   align-items: center;
+
   padding: calc(0.6rem + var(--safe-top)) calc(1rem + var(--safe-right))
-    var(--reserve-bottom) calc(1rem + var(--safe-left));
+    calc(var(--wa-gap) + var(--safe-bottom)) calc(1rem + var(--safe-left));
 }
 
 [hidden] {
@@ -156,8 +149,11 @@ option {
   width: 100%;
   max-width: 40rem;
   margin: 0 auto;
-  flex: 0 1 auto;
+
+  flex: 1 1 auto;
   min-height: 0;
+  max-height: 100%;
+
   padding: 1.3rem 1.3rem 1.4rem;
   border-radius: 1.6rem;
   border: 1px solid rgb(255 255 255 / 60%);
@@ -328,12 +324,7 @@ button:focus-visible {
   outline-offset: 2px;
 }
 
-/* ---- Primary CTA: Open Syllabus ----
-   Mirrors #dev-btn exactly:
-   - same transition property list (background, box-shadow, transform, color)
-   - same ripple layer + btn-ripple keyframes
-   - same hover/active shape (lift on hover, compress + inset shadow on active)
-   - only the color tokens differ (gold), so the ink stays dark for ~8:1 contrast. */
+/* ---- Primary CTA: Open Syllabus ---- */
 #open-btn {
   background: linear-gradient(135deg, var(--gold-500) 0%, var(--gold-600) 100%);
   color: var(--gold-ink);
@@ -412,7 +403,7 @@ button:focus-visible {
   animation: btn-ripple 0.5s ease-out;
 }
 
-/* ---- Developer Info: solid deep-blue, white ink ---- */
+/* ---- Developer Info ---- */
 #dev-btn {
   background: var(--dev-bg);
   color: #fff;
@@ -478,7 +469,7 @@ button:focus-visible {
   100% { opacity: 0;   transform: scale(1.6); }
 }
 
-/* ---- Install / App Mode: solid green, white ink ---- */
+/* ---- Install / App Mode ---- */
 #install-btn {
   background: var(--install-bg);
   color: #fff;
@@ -540,7 +531,7 @@ button:focus-visible {
 }
 
 /* ==========================================================================
-   6. Instruction card (#msg) — prominent notification
+   6. Instruction card (#msg)
    ========================================================================== */
 #msg {
   position: relative;
@@ -610,7 +601,6 @@ button:focus-visible {
 .modal-box {
   width: 100%;
   max-width: 40em;
-  height: 92vh;
   height: 92dvh;
   max-height: 100%;
   background: #fff;
@@ -761,8 +751,6 @@ button:focus-visible {
 .developer-modal {
   max-width: 28em;
   height: auto;
-  max-height: 90vh;
-  max-height: 90dvh;
   max-height: min(90dvh, 100%);
   width: 100%;
   background: #fff;
@@ -1081,8 +1069,8 @@ footer {
   color: var(--ink-muted);
   font-weight: 500;
   letter-spacing: 0.01em;
-  margin-top: 0.9rem;
-  margin-bottom: auto;
+  margin-top: 0.6rem;
+  margin-bottom: 0;
   opacity: 0;
 }
 
@@ -1112,6 +1100,7 @@ footer {
   box-shadow:
     0 2px 8px rgb(30 58 138 / 10%),
     inset 0 1px 0 rgb(255 255 255 / 90%);
+  flex-wrap: wrap;
 }
 
 .donate-icon {
@@ -1145,7 +1134,7 @@ footer {
   color: var(--ink-soft);
 }
 
-/* Donate button: same solid deep-blue treatment as #dev-btn */
+/* Donate button */
 #donate-btn {
   flex: none;
   width: auto;
@@ -1221,7 +1210,12 @@ footer {
   animation: btn-ripple 0.5s ease-out;
 }
 
-/* Send Syllabus: full-width button inside the card (was a fixed dock) */
+#donate-btn:disabled {
+  opacity: 0.6;
+  cursor: progress;
+}
+
+/* Send Syllabus (WhatsApp) */
 a.wa-float,
 a.wa-float:link,
 a.wa-float:visited {
@@ -1290,13 +1284,52 @@ a:hover {
   color: var(--gold-700);
 }
 
+/* ---- Donate amount picker (Razorpay) ---- */
+.donate-amounts {
+  flex: 1 1 100%;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.donate-chip {
+  flex: 1 1 auto;
+  width: auto;
+  min-height: 2.3rem;
+  margin: 0;
+  padding: 0.3rem 0.7rem;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: var(--dev-bg);
+  background: #fff;
+  border: 1.5px solid var(--dev-bg);
+  box-shadow: none;
+}
+
+.donate-chip.is-selected {
+  color: #fff;
+  background: var(--dev-bg);
+}
+
+.donate-custom {
+  flex: 1 1 5.5rem;
+  min-width: 0;
+  min-height: 2.3rem;
+  padding: 0.3rem 0.6rem;
+  font: inherit;
+  font-size: 0.9rem;
+  color: var(--navy-900);
+  background: #fff;
+  border: 1.5px solid var(--dev-bg);
+  border-radius: 0.9rem;
+}
+
 /* ==========================================================================
    10. Responsive + display-mode overrides
    ========================================================================== */
 @media (width >= 900px) {
   .modal-box {
     max-width: 65em;
-    height: 86vh;
     height: 86dvh;
   }
 
@@ -1327,7 +1360,6 @@ a:hover {
   }
 }
 
-/* Donate button: tighter padding + smaller text so the label stays on one line */
 @media (width <= 600px) {
   #donate-btn {
     padding: 0.3rem 0.6rem;
@@ -1367,20 +1399,13 @@ a:hover {
   :root {
     --wa-gap: 12px;
     --reserve-bottom: calc(var(--wa-gap) + var(--safe-bottom));
+    --fit-usable: calc(
+      100dvh - var(--safe-top) - var(--safe-bottom) - var(--wa-gap)
+    );
   }
 
   html {
-    font-size: 12px;
-    font-size: clamp(
-      8px,
-      calc((100vh - var(--reserve-bottom) - var(--safe-top)) / var(--fit-rem-land)),
-      22px
-    );
-    font-size: clamp(
-      8px,
-      calc((100dvh - var(--reserve-bottom) - var(--safe-top)) / var(--fit-rem-land)),
-      22px
-    );
+    font-size: clamp(8px, calc(var(--fit-usable) / var(--fit-rem-land)), 22px);
   }
 
   body {
@@ -1391,10 +1416,13 @@ a:hover {
     max-width: 62rem;
     display: grid;
     grid-template-columns: minmax(0, 0.85fr) repeat(2, minmax(0, 1fr));
+    grid-template-rows: auto auto auto auto auto auto auto auto;
     column-gap: 1.2rem;
     align-items: center;
+    align-content: start;
     padding: 0.9rem 1.2rem 1rem;
     border-radius: 1.4rem;
+    overflow-y: auto;
   }
 
   .header-center {
@@ -1500,7 +1528,6 @@ a:hover {
   }
 
   .modal-box {
-    height: 96vh;
     height: 96dvh;
   }
 }
@@ -1709,53 +1736,32 @@ a:hover {
 }
 
 /* ==========================================================================
-   9b. Donate amount picker (Razorpay)
+   12. Mobile PWA safety net
    ========================================================================== */
-.donate-card {
-  flex-wrap: wrap;
+@media (max-width: 900px) and (display-mode: standalone),
+       (max-width: 900px) and (display-mode: minimal-ui),
+       (max-width: 900px) and (display-mode: fullscreen) {
+  body {
+    height: 100dvh;
+    max-height: 100dvh;
+    overflow: hidden;
+  }
+
+  .box {
+    flex: 1 1 auto;
+    min-height: 0;
+    max-height: 100%;
+    overflow-y: auto;
+  }
+
+  footer {
+    margin-bottom: 0;
+  }
 }
 
-.donate-amounts {
-  flex: 1 1 100%;
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.4rem;
-}
-
-/* override the global full-width button rules */
-.donate-chip {
-  flex: 1 1 auto;
-  width: auto;
-  min-height: 2.3rem;
-  margin: 0;
-  padding: 0.3rem 0.7rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  color: var(--dev-bg);
-  background: #fff;
-  border: 1.5px solid var(--dev-bg);
-  box-shadow: none;
-}
-
-.donate-chip.is-selected {
-  color: #fff;
-  background: var(--dev-bg);
-}
-
-.donate-custom {
-  flex: 1 1 5.5rem;
-  min-width: 0;
-  min-height: 2.3rem;
-  padding: 0.3rem 0.6rem;
-  font: inherit;
-  font-size: 0.9rem;
-  color: var(--navy-900);
-  background: #fff;
-  border: 1.5px solid var(--dev-bg);
-  border-radius: 0.9rem;
-}
-
-#donate-btn:disabled {
-  opacity: 0.6;
-  cursor: progress;
+/* iOS Safari (incl. PWA) dynamic-toolbar fallback */
+@supports (-webkit-touch-callout: none) {
+  body {
+    height: -webkit-fill-available;
+  }
 }
