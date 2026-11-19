@@ -313,30 +313,18 @@
       return;
     }
 
-    var nameInput = document.getElementById("donate-name");
-    var donorName = nameInput ? nameInput.value.replace(/\s+/g, " ").trim() : "";
-    if (donorName.length < 2 || !/\p{L}/u.test(donorName)) {
-      say("Please enter your name.", 5000);
-      if (nameInput) {
-        nameInput.focus({ preventScroll: true });
-      }
-      return;
-    }
-
     busy = true;
     setBusyUi(true);
     track("donate_order_requested", { amount_inr: amount });
 
-    Promise.all([postJson("/api/create-order", { amount: amount, donorName: donorName }), loadCheckout()])
+    Promise.all([postJson("/api/create-order", { amount: amount }), loadCheckout()])
       .then(function (results) {
         safeOpenCheckout(results[0]);
       })
       .catch(function (err) {
         track("donate_unavailable", { reason: err.message });
         finish();
-        if (err.status === 400 && err.data && err.data.error === "invalid_donor_name") {
-          say("Please enter your name.", 5000);
-        } else if (err.status === 400 && err.data && err.data.error === "invalid_amount") {
+        if (err.status === 400 && err.data && err.data.error === "invalid_amount") {
           say("Please choose an amount between ₹" + err.data.min + " and ₹" + err.data.max + ".", 5000);
         } else if (typeof window.startUpiDonate === "function") {
           window.startUpiDonate(); // original UPI flow as a fallback
