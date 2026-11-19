@@ -1,3 +1,16 @@
+// Keep --app-h equal to the real visible height and force layout to re-resolve.
+function syncViewport() {
+  const h = window.visualViewport?.height ?? window.innerHeight;
+  const root = document.documentElement;
+  root.style.setProperty("--app-h", `${Math.round(h)}px`);
+  void root.offsetHeight; // force synchronous style + layout (rem basis, body box)
+  void document.body.offsetHeight;
+}
+syncViewport();
+window.addEventListener("resize", syncViewport);
+window.addEventListener("orientationchange", syncViewport);
+window.visualViewport?.addEventListener("resize", syncViewport);
+
 // app.js
 /* global syllabus, branchNames, semesterNames, sessionsBySemester */
 
@@ -669,14 +682,26 @@ if ("serviceWorker" in navigator) {
       document.removeEventListener("keydown", onKey, true);
       overlay.remove();
 
-      // Give focus back to where the user was, without scrolling the page.
-      if (previouslyFocused && document.contains(previouslyFocused)) {
+      // Don't hand focus back to a text field: that can pop the keyboard
+      // and shift the visual viewport inside the fixed body.
+      const el = previouslyFocused;
+      if (
+        el &&
+        document.contains(el) &&
+        !/^(INPUT|TEXTAREA|SELECT)$/.test(el.tagName)
+      ) {
         try {
-          previouslyFocused.focus({ preventScroll: true });
+          el.focus({ preventScroll: true });
         } catch {
           // element can't take focus: ignore
         }
       }
+
+      // Re-resolve layout after the overlay (and its backdrop-filter layer) is gone.
+      requestAnimationFrame(() => {
+        syncViewport();
+        requestAnimationFrame(syncViewport); // second pass catches late toolbar changes
+      });
       onClose(result);
     }
 
