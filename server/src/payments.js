@@ -2,7 +2,7 @@
 
 // Razorpay donations: create an order, verify the payment, receive webhooks.
 //
-//   POST /api/create-order      { amount (whole rupees), donorName }  -> order details for Checkout
+//   POST /api/create-order      { amount (whole rupees) }  -> order details for Checkout
 //   POST /api/verify-payment    { razorpay_order_id, razorpay_payment_id, razorpay_signature }
 //   POST /api/razorpay-webhook  (called by Razorpay; signed with the webhook secret)
 //
@@ -146,12 +146,9 @@ async function readRawBody(req) {
   return readStream(req, MAX_WEBHOOK_BYTES);
 }
 
-const DONOR_NAME_MIN = 2;
-const DONOR_NAME_MAX = 60;
-
 function cleanName(value) {
-  // Donor name: strip control chars and angle brackets, collapse spaces, cap length.
-  // Only real strings are accepted: String({}) would otherwise store "[object Object]".
+  // Optional donor name: strip control chars, collapse spaces, cap length.
+  // Only real strings are accepted (String({}) would give "[object Object]").
   if (typeof value !== "string") {
     return "";
   }
@@ -160,19 +157,18 @@ function cleanName(value) {
     .replace(/[\u0000-\u001f\u007f<>]/g, "")
     .replace(/\s+/g, " ")
     .trim()
-    .slice(0, DONOR_NAME_MAX);
+    .slice(0, 60);
 }
 
-// Reads the donor name from the request body. `donorName` is the field name;
-// the older `name` is still accepted so existing clients keep working.
-// Returns the cleaned name, or null when it is missing / empty / not a real name.
-function extractDonorName(body) {
-  const raw = body.donorName !== undefined ? body.donorName : body.name;
-  const name = cleanName(raw);
-  if (name.length < DONOR_NAME_MIN || !/\p{L}/u.test(name)) {
-    return null; // missing, blank after cleaning, too short, or no letters at all
-  }
-  return name;
+// What Razorpay tells us about the payer once a payment exists. Razorpay does
+// NOT expose the UPI account holder's real name; it gives the UPI ID (vpa),
+// and the email / phone entered in Checkout. A card payment may carry a name.
+function payerFromPayment(payment) {
+  const vpa = cleanName(payment.vpa || (payment.upi && payment.upi.vpa) || "");
+  const email = cleanName(payment.email || "");
+  const contact = cleanName(payment.contact || "");
+  const cardName = cleanName((payment.card && payment.card.name) || "");
+  return { vpa, email, contact, name: cardName || vpa };
 }
 
 // ---------------------------------------------------------------------------
@@ -333,18 +329,7 @@ function createPaymentsHandlers({
           cors,
         );
       }
-
-      // Validate the donor name before anything is created at Razorpay, so a
-      // rejected request never leaves an orphaned order or a nameless donation.
-      const donorName = extractDonorName(body);
-      if (donorName === null) {
-        return send(
-          res,
-          400,
-          { error: "invalid_donor_name", min: DONOR_NAME_MIN, max: DONOR_NAME_MAX },
-          cors,
-        );
-      }
+      const donorName = cleanName(body.name); // optional; filled from the payment once it is made
 
       const receipt = `don_${now().toString(36)}_${crypto.randomBytes(4).toString("hex")}`; // <= 40 chars
 
@@ -482,6 +467,7 @@ function createPaymentsHandlers({
 
   // Moves created/authorized -> paid/authorized exactly once.
   async function markPayment(donations, doc, payment, status) {
+    const payer = payerFromPayment(payment);
     const result = await donations.updateOne(
       { _id: doc._id, status: { $in: ["created", "authorized"] } },
       {
@@ -489,6 +475,11 @@ function createPaymentsHandlers({
           status,
           paymentId: payment.id,
           method: payment.method || "",
+          payerVpa: payer.vpa, // UPI ID, e.g. name@okicici
+          payerEmail: payer.email,
+          payerContact: payer.contact,
+          // keep a name the client sent; otherwise use what the payment gives us
+          donorName: doc.donorName || payer.name,
           verifiedAt: new Date(now()),
         },
       },
@@ -621,7 +612,7 @@ module.exports = {
   createPaymentsHandlers,
   verifyCheckoutSignature,
   verifyWebhookSignature,
-  extractDonorName,
+  payerFromPayment,
   hmacHex,
   toMinorUnits,
   fromMinorUnits,
