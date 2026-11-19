@@ -591,6 +591,7 @@ if ("serviceWorker" in navigator) {
     dialog: null, //     handle of the dialog currently on screen
     shown: false, //     a dialog was already shown during this page load
     reloading: false, // an update reload is in progress
+    reloadPending: false, // a new worker took over; reload is waiting for checkout to finish
   };
   let announceTimer = null;
 
@@ -728,6 +729,12 @@ if ("serviceWorker" in navigator) {
     };
   }
 
+  // True while a Razorpay payment is in flight (donate.js exposes this).
+  // An update must never reload the page in the middle of a payment.
+  function checkoutBusy() {
+    return typeof window.beuDonateBusy === "function" && window.beuDonateBusy();
+  }
+
   // Debounce: signals arriving within a moment of each other (for example the
   // version message and the data comparison) end up in ONE dialog.
   function scheduleAnnounce() {
@@ -745,6 +752,15 @@ if ("serviceWorker" in navigator) {
     }
     if (!updateState.version && !updateState.dataHash) {
       return; // nothing to announce
+    }
+
+    // A reload is already queued, or a payment is running: no dialog now.
+    if (updateState.reloadPending) {
+      return;
+    }
+    if (checkoutBusy()) {
+      scheduleAnnounce(); // look again once checkout has finished
+      return;
     }
 
     // A dialog is already open: just refresh its text. Never open a second.
@@ -970,8 +986,32 @@ if ("serviceWorker" in navigator) {
     { once: true },
   );
 
-  // NOTE: there are deliberately no "controllerchange", visibility, pageshow,
-  // online or interval triggers any more. Each of them used to start another
-  // check that could open another dialog. A new check happens on the next page
-  // load, and the service worker's own update check still keeps the cache fresh.
+  // ----- Auto-reload when a new worker takes control -----
+  // The worker calls skipWaiting() on install and clients.claim() on
+  // activate, so every deploy fires "controllerchange" in open pages.
+  //   * hadController guards the very first visit (claim() fires the event
+  //     too, and there is nothing to reload from).
+  //   * updateState.reloading / reloadPending make sure it reloads only once
+  //     and that the "Update Now" dialog never competes with it.
+  //   * A running Razorpay payment postpones the reload until it is finished.
+  function reloadWhenSafe() {
+    if (updateState.reloading) {
+      return;
+    }
+    if (checkoutBusy()) {
+      setTimeout(reloadWhenSafe, 500);
+      return;
+    }
+    updateState.reloading = true;
+    clearTimeout(announceTimer);
+    window.location.reload();
+  }
+
+  navigator.serviceWorker.addEventListener("controllerchange", () => {
+    if (!hadController || updateState.reloading || updateState.reloadPending) {
+      return;
+    }
+    updateState.reloadPending = true;
+    reloadWhenSafe();
+  });
 }
