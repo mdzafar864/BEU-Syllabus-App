@@ -10,11 +10,21 @@
  * If anything fails before the modal opens (API down, script blocked), the
  * original UPI flow in app.js is used so a donor is never left stuck.
  *
- * Speed: nothing slow is left for the click itself. As soon as the donor shows
- * interest (the card scrolls into view, or they touch a chip / the button), the
- * page (1) wakes the serverless API + database and (2) downloads Razorpay
- * Checkout, both off the click path. Requests are "simple" CORS requests
- * (text/plain body) so the browser skips the extra preflight round trip.
+ * Speed: nothing slow is left for the click itself. During app initialization
+ * (right after the page is parsed, in idle time) the page (1) wakes the
+ * serverless API + database and (2) downloads AND initializes Razorpay
+ * Checkout, so window.Razorpay is ready before the first tap. The same warm-up
+ * is repeated when the donor shows interest, and again when the tab returns
+ * from the background. Requests are "simple" CORS requests (text/plain body)
+ * so the browser skips the extra preflight round trip.
+ *
+ * What is NOT pre-loaded: the order id. An order is tied to one amount and is
+ * stored server-side, so creating one for every page view would fill the
+ * database with orders nobody pays. The order is created on click, in parallel
+ * with the (already finished) Checkout download.
+ *
+ * Loading state: the button is disabled the instant it is clicked and stays
+ * disabled until the flow ends (modal closed, payment confirmed, or any error).
  */
 (function () {
   "use strict";
@@ -24,9 +34,11 @@
   var MAX_INR = 50000; // the server enforces its own limits as well
   var REQUEST_TIMEOUT_MS = 12000; // generous: covers a cold start, then the UPI fallback
   var WARM_EVERY_MS = 4 * 60 * 1000; // serverless instances sleep after a few idle minutes
+  var LOADING_GUARD_MS = 30000; // never leave the button stuck if checkout never opens
   var checkoutPromise = null;
   var busy = false;
   var lastWarm = 0;
+  var loadingGuard = null;
 
   function apiBase() {
     var cfg = window.BEU_CONFIG || {};
@@ -82,11 +94,39 @@
     document.head.appendChild(l);
   }
 
-  // Called when the donor shows interest, never on plain page views.
+  // Warms the API and fetches Checkout. Safe to call repeatedly: warmApi is
+  // throttled, preloadCheckout runs once.
   function prepare() {
     warmApi();
     preloadCheckout();
   }
+
+  // App initialization: do the slow, network-bound work in idle time so it never
+  // competes with rendering the syllabus list, then initialize Checkout so the
+  // click path has nothing left to download. Failures are swallowed on purpose:
+  // loadCheckout() resets itself, so the click will simply retry.
+  function initPreload() {
+    prepare();
+    loadCheckout().catch(function () {});
+  }
+
+  function scheduleInitPreload() {
+    var run = function () {
+      (window.requestIdleCallback || function (fn) { return setTimeout(fn, 300); })(initPreload);
+    };
+    if (document.readyState === "complete") {
+      run();
+    } else {
+      window.addEventListener("load", run, { once: true });
+    }
+  }
+
+  // Instances sleep and tabs get frozen: re-warm when the donor comes back.
+  document.addEventListener("visibilitychange", function () {
+    if (document.visibilityState === "visible") {
+      warmApi();
+    }
+  });
 
   function loadCheckout() {
     if (window.Razorpay) {
@@ -221,17 +261,29 @@
   }
 
   // ---- payment ------------------------------------------------------------
-  // Instant feedback on the click, before any network work has finished.
+  // Local loading state for the Donate button. It is applied synchronously on
+  // click (before any network work) and removed in finish(), so a second tap
+  // can never start a second order.
+  // Only attributes/classes change here, never the label text or size: a wider
+  // label would reflow the flex-wrap donate card (and the fit-to-screen layout
+  // around it) for as long as the request is running.
   function setBusyUi(on) {
     var btn = document.getElementById("donate-btn");
     if (!btn) {
       return;
     }
-    // Only attributes/classes change here, never the label text or size: a wider
-    // label would reflow the flex-wrap donate card (and the fit-to-screen
-    // layout around it) for as long as the request is running.
     btn.disabled = on;
+    btn.classList.toggle("is-loading", on);
     btn.setAttribute("aria-busy", on ? "true" : "false");
+
+    clearTimeout(loadingGuard);
+    loadingGuard = on
+      ? setTimeout(function () {
+          // Safety net: checkout neither opened nor failed. Re-enable the button.
+          busy = false;
+          setBusyUi(false);
+        }, LOADING_GUARD_MS)
+      : null;
   }
 
   function finish(message) {
@@ -307,13 +359,15 @@
     if (busy) {
       return;
     }
+    // Lock first: from this line on, further clicks are ignored.
+    busy = true;
     var amount = chosenAmount();
     if (!Number.isInteger(amount) || amount < MIN_INR || amount > MAX_INR) {
+      busy = false; // nothing was started, so there is nothing to wait for
       say("Please enter a whole amount between ₹" + MIN_INR + " and ₹" + MAX_INR + ".", 5000);
       return;
     }
 
-    busy = true;
     setBusyUi(true);
     track("donate_order_requested", { amount_inr: amount });
 
@@ -333,4 +387,13 @@
         }
       });
   };
+
+  // Back/forward cache: a restored page must not come back with a stuck button.
+  window.addEventListener("pageshow", function (e) {
+    if (e.persisted) {
+      finish();
+    }
+  });
+
+  scheduleInitPreload();
 })();
