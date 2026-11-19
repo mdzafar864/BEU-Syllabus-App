@@ -293,6 +293,16 @@
           <span>Donate</span>
         </button>
         <div class="donate-amounts" role="group" aria-label="Donation amount">
+          <input
+            id="donate-name"
+            class="donate-custom donate-name"
+            type="text"
+            maxlength="60"
+            autocomplete="name"
+            placeholder="Your name"
+            aria-label="Your name"
+            required
+          />
           <button type="button" class="donate-chip" data-amount="10" aria-pressed="false">₹10</button>
           <button type="button" class="donate-chip" data-amount="50" aria-pressed="true">₹50</button>
           <button type="button" class="donate-chip" data-amount="100" aria-pressed="false">₹100</button>
