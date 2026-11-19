@@ -1331,6 +1331,10 @@ a:hover {
   background: var(--dev-bg);
 }
 
+.donate-name {
+  flex: 1 1 100%; /* its own full-width row above the amount chips */
+}
+
 .donate-custom {
   flex: 1 1 5.5rem;
   min-width: 0;
