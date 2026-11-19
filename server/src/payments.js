@@ -2,7 +2,7 @@
 
 // Razorpay donations: create an order, verify the payment, receive webhooks.
 //
-//   POST /api/create-order      { amount (whole rupees), name? }  -> order details for Checkout
+//   POST /api/create-order      { amount (whole rupees), donorName }  -> order details for Checkout
 //   POST /api/verify-payment    { razorpay_order_id, razorpay_payment_id, razorpay_signature }
 //   POST /api/razorpay-webhook  (called by Razorpay; signed with the webhook secret)
 //
@@ -146,14 +146,33 @@ async function readRawBody(req) {
   return readStream(req, MAX_WEBHOOK_BYTES);
 }
 
+const DONOR_NAME_MIN = 2;
+const DONOR_NAME_MAX = 60;
+
 function cleanName(value) {
-  // Optional donor name: strip control chars, collapse spaces, cap length.
-  return String(value || "")
+  // Donor name: strip control chars and angle brackets, collapse spaces, cap length.
+  // Only real strings are accepted: String({}) would otherwise store "[object Object]".
+  if (typeof value !== "string") {
+    return "";
+  }
+  return value
     // eslint-disable-next-line no-control-regex
     .replace(/[\u0000-\u001f\u007f<>]/g, "")
     .replace(/\s+/g, " ")
     .trim()
-    .slice(0, 60);
+    .slice(0, DONOR_NAME_MAX);
+}
+
+// Reads the donor name from the request body. `donorName` is the field name;
+// the older `name` is still accepted so existing clients keep working.
+// Returns the cleaned name, or null when it is missing / empty / not a real name.
+function extractDonorName(body) {
+  const raw = body.donorName !== undefined ? body.donorName : body.name;
+  const name = cleanName(raw);
+  if (name.length < DONOR_NAME_MIN || !/\p{L}/u.test(name)) {
+    return null; // missing, blank after cleaning, too short, or no letters at all
+  }
+  return name;
 }
 
 // ---------------------------------------------------------------------------
@@ -314,7 +333,18 @@ function createPaymentsHandlers({
           cors,
         );
       }
-      const donorName = cleanName(body.name);
+
+      // Validate the donor name before anything is created at Razorpay, so a
+      // rejected request never leaves an orphaned order or a nameless donation.
+      const donorName = extractDonorName(body);
+      if (donorName === null) {
+        return send(
+          res,
+          400,
+          { error: "invalid_donor_name", min: DONOR_NAME_MIN, max: DONOR_NAME_MAX },
+          cors,
+        );
+      }
 
       const receipt = `don_${now().toString(36)}_${crypto.randomBytes(4).toString("hex")}`; // <= 40 chars
 
@@ -591,6 +621,7 @@ module.exports = {
   createPaymentsHandlers,
   verifyCheckoutSignature,
   verifyWebhookSignature,
+  extractDonorName,
   hmacHex,
   toMinorUnits,
   fromMinorUnits,
