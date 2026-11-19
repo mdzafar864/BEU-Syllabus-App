@@ -1788,3 +1788,21 @@ a:hover {
     height: -webkit-fill-available;
   }
 }
+
+/* ==========================================================================
+   13. Razorpay checkout containment
+   --------------------------------------------------------------------------
+   The page CSP has no 'unsafe-inline' for styles, so styles that checkout.js
+   injects itself may be refused. Its container must never sit in the flow of
+   the fixed, flex, overflow:hidden body, so its positioning is guaranteed from
+   this same-origin stylesheet. 'display' is deliberately NOT set here:
+   checkout.js toggles it through the CSSOM, which the CSP allows.
+   ========================================================================== */
+.razorpay-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2147483647;
+}
