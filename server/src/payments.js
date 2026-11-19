@@ -43,6 +43,12 @@ function fromMinorUnits(minor, currency = "INR") {
   return minor / 10 ** MINOR_EXPONENT[currency];
 }
 
+// Expected amount in PAISE for a stored donation, for comparing with Razorpay.
+// New docs: `amountPaise`. Legacy docs (before this change) kept paise in `amount`.
+function docAmountPaise(doc) {
+  return doc.amountPaise !== undefined ? doc.amountPaise : doc.amount;
+}
+
 // ---------------------------------------------------------------------------
 // Crypto helpers (exported for tests)
 // ---------------------------------------------------------------------------
@@ -332,8 +338,8 @@ function createPaymentsHandlers({
       await db.collection("donations").insertOne({
         _id: order.id,
         receipt,
-        amount: order.amount, // PAISE (1 rupee = 100), the unit Razorpay uses
-        amountInr: fromMinorUnits(order.amount, order.currency), // same value in rupees, for reading the DB
+        amount: fromMinorUnits(order.amount, order.currency), // RUPEES: Rs 1 -> 1 (what you read in the DB)
+        amountPaise: order.amount, // PAISE: Rs 1 -> 100 (Razorpay's unit, used to verify payments)
         currency: order.currency,
         donorName,
         status: "created",
@@ -417,7 +423,7 @@ function createPaymentsHandlers({
       if (
         !payment ||
         payment.order_id !== orderId ||
-        payment.amount !== doc.amount ||
+        payment.amount !== docAmountPaise(doc) ||
         payment.currency !== doc.currency
       ) {
         console.error("[payments] payment/order mismatch for", orderId);
@@ -517,7 +523,7 @@ function createPaymentsHandlers({
 
       if (event.event === "payment.authorized") {
         if (
-          payment.amount === doc.amount &&
+          payment.amount === docAmountPaise(doc) &&
           payment.currency === doc.currency &&
           payment.status === "authorized"
         ) {
@@ -525,7 +531,7 @@ function createPaymentsHandlers({
         }
       } else if (event.event === "payment.captured" || event.event === "order.paid") {
         if (
-          payment.amount === doc.amount &&
+          payment.amount === docAmountPaise(doc) &&
           payment.currency === doc.currency &&
           payment.status === "captured"
         ) {
@@ -536,7 +542,7 @@ function createPaymentsHandlers({
             doc._id,
             JSON.stringify({
               payAmount: payment.amount,
-              docAmount: doc.amount,
+              docAmount: docAmountPaise(doc),
               payCurrency: payment.currency,
               docCurrency: doc.currency,
               payStatus: payment.status,
