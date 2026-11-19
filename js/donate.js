@@ -28,6 +28,63 @@
   var busy = false;
   var lastWarm = 0;
 
+  // ---- page-state safety net around the Razorpay modal ---------------------
+  // checkout.js can leave things behind (body/html inline styles, a changed
+  // viewport meta, orphaned containers/iframes). The page's CSP has no
+  // 'unsafe-inline' for styles, so only the CSSOM (el.style.cssText) is used
+  // here, never setAttribute("style", ...).
+  var pageSnapshot = null;
+  var LEFTOVER_SELECTOR =
+    ".razorpay-container, .razorpay-backdrop, iframe.razorpay-checkout-frame";
+
+  function snapshotPage() {
+    var m = document.querySelector('meta[name="viewport"]');
+    pageSnapshot = {
+      viewport: m ? m.getAttribute("content") : null,
+      body: document.body.style.cssText,
+      html: document.documentElement.style.cssText,
+    };
+  }
+
+  function restorePage() {
+    if (!pageSnapshot) {
+      return;
+    }
+    var m = document.querySelector('meta[name="viewport"]');
+    if (m && pageSnapshot.viewport !== null) {
+      m.setAttribute("content", pageSnapshot.viewport);
+    }
+    document.body.style.cssText = pageSnapshot.body;
+    document.documentElement.style.cssText = pageSnapshot.html;
+    pageSnapshot = null;
+    window.dispatchEvent(new Event("resize")); // make dvh / rem recompute
+  }
+
+  // Called when the modal has closed (dismissed, paid, or never opened).
+  // Only the nodes that exist NOW are removed, after the close animation, so a
+  // new checkout opened within that time is never touched.
+  function cleanupCheckout() {
+    restorePage();
+    var stale = Array.prototype.slice.call(document.querySelectorAll(LEFTOVER_SELECTOR));
+    if (!stale.length) {
+      return;
+    }
+    setTimeout(function () {
+      stale.forEach(function (n) {
+        if (n.parentNode) {
+          n.parentNode.removeChild(n);
+        }
+      });
+      restorePage();
+      window.dispatchEvent(new Event("resize"));
+    }, 600);
+  }
+
+  // app.js asks this before it reloads the page for an update.
+  window.beuDonateBusy = function () {
+    return busy;
+  };
+
   function apiBase() {
     var cfg = window.BEU_CONFIG || {};
     return String(cfg.apiBase || "").replace(/\/+$/, "");
@@ -237,6 +294,7 @@
   function finish(message) {
     busy = false;
     setBusyUi(false);
+    cleanupCheckout();
     if (message) {
       say(message, 8000);
     }
@@ -264,6 +322,7 @@
   }
 
   function openCheckout(order) {
+    snapshotPage(); // before checkout.js touches anything
     var rzp = new window.Razorpay({
       key: order.keyId,
       order_id: order.orderId,
@@ -279,6 +338,7 @@
         },
       },
       handler: function (response) {
+        cleanupCheckout(); // modal is closing: restore the page now, not after verify
         verify(order, response);
       },
     });
