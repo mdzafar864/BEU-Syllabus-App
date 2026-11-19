@@ -10,36 +10,7 @@
          <span class="stat-value">..</span><span class="stat-label">..</span>
        </div> x3
      </div>
-
-   Bottom container expected:
-
-     <div class="bottom-bar" id="bottom-bar"> ... </div>
    ========================================================================== */
-
-/* --------------------------------------------------------------------------
-   Reserved space for the fixed bottom bar so nothing hides behind it and the
-   page never "jumps" on first paint. --bottom-bar-h is optional; the fallback
-   keeps it safe if JS never sets it.
-   -------------------------------------------------------------------------- */
-:root {
-  --bottom-bar-h: 4rem;
-}
-
-body {
-  padding-bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom, 0px));
-  scroll-padding-bottom: calc(var(--bottom-bar-h) + env(safe-area-inset-bottom, 0px));
-}
-
-/* Fixed bottom container: pinned to the bottom edge, grows upward, opaque. */
-.bottom-bar {
-  position: fixed;
-  inset: auto 0 0 0; /* top:auto right:0 bottom:0 left:0 */
-  z-index: 10;
-  background: #fff;
-  padding-bottom: env(safe-area-inset-bottom, 0px);
-  /* Prevent the bar's own height change from being animated into a shift */
-  will-change: height;
-}
 
 /* Container: three equal columns on a tinted surface (no outline). */
 .stats-bar {
@@ -63,17 +34,12 @@ body {
   box-shadow: inset 1px 0 0 #dde5f2;
 }
 
-/* Locked row: fixed height + nowrap + overflow hidden = zero CLS regardless
-   of whether the value is a shimmer, "0", or "1,234,567". */
 .stat-value {
   display: block;
-  height: 1.44rem;          /* 1.2rem font × 1.2 line-height — immutable */
-  min-height: 1.44rem;
-  overflow: hidden;
-  white-space: nowrap;
+  min-height: 1.44rem; /* 1.2rem font x 1.2 line-height: loading = loaded */
   font-size: 1.2rem;
   font-weight: 800;
-  line-height: 1.44rem;     /* vertical centering via line box */
+  line-height: 1.2;
   color: var(--navy-900);
   font-variant-numeric: tabular-nums;
   letter-spacing: -0.01em;
@@ -140,42 +106,37 @@ body {
   }
 }
 
-/* Loading shimmer: absolutely centered inside the locked 1.44rem row so the
-   bar height is identical before and after the real value arrives. */
+/* Loading shimmer: centered by flex inside the reserved 1.44rem row, so the
+   bar keeps the same height once the real number replaces it. */
 .stat-value:empty,
 .stat-value.is-loading {
-  position: relative;
-  color: transparent;       /* hide any stray text node */
-  font-size: 0;             /* collapse any text metrics */
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .stat-value:empty::before,
 .stat-value.is-loading::before {
   content: "";
-  position: absolute;
-  top: 50%;
-  left: 50%;
+  display: block;
+  flex: none;
   width: 2.2rem;
   height: 0.85rem;
-  transform: translate(-50%, -50%);
+  margin: 0;
   border-radius: 0.4rem;
   background: linear-gradient(90deg, #e3e9f3 25%, #f1f4fa 50%, #e3e9f3 75%);
   background-size: 200% 100%;
   animation: stat-shimmer 1.4s linear infinite;
 }
 
+.stat-value.is-loading {
+  font-size: 0;
+  min-height: 1.44rem; /* font-size:0 would otherwise collapse the line box */
+}
+
 @keyframes stat-shimmer {
   to {
     background-position: -200% 0;
-  }
-}
-
-/* Respect reduced-motion for both animations */
-@media (prefers-reduced-motion: reduce) {
-  .stat-live .stat-label::before,
-  .stat-value:empty::before,
-  .stat-value.is-loading::before {
-    animation: none;
   }
 }
 
