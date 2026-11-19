@@ -63,9 +63,15 @@
   --reserve-bottom: calc(var(--wa-gap) + var(--safe-bottom));
 
   /* ---- Usable vertical space (single source of truth) ---- */
-  --app-h: 100dvh; /* kept in sync with the real visible height by JS (syncViewport) */
+  /* --app-h  = LIVE visible height. With interactive-widget=resizes-content,
+                 100dvh already shrinks when the keyboard opens; JS (syncViewport)
+                 only needs to override it on browsers without that support (iOS).
+     --fit-h  = height used ONLY for the rem scale. JS freezes it while an input
+                 is focused so the text doesn't collapse when the keyboard opens.
+                 Falls back to --app-h if JS hasn't set it. */
+  --app-h: 100dvh;
   --fit-usable: calc(
-    var(--app-h) - var(--safe-top) - var(--safe-bottom) - var(--wa-gap)
+    var(--fit-h, var(--app-h)) - var(--safe-top) - var(--safe-bottom) - var(--wa-gap)
   );
 
   /* ---- Type scale ---- */
@@ -115,8 +121,8 @@ body {
   position: fixed;
   inset: 0;
   width: 100%;
-  height: var(--app-h);
-  max-height: var(--app-h);
+  height: 100dvh;                 /* fallback: tracks the keyboard under resizes-content */
+  height: var(--app-h, 100dvh);   /* JS override for browsers that ignore interactive-widget */
   overflow: hidden;
   overscroll-behavior: none;
 
@@ -168,6 +174,7 @@ option {
   touch-action: pan-y;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none;
+  scroll-padding-block: 1rem;     /* focused inputs scroll into view with breathing room */
 }
 
 .box::-webkit-scrollbar {
@@ -1337,7 +1344,8 @@ a:hover {
   min-height: 2.3rem;
   padding: 0.3rem 0.6rem;
   font: inherit;
-  font-size: 0.9rem;
+  font-size: max(16px, 0.9rem);   /* >=16px prevents iOS focus-zoom */
+  scroll-margin-block: 1rem;
   color: var(--navy-900);
   background: #fff;
   border: 1.5px solid var(--dev-bg);
@@ -1420,7 +1428,7 @@ a:hover {
     --wa-gap: 12px;
     --reserve-bottom: calc(var(--wa-gap) + var(--safe-bottom));
     --fit-usable: calc(
-      100dvh - var(--safe-top) - var(--safe-bottom) - var(--wa-gap)
+      var(--fit-h, var(--app-h)) - var(--safe-top) - var(--safe-bottom) - var(--wa-gap)
     );
   }
 
@@ -1767,7 +1775,7 @@ a:hover {
        (max-width: 900px) and (display-mode: fullscreen) {
   body {
     height: 100dvh;
-    max-height: 100dvh;
+    height: var(--app-h, 100dvh);
     overflow: hidden;
   }
 
@@ -1783,9 +1791,6 @@ a:hover {
   }
 }
 
-/* iOS Safari (incl. PWA) dynamic-toolbar fallback */
-@supports (-webkit-touch-callout: none) {
-  body {
-    height: -webkit-fill-available;
-  }
-}
+/* iOS Safari ignores interactive-widget, so --app-h (set from visualViewport
+   by JS) drives the body height there. The old -webkit-fill-available override
+   was removed: it pinned the height and ignored the keyboard. */
