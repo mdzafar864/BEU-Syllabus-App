@@ -1228,6 +1228,44 @@ footer {
   animation: donate-pulse 0.9s ease-in-out infinite;
 }
 
+/* Loading state: the heart icon is swapped for a spinner of the same size, so
+   the button keeps its exact width and the card never reflows. */
+#donate-btn.is-loading {
+  pointer-events: none;
+  position: relative;
+}
+
+#donate-btn.is-loading svg {
+  visibility: hidden;
+  animation: none;
+}
+
+#donate-btn.is-loading::before {
+  content: "";
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin-top: -0.5rem;
+  border: 2px solid rgb(255 255 255 / 40%);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: donate-spin 0.7s linear infinite;
+}
+
+@keyframes donate-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  #donate-btn.is-loading::before {
+    animation-duration: 2s;
+  }
+}
+
 @keyframes donate-pulse {
   50% {
     opacity: 0.35;
