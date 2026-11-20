@@ -24,6 +24,7 @@
   <img src="https://img.shields.io/badge/Node.js-339933?style=flat-square&logo=nodedotjs&logoColor=white" alt="Node.js">
   <img src="https://img.shields.io/badge/MongoDB%20Atlas-47A248?style=flat-square&logo=mongodb&logoColor=white" alt="MongoDB Atlas">
   <img src="https://img.shields.io/badge/Razorpay-0C2451?style=flat-square&logo=razorpay&logoColor=white" alt="Razorpay">
+  <img src="https://img.shields.io/badge/Vercel-000000?style=flat-square&logo=vercel&logoColor=white" alt="Vercel">
   <img src="https://img.shields.io/badge/GitHub%20Pages-222?style=flat-square&logo=github&logoColor=white" alt="GitHub Pages">
 </p>
 
@@ -42,6 +43,8 @@
 - [Deployment (CI/CD)](#-deployment-cicd)
 - [Stats Bar & Usage Tracking](#-stats-bar--usage-tracking)
 - [Donations (Razorpay)](#-donations-razorpay)
+- [API Deployment & Performance](#-api-deployment--performance)
+- [Native Shells (Android / Windows)](#-native-shells-android--windows)
 - [Archive Folder](#-archive-folder)
 - [Roadmap](#-roadmap)
 - [Contributing](#-contributing)
@@ -65,6 +68,7 @@
 | 📱 Mobile & desktop friendly | 🌐 Installable PWA (works like an app) |
 | ⚡ Fast loading with service worker cache | 🔄 Auto-update on every deploy |
 | 📊 Live stats bar (Total / Active users, Downloads) | 🔒 Anonymous tracking, no personal data |
+| 🧩 Persistent user id in native shells (Android / Windows) | 🚀 Fast donate flow (API warm-up, lightweight Razorpay client) |
 | 💙 Support the project with **Razorpay** (UPI, cards, netbanking) | 🛟 UPI fallback if online payment is unavailable |
 
 ---
@@ -73,7 +77,8 @@
 
 | Version | Type | Location | Notes |
 | --- | --- | --- | --- |
-| **Current (v1.0.x+)** | Static frontend + analytics & payments API | [`/`](./) (root) + [`/server`](./server) | Stats bar, click tracking, Razorpay donations, MongoDB Atlas |
+| **Current (v1.0.6)** | Static frontend + analytics & payments API | [`/`](./) (root) + [`/server`](./server) | Stats bar, click tracking, Razorpay donations, MongoDB Atlas |
+| **Native shells** | Android / Android TV / Windows identity code | [`/native`](./native) | Persistent anonymous user id that survives "Clear data". Needs to be built and tested on a device |
 | **v1.0 (archive)** | ⚡ **Serverless** (frontend only) | [`/archive/v1.0`](./archive/v1.0) | No backend, no database, no stats bar. Only GitHub Pages |
 
 > Want the simplest possible version with zero backend? Use the [serverless v1.0 archive](./archive/v1.0).
@@ -100,22 +105,26 @@
         │                           │                           │
  Syllabus data (js/data.js)   tracker.js / stats.js         donate.js
  semester → session →               │                           │
- branch → PDF                POST /api/track          POST /api/create-order
-                             GET  /api/stats          POST /api/verify-payment
-                                    │                           │
-                                    │                           │ ◄── Razorpay Checkout modal
-                                    │                           │     (loaded only on Donate click)
+ branch → PDF                POST /api/track          GET  /api/create-order?warm=1
+                             GET  /api/stats          POST /api/create-order
+        ▲                           │                 POST /api/verify-payment
+        │ window.BEU_NATIVE_ID      │                           │
+        │ window.BEUNative          │                           │ ◄── Razorpay Checkout modal
+ native/ (Android • Android TV      │                           │     (loaded only on Donate click)
+          • Windows shells)         │                           │
                           ┌─────────▼───────────────────────────▼─────────┐
                           │             server/ (Node API)                │
-                          │             Vercel / Render ...               │
+                          │      Vercel (bom1, Fluid compute) / Render    │
                           │  api/ → src/app.js (analytics)                │
                           │       → src/payments.js (donations)           │
+                          │         └ src/razorpay-lite.js (fetch client) │
                           └───────┬───────────────────────────┬───────────┘
                                   │                           │
                        ┌──────────▼──────────┐       ┌────────▼─────────┐
                        │    MongoDB Atlas    │       │     Razorpay     │
                        │ events • visitors • │       │ orders, payments │
-                       │ counters • donations│       └────────┬─────────┘
+                       │ counters • meta •   │       └────────┬─────────┘
+                       │ donations           │                │
                        └─────────────────────┘                │
                                   ▲   POST /api/razorpay-webhook (signed)
                                   └───────────────────────────┘
@@ -127,9 +136,11 @@
 
 1. The frontend is fully static and hosted on **GitHub Pages**.
 2. Syllabus links live in `js/data.js` as `syllabus[semester][session][branch] = pdfLink`.
-3. `service-worker.js` caches the app for offline-friendly, fast loading. `scripts/build-sw.js` stamps a fresh build id on every deploy so users always get updates.
-4. `tracker.js` and `stats.js` talk to the **`server/`** API, which stores anonymous usage data in **MongoDB Atlas**. A static site cannot connect to Atlas directly (the password would be public), so the API sits in between.
-5. `donate.js` handles donations. The browser only suggests an amount; the **`server/`** API creates the Razorpay order, verifies the payment signature and records the result in the `donations` collection. The Razorpay **key secret never reaches the browser**.
+3. `service-worker.js` caches the app shell for fast, offline-friendly loading. Every shell file is fetched with `cache: "reload"` on install and revalidated with `no-cache` afterwards, so the browser's HTTP cache can never serve a stale file after a deploy. `scripts/build-sw.js` stamps a fresh build id on every deploy, and `scripts/sw-stale-cache-check.js` is a local check that this stale-cache protection works.
+4. `tracker.js` and `stats.js` talk to the **`server/`** API, which stores anonymous usage data in **MongoDB Atlas**. A static site cannot connect to Atlas directly (the password would be public), so the API sits in between. Events are sent in batches, with a heartbeat every 20 s and a `sendBeacon` flush when the page is hidden.
+5. `tracker.js` uses a persistent id from a **native shell** when one exists (`window.BEU_NATIVE_ID` or `window.BEUNative`), otherwise a random id in `localStorage`. It also reports `platform` (`web | android | android-tv | windows`).
+6. `donate.js` handles donations. The browser only suggests an amount; the **`server/`** API creates the Razorpay order, verifies the payment signature and records the result in the `donations` collection. The Razorpay **key secret never reaches the browser**. When a donor shows interest, `donate.js` calls `GET /api/create-order?warm=1` and preloads Checkout so the first tap is fast.
+7. The server talks to Razorpay through `src/razorpay-lite.js`, a small client built on Node's `fetch` (no `razorpay` npm package), which keeps serverless cold starts short. `server/` has a single runtime dependency: `mongodb`.
 
 ---
 
@@ -167,21 +178,30 @@ BEU-Syllabus-App
 ├── server/                    # Analytics + payments API (Node.js + MongoDB Atlas)
 │   ├── api/                   # Vercel functions
 │   │   ├── track.js, stats.js, health.js     # analytics
-│   │   ├── create-order.js                   # Razorpay: create order
+│   │   ├── create-order.js                   # Razorpay: create order (+ ?warm=1 warm-up)
 │   │   ├── verify-payment.js                 # Razorpay: verify signature + payment
 │   │   └── razorpay-webhook.js               # Razorpay: signed webhook (raw body)
 │   ├── src/                   # app, config, db, seed, validate, instance,
-│   │                          # payments (donation logic), payments-instance
-│   ├── test/
-│   │   └── payments.test.js   # Payment tests (no network needed)
+│   │                          # payments (donation logic), payments-instance,
+│   │                          # razorpay-lite (fetch-based Razorpay client)
 │   ├── scripts/seed.js        # Manual DB seed
 │   ├── server.js              # Local / Node host entry (analytics + payment routes)
-│   ├── package.json           # Dependencies (mongodb, razorpay)
+│   ├── vercel.json            # Vercel region (bom1) + Fluid compute
+│   ├── package.json           # Single dependency: mongodb
 │   ├── .env.example           # Environment variable template (MongoDB + Razorpay)
-│   └── README.md              # API documentation
+│   ├── .gitignore             # node_modules, .env
+│   └── README.md              # API documentation + deployment optimizations
+│
+├── native/                    # Persistent user id for native shells
+│   ├── README.md              # Contract, setup and limits
+│   ├── android/               # Kotlin: IdentityBridge, PersistentUserId,
+│   │                          # IdentityAuthenticator, manifest snippet, res/xml
+│   └── windows/
+│       └── PersistentUserId.cs   # WebView2 + Credential Manager
 │
 ├── scripts/
-│   └── build-sw.js            # Stamps build id into service-worker.js & version.json
+│   ├── build-sw.js            # Stamps build id into service-worker.js & version.json
+│   └── sw-stale-cache-check.js  # Checks the service worker never serves stale shell files
 │
 ├── .github/workflows/
 │   └── deploy.yml             # Build + deploy to GitHub Pages
@@ -193,6 +213,7 @@ BEU-Syllabus-App
         ├── css/style.css
         ├── js/ (app.js, analytics.js, data.js)
         ├── assets/
+        ├── robots.txt, sitemap.xml, README.md
         ├── scripts/build-sw.js
         └── .github/workflows/deploy.yml
 ```
@@ -233,13 +254,16 @@ npx serve .
 
 ### Run the analytics API locally (optional)
 
+Requires **Node 20.6 or newer**.
+
 ```bash
 cd server
 cp .env.example .env      # add your MongoDB Atlas + Razorpay TEST details
 npm install
-npm test                  # payment tests, no network needed
 npm run dev
 ```
+
+For local testing also set `apiBase: "http://localhost:3000"` in `js/config.js` and add that origin to `connect-src` in `index.html`.
 
 Check it at `http://localhost:3000/api/health`. The donation routes (`/api/create-order`, `/api/verify-payment`, `/api/razorpay-webhook`) run on the same server.
 
@@ -258,14 +282,22 @@ Pushing to `main` runs [`.github/workflows/deploy.yml`](./.github/workflows/depl
 
 1. Checks out the repo and sets up Node 22.
 2. Runs `node scripts/build-sw.js` to stamp a fresh **build id** into `service-worker.js` and `version.json` (deployed copy only, nothing is committed back).
-3. Removes `scripts`, `.github` and `.git` from the published output. (`js/donate.js` is part of the hashed, cached app shell like the other scripts.)
+3. Removes `scripts`, `.github` and `.git` from the published output. (`js/donate.js` and `js/config.js` are part of the hashed, cached app shell like the other scripts.)
 4. Uploads and deploys to **GitHub Pages**.
 
 Bump the patch version when releasing:
 
 ```bash
-node scripts/build-sw.js --bump     # 1.0.2 -> 1.0.3
+node scripts/build-sw.js --bump     # 1.0.6 -> 1.0.7
 ```
+
+Optional: check that the service worker never serves a stale shell file after a deploy.
+
+```bash
+node scripts/sw-stale-cache-check.js
+```
+
+The API in `server/` is deployed separately (Vercel, Root Directory = `server`). See [API Deployment & Performance](#-api-deployment--performance).
 
 ---
 
@@ -274,7 +306,7 @@ node scripts/build-sw.js --bump     # 1.0.2 -> 1.0.3
 A stats bar under the **Install / App Mode Active** button shows **Total Users**, **Active Users** and **Downloads**. Every button click, dropdown change and app action is saved to **MongoDB Atlas**, next to the existing **Google Analytics 4** tracking.
 
 ```text
-Browser (GitHub Pages) ──► server/ API (Vercel / Render / ...) ──► MongoDB Atlas
+Browser / native shell ──► server/ API (Vercel / Render / ...) ──► MongoDB Atlas
    tracker.js, stats.js        POST /api/track   GET /api/stats
 ```
 
@@ -287,7 +319,7 @@ Browser (GitHub Pages) ──► server/ API (Vercel / Render / ...) ──► M
    - `index.html` → add the same origin to `connect-src` in the Content Security Policy. (The Razorpay hosts are already allowed there for donations.)
 4. Push. Until `apiBase` is set, tracking is off and the bar shows `—`.
 
-The API creates its collections, indexes and default documents automatically on first connection to an empty database. More details: [`server/README.md`](./server/README.md).
+With `AUTO_SEED=true` (the default) the API creates its collections, indexes and default documents on first connection to an empty database. The production setting is `AUTO_SEED=false`; run `npm run seed` once by hand for a new database. More details: [`server/README.md`](./server/README.md).
 
 ### What is stored
 
@@ -296,12 +328,14 @@ The API creates its collections, indexes and default documents automatically on 
 | `events` | One row per click / change / action (`type`, `name`, `data`, `visitorId`, `sessionId`, time). Auto-deleted after `EVENT_TTL_DAYS` (default 180). |
 | `visitors` | One row per anonymous browser id: first / last seen, language, screen. Powers Total and Active users. |
 | `counters` | Running Downloads total (kept even after old events expire). |
+| `meta` | Schema version document used by the seeder. |
 | `donations` | One row per Razorpay order (see [Donations](#-donations-razorpay)). Not deleted automatically. |
 
-- **Total users** = distinct anonymous browser ids.
-- **Active users** = visitors whose page is open and in the foreground. A heartbeat every 20 s (`heartbeatMs`) keeps them counted; closing or backgrounding the page removes them immediately. `ACTIVE_WINDOW_MINUTES` (default 1) is the safety net for crashed tabs or lost connections.
+- **Total users** = distinct anonymous ids (one per browser, or one per native install, see [Native Shells](#-native-shells-android--windows)).
+- **Active users** = visitors whose page is open and in the foreground. A heartbeat every 20 s (`heartbeatMs`) keeps them counted; closing or backgrounding the page removes them immediately. `ACTIVE_WINDOW_MINUTES` is the safety net for crashed tabs or lost connections (default 1 in `.env.example`, `3` in production; keep it at least 3× the heartbeat).
 - **Downloads** = presses of the Download button in the PDF viewer.
-- 🔒 **Privacy:** no names, emails or IP addresses are stored. The id is a random value in `localStorage`; clearing site data creates a new one.
+- 🔒 **Privacy:** no names, emails or IP addresses are stored. In a browser the id is a random value in `localStorage`; clearing site data creates a new one. Native shells keep the id in a store that survives "Clear data".
+- Each event also carries `meta.platform` (`web`, `android`, `android-tv` or `windows`).
 - Event types in `events`: `click`, `change`, `action` (mirrored GA4 events), `page_view`, `session_start`.
 - Raw clicks and dropdown changes also go to GA4 as `ui_click` / `ui_select_change`. Set `mirrorUiEventsToGA: false` in `js/config.js` to turn that off.
 
@@ -321,13 +355,14 @@ Donate click → POST /api/create-order → Razorpay Checkout modal
 
 | Route | Called by | What it does |
 | --- | --- | --- |
+| `GET /api/create-order?warm=1` | Browser | Warm-up only. Wakes the serverless function and the Atlas connection before the donor presses Donate. Touches no payment data. |
 | `POST /api/create-order` | Browser | Validates the amount (whole ₹, within limits), converts to paise **on the server**, creates the Razorpay order, stores it as `created`, returns `{ orderId, amount, currency, keyId }`. |
 | `POST /api/verify-payment` | Browser | Checks the HMAC signature, confirms the order is ours, fetches the payment from Razorpay and matches amount / currency / status, then marks the donation `paid`. Safe to call twice. |
 | `POST /api/razorpay-webhook` | Razorpay | Signed with the webhook secret and verified against the **raw** body. Settles donors who paid but closed the tab. Handles `payment.captured`, `order.paid`, `payment.failed`. |
 
 ### Setup
 
-1. **Install (backend only):** `cd server && npm install razorpay --ignore-scripts`, then commit `package-lock.json`. Run `npm audit --omit=dev`.
+1. **Install (backend only):** `cd server && npm install`. No Razorpay SDK is needed: the API uses the built-in `src/razorpay-lite.js` client. Commit `package-lock.json` and run `npm audit --omit=dev`.
 2. **Environment variables** (Vercel → Settings → Environment Variables, or `server/.env` locally):
 
    | Variable | Value |
@@ -337,6 +372,7 @@ Donate click → POST /api/create-order → Razorpay Checkout modal
    | `RAZORPAY_WEBHOOK_SECRET` | Long random string you choose (`openssl rand -hex 32`) |
    | `DONATION_MIN_INR` / `DONATION_MAX_INR` | Optional limits, default ₹1 / ₹50,000 |
    | `DONATION_RATE_LIMIT_PER_MIN` | Optional per-IP limit, default 20 |
+| `ALLOWED_ORIGINS` | Your site origin, for example `https://mdzafar864.github.io` |
 
 3. **Webhook:** Razorpay Dashboard → Settings → Webhooks → URL `https://YOUR-API/api/razorpay-webhook`, same secret as above, events `payment.captured`, `order.paid`, `payment.failed` (optionally `payment.authorized`).
 4. **Test with test keys** and check that the `donations` document becomes `paid`. Keep your browser console open for any CSP message on the first payment.
@@ -358,6 +394,46 @@ Donate click → POST /api/create-order → Razorpay Checkout modal
 - 🔐 The **key secret and webhook secret live only in server environment variables.** Never put them in `js/`, `index.html`, this README or git. Rotate the secret immediately if it leaks.
 - The browser is never trusted for the amount or for "payment success". Only the server's signature check plus a Razorpay payment lookup marks a donation paid.
 - Signatures are compared in constant time, routes are rate limited, CORS is limited to `ALLOWED_ORIGINS`, and responses are `Cache-Control: no-store`.
+
+---
+
+## ⚙ API Deployment & Performance
+
+The production API (Vercel + Atlas) is tuned to keep cold starts, database connections and invocations low. Full explanation: [`server/README.md`](./server/README.md#deployment-optimizations).
+
+| Setting | Value | Where | Why |
+| --- | --- | --- | --- |
+| `regions` | `["bom1"]` | `server/vercel.json` | Runs functions in Mumbai. Must match your Atlas region (AWS `ap-south-1`). |
+| `fluid` | `true` | `server/vercel.json` | Fluid compute: instance reuse, bytecode caching, pre-warming. |
+| `AUTO_SEED` | `false` | Vercel env | Skips the start-up database check on every cold start. |
+| `ACTIVE_WINDOW_MINUTES` | `3` | Vercel env | Tolerates missed heartbeats (heartbeat is 20 s). |
+| `maxPoolSize` / `minPoolSize` | `2` / `0` | `server/src/db.js` | Few connections, none held idle on the Atlas free tier. |
+| Razorpay client | `fetch` | `server/src/razorpay-lite.js` | No `razorpay` / axios load on cold start, 8 s request timeout. |
+| `heartbeatMs` / `statsRefreshMs` | `20000` / `10000` | `js/config.js` | Fixed timers keep API calls per visitor predictable. `/api/stats` is cached for 15 s. |
+
+Changing a Vercel environment variable needs a redeploy. Tip: use the standard Atlas connection string (`mongodb://host1,host2,host3/...`) instead of `mongodb+srv://` to skip SRV/TXT DNS lookups.
+
+---
+
+## 🤖 Native Shells (Android / Windows)
+
+The [`native/`](./native) folder holds the code for wrapping the app in an Android, Android TV or Windows shell. Its only job is to give each install **one stable anonymous id**, so a user who clears browser data is not counted twice.
+
+| Platform | Store | Survives clear data | Survives uninstall |
+| --- | --- | --- | --- |
+| Android phone / tablet | AccountManager + EncryptedSharedPreferences | Yes | No |
+| Android TV | AccountManager + EncryptedSharedPreferences | Yes | No |
+| Windows | Credential Manager | Yes | Yes |
+| Browser / PWA | `localStorage` | No | No |
+
+**Contract with the web app:** the shell injects `window.BEU_NATIVE_ID` and `window.BEU_PLATFORM` (Windows) or exposes `window.BEUNative.getId()` / `getPlatform()` (Android). `js/tracker.js` validates the id with the same regex as the server, prefers it over `localStorage`, and sends `meta.platform`.
+
+**Setup in short**
+
+- **Android:** copy the `.kt` files into package `com.beu.syllabus.identity`, add `res/xml/authenticator.xml`, merge `AndroidManifest.snippet.xml`, set `minSdk 23`, add `security-crypto`, and call `IdentityBridge.install(webView)` before `loadUrl`.
+- **Windows:** add the WebView2 NuGet package, copy `PersistentUserId.cs`, and call `await PersistentUserId.InstallAsync(webView.CoreWebView2)` before the first `Navigate`.
+
+> ⚠ The Kotlin and C# files were written without a compiler, so build and test them on a real device. The id is not a secret: this prevents honest double-counting, not deliberate inflation. Full details: [`native/README.md`](./native/README.md).
 
 ---
 
@@ -387,7 +463,7 @@ The [`archive/`](./archive) folder is a **store folder** for old versions of the
 - [ ] 📚 Notes section
 - [ ] 📝 Previous year questions
 - [ ] 🤖 Telegram bot integration
-- [ ] 📱 Android app
+- [ ] 📱 Android app (identity code is ready in [`native/`](./native), full app shell is pending)
 
 ---
 
