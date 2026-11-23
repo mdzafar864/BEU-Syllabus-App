@@ -105,7 +105,7 @@ const syllabus = {
       EE: "https://drive.google.com/file/d/1nKpL1rXXa7EGJqbvDkmEem1uh74QWjOU/preview",
       ECE: "https://drive.google.com/file/d/1kWy1_zhggLM9U4jrkTzGWNdLcE-4QXMr/preview",
       ME: "https://drive.google.com/file/d/1UFZLtpjIdwiyE9b6BNWfvStfHQztmr1a/preview",
-      AI: "https://drive.google.com/file/d/1psBOKvD7xHSEOkzAjiFmJ8giSeJu6hxM/preview",
+      AI: "https://drive.google.com/file/d/1FK1TstNUQxdTNUNr7Hf4pWq_rBuCg5wr/preview",
       EEE: "https://drive.google.com/file/d/18IodWCERPmSl0w1JvD38IuOBy0ec18sw/preview",
     },
   },
