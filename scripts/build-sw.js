@@ -30,7 +30,6 @@ const hashed = [
   "js/donate.js",
   "js/stats.js",
   "css/stats.css",
-  "js/data.js",
 ];
 
 const hash = crypto.createHash("sha1");
