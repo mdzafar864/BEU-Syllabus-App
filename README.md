@@ -73,7 +73,7 @@
 
 | Version               | Type                                       | Location                                 | Notes                                                        |
 | --------------------- | ------------------------------------------ | ---------------------------------------- | ------------------------------------------------------------ |
-| **Current (v1.0.x+)** | Static frontend + analytics & payments API | [`/`](./) (root) + [`/server`](./server) | Stats bar, click tracking, Razorpay donations, MongoDB Atlas |
+| **Current (v1.0.9)** | Static frontend + analytics & payments API | [`/`](./) (root) + [`/server`](./server) | Stats bar, click tracking, Razorpay donations, MongoDB Atlas |
 | **v1.0 (archive)**    | ⚡ **Serverless** (frontend only)          | [`/archive/v1.0`](./archive/v1.0)        | No backend, no database, no stats bar. Only GitHub Pages     |
 
 > Want the simplest possible version with zero backend? Use the [serverless v1.0 archive](./archive/v1.0).
@@ -98,18 +98,21 @@
                                     │
         ┌───────────────────────────┼───────────────────────────┐
         │                           │                           │
- Syllabus data (js/data.js)   tracker.js / stats.js         donate.js
- semester → session →               │                           │
- branch → PDF                POST /api/track          POST /api/create-order
-                             GET  /api/stats          POST /api/verify-payment
+ Syllabus data (js/data.js)  tracker.js / stats.js /          donate.js
+ semester → session →         user-id.js                        │
+ branch → PDF                       │                    POST /api/create-order
+                             POST /api/track             POST /api/verify-payment
+                             POST /api/users
+                             GET  /api/stats
                                     │                           │
                                     │                           │ ◄── Razorpay Checkout modal
                                     │                           │     (loaded only on Donate click)
                           ┌─────────▼───────────────────────────▼─────────┐
                           │             server/ (Node API)                │
                           │             Vercel / Render ...               │
-                          │  api/ → src/app.js (analytics)                │
+                          │  api/ → src/app.js (analytics, users)         │
                           │       → src/payments.js (donations)           │
+                          │         └─ src/razorpay-lite.js (fetch client)│
                           └───────┬───────────────────────────┬───────────┘
                                   │                           │
                        ┌──────────▼──────────┐       ┌────────▼─────────┐
@@ -128,8 +131,8 @@
 1. The frontend is fully static and hosted on **GitHub Pages**.
 2. Syllabus links live in `js/data.js` as `syllabus[semester][session][branch] = pdfLink`.
 3. `service-worker.js` caches the app for offline-friendly, fast loading. `scripts/build-sw.js` stamps a fresh build id on every deploy so users always get updates.
-4. `tracker.js` and `stats.js` talk to the **`server/`** API, which stores anonymous usage data in **MongoDB Atlas**. A static site cannot connect to Atlas directly (the password would be public), so the API sits in between.
-5. `donate.js` handles donations. The browser only suggests an amount; the **`server/`** API creates the Razorpay order, verifies the payment signature and records the result in the `donations` collection. The Razorpay **key secret never reaches the browser**.
+4. `user-id.js` gives every browser an anonymous `userId` (kept in `localStorage`) and registers it once with `POST /api/users`. `tracker.js` and `stats.js` talk to the **`server/`** API, which stores anonymous usage data in **MongoDB Atlas**. A static site cannot connect to Atlas directly (the password would be public), so the API sits in between.
+5. `donate.js` handles donations. The browser only suggests an amount; the **`server/`** API creates the Razorpay order (through `src/razorpay-lite.js`, a small client built on Node's `fetch` instead of the `razorpay` npm package), verifies the payment signature and records the result in the `donations` collection. The Razorpay **key secret never reaches the browser**.
 
 ---
 
@@ -144,6 +147,7 @@ BEU-Syllabus-App
 ├── version.json               # App version + build id
 ├── robots.txt                 # SEO
 ├── sitemap.xml                # SEO
+├── README.md                  # This file
 │
 ├── css/
 │   ├── style.css              # Main styles
@@ -155,6 +159,7 @@ BEU-Syllabus-App
 │   ├── analytics.js           # Google Analytics 4
 │   ├── config.js              # API URL + tracking settings
 │   ├── tracker.js             # Click / action tracking → MongoDB + GA4
+│   ├── user-id.js             # Anonymous userId (localStorage) → POST /api/users
 │   ├── stats.js               # Stats bar (Total, Active, Downloads)
 │   └── donate.js              # Razorpay donations (amount picker, Checkout, verify)
 │
@@ -165,19 +170,21 @@ BEU-Syllabus-App
 │   └── screenshots/           # README screenshots
 │
 ├── server/                    # Analytics + payments API (Node.js + MongoDB Atlas)
-│   ├── api/                   # Vercel functions
+│   ├── api/                   # Vercel functions (one file per route)
 │   │   ├── track.js, stats.js, health.js     # analytics
+│   │   ├── users.js                          # register anonymous userId
 │   │   ├── create-order.js                   # Razorpay: create order
 │   │   ├── verify-payment.js                 # Razorpay: verify signature + payment
 │   │   └── razorpay-webhook.js               # Razorpay: signed webhook (raw body)
 │   ├── src/                   # app, config, db, seed, validate, instance,
-│   │                          # payments (donation logic), payments-instance
-│   ├── test/
-│   │   └── payments.test.js   # Payment tests (no network needed)
+│   │                          # payments (donation logic), payments-instance,
+│   │                          # razorpay-lite (minimal Razorpay REST client)
 │   ├── scripts/seed.js        # Manual DB seed
 │   ├── server.js              # Local / Node host entry (analytics + payment routes)
-│   ├── package.json           # Dependencies (mongodb, razorpay)
+│   ├── vercel.json            # Vercel settings (Fluid compute, Mumbai region bom1)
+│   ├── package.json           # Dependency: mongodb only
 │   ├── .env.example           # Environment variable template (MongoDB + Razorpay)
+│   ├── .gitignore             # Ignores node_modules/ and .env
 │   └── README.md              # API documentation
 │
 ├── scripts/
@@ -190,9 +197,10 @@ BEU-Syllabus-App
     ├── .nojekyll              # Tells GitHub Pages to skip Jekyll processing here
     └── v1.0/                  # ⚡ Serverless version (frontend only)
         ├── index.html, manifest.json, service-worker.js, version.json
+        ├── robots.txt, sitemap.xml, README.md
         ├── css/style.css
         ├── js/ (app.js, analytics.js, data.js)
-        ├── assets/
+        ├── assets/            # icons, logo (.png + .svg), screenshots
         ├── scripts/build-sw.js
         └── .github/workflows/deploy.yml
 ```
@@ -237,11 +245,10 @@ npx serve .
 cd server
 cp .env.example .env      # add your MongoDB Atlas + Razorpay TEST details
 npm install
-npm test                  # payment tests, no network needed
 npm run dev
 ```
 
-Check it at `http://localhost:3000/api/health`. The donation routes (`/api/create-order`, `/api/verify-payment`, `/api/razorpay-webhook`) run on the same server.
+Check it at `http://localhost:3000/api/health`. The user route (`/api/users`) and the donation routes (`/api/create-order`, `/api/verify-payment`, `/api/razorpay-webhook`) run on the same server. If `AUTO_SEED=false`, run `npm run seed` once to create the collections.
 
 ### Use the serverless version (no backend)
 
@@ -275,13 +282,15 @@ A stats bar under the **Install / App Mode Active** button shows **Total Users**
 
 ```text
 Browser (GitHub Pages) ──► server/ API (Vercel / Render / ...) ──► MongoDB Atlas
-   tracker.js, stats.js        POST /api/track   GET /api/stats
+tracker.js, stats.js,       POST /api/track   POST /api/users   GET /api/stats
+   user-id.js
 ```
 
 ### Setup (about 10 minutes)
 
 1. **Atlas:** create a free cluster and a database user. Under _Network Access_ allow your API host (Vercel needs `0.0.0.0/0`, so use a strong password).
 2. **Deploy `server/`** to Vercel (Root Directory = `server`) or any Node host, using the variables from [`server/.env.example`](./server/.env.example). Open `https://YOUR-API/api/health` to verify.
+   `server/vercel.json` runs functions in Mumbai (`bom1`); change it to the Vercel region nearest your Atlas cluster.
 3. **Point the app at it** (same URL in both places):
    - `js/config.js` → `apiBase: "https://YOUR-API"`
    - `index.html` → add the same origin to `connect-src` in the Content Security Policy. (The Razorpay hosts are already allowed there for donations.)
@@ -327,7 +336,7 @@ Donate click → POST /api/create-order → Razorpay Checkout modal
 
 ### Setup
 
-1. **Install (backend only):** `cd server && npm install razorpay --ignore-scripts`, then commit `package-lock.json`. Run `npm audit --omit=dev`.
+1. **Install (backend only):** `cd server && npm install`. No Razorpay package is needed: `src/razorpay-lite.js` calls the Razorpay REST API with Node's built-in `fetch`. Commit `package-lock.json` and run `npm audit --omit=dev`.
 2. **Environment variables** (Vercel → Settings → Environment Variables, or `server/.env` locally):
 
    | Variable                                | Value                                                  |
