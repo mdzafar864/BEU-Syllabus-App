@@ -5,7 +5,7 @@
  *   2. Shared helpers
  *   3. App shell caching        (versioned cache, replaced on every build)
  *   4. Syllabus data module     (data.js: network-first, refresh, "SYLLABUS_UPDATED")
- *   5. Version module           (version.json check, "VERSION_UPDATED")
+ *   5. Version module           (version.json "version" check, "VERSION_UPDATED")
  *   6. Lifecycle / fetch / sync / message wiring
  *
  * The data module and the version module share NO state, NO cache and NO
@@ -13,9 +13,14 @@
  * message; the page decides how to present them (see js/app.js).
  */
 
-// Stamped on every build by `node scripts/build-sw.js` - do not edit by hand.
-// The marker comment lets the script find and replace this line each time.
+// Stamped by `node scripts/build-sw.js` - do not edit by hand.
+// BUILD_ID only changes when shell files change (data.js is NOT included).
+// The marker comments let the script find and replace these lines.
 const BUILD_ID = "mwlgql9n-0b2af721"; // @build-id
+
+// Release number shown to users. Stamped from version.json by the same script.
+// Edit "version" in version.json by hand, then run the build script.
+const APP_VERSION = "1.0.7"; // @app-version
 
 // ---------------------------------------------------------
 // 1. CONFIG & CACHE NAMES
@@ -220,9 +225,10 @@ const SyllabusData = {
 // 5. VERSION MODULE  ->  posts "VERSION_UPDATED"
 // ---------------------------------------------------------
 const AppVersion = {
-  // Compare the build this worker was made with against version.json on the
-  // server (written by the same build script). Stateless: nothing is stored,
-  // so it can never disturb the syllabus baseline.
+  // Compares the release number this worker was built with (APP_VERSION)
+  // against "version" in version.json on the server. That number only changes
+  // when YOU edit it, so shell or data.js deploys never trigger this popup.
+  // Stateless: nothing is stored, so it can never disturb the syllabus baseline.
   async check() {
     const res = await fetch(VERSION_URL, { cache: "no-store" });
     if (!res.ok) {
@@ -236,22 +242,15 @@ const AppVersion = {
       return;
     }
 
-    const latestBuild = remote && remote.build;
-    if (!latestBuild || latestBuild === BUILD_ID) {
+    const latest = remote && remote.version;
+    if (!latest || latest === APP_VERSION) {
       return;
     }
 
-    // A newer deploy is live: fetch the new worker now instead of waiting for
+    // A new release is live: fetch the new worker now instead of waiting for
     // the browser's own update check. It will skipWaiting() and take over.
     await self.registration.update().catch(() => {});
-    await notifyClients("VERSION_UPDATED", { version: remote.version });
-  },
-
-  // Called from "activate". True when this worker replaced an older build.
-  async announceIfUpgrade(wasUpgrade) {
-    if (wasUpgrade) {
-      await notifyClients("VERSION_UPDATED", { version: BUILD_ID });
-    }
+    await notifyClients("VERSION_UPDATED", { version: latest });
   },
 };
 
@@ -271,12 +270,12 @@ self.addEventListener("install", (event) => {
 });
 
 // ACTIVATE - drop old builds' shells, claim open pages immediately.
+// No version announcement here: a new shell build alone is not a "new version".
 self.addEventListener("activate", (event) => {
   event.waitUntil(
     (async () => {
-      const removed = await removeOldShells();
+      await removeOldShells();
       await self.clients.claim();
-      await AppVersion.announceIfUpgrade(removed > 0);
     })(),
   );
 });
