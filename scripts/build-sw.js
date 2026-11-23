@@ -1,19 +1,4 @@
 #!/usr/bin/env node
-/*
- * Stamps build info into service-worker.js and version.json.
- * Run it before deploying shell changes or a new release:
- *   node scripts/build-sw.js
- *
- * BUILD_ID  = hash over the files the service worker caches (shell only).
- *             Deterministic: no timestamp, and js/data.js is NOT included,
- *             so a data-only change leaves service-worker.js byte-identical
- *             and the browser never sees a "new worker".
- * APP_VERSION = the "version" field of version.json, which YOU edit by hand.
- *             Changing it is what triggers the "New Version Available" popup.
- *
- * Options:
- *   --bump   also increment the patch number in version.json ("1.0.2" -> "1.0.3")
- */
 const fs = require("fs");
 const path = require("path");
 const crypto = require("crypto");
