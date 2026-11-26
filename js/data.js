@@ -144,7 +144,6 @@ const syllabus = {
       CE: "https://drive.google.com/file/d/1zplxNkclO9vL0hqaR_VoeD2gpMrzzFHi/preview",
       CSE: "https://drive.google.com/file/d/1rHe9jjmyQnJTPiedYeQIGFTRHRBY9L5v/preview",
       CECA: "https://drive.google.com/file/d/1MDutfNnAH4q--uWtvm9pAccqenLh1rib/preview",
-      CSE: "https://drive.google.com/file/d/1SZdAT8a1vrIfrMPYjl0Q-0cc3hBba3z3/preview",
       EE: "https://drive.google.com/file/d/1-xBDdIrwWc_wz71toL_zbGSnxKbXOfE0/preview",
       ECE: "https://drive.google.com/file/d/1MHmOfqd7MgTA6qw2qCFLUkBpau_iXk90/preview",
       ME: "https://drive.google.com/file/d/1aBKZP3P9Ttni0RPa-HWK6yi1vND1_KlL/preview",
