@@ -143,6 +143,7 @@ const syllabus = {
     "2024-2028": {
       CE: "https://drive.google.com/file/d/1zplxNkclO9vL0hqaR_VoeD2gpMrzzFHi/preview",
       CSE: "https://drive.google.com/file/d/1rHe9jjmyQnJTPiedYeQIGFTRHRBY9L5v/preview",
+      IOT: "https://drive.google.com/file/d/1QHN-vWd0q6IG8FqYMU2-0t_PYmvjK7B5/preview",
       CECA: "https://drive.google.com/file/d/1MDutfNnAH4q--uWtvm9pAccqenLh1rib/preview",
       EE: "https://drive.google.com/file/d/1-xBDdIrwWc_wz71toL_zbGSnxKbXOfE0/preview",
       ECE: "https://drive.google.com/file/d/1MHmOfqd7MgTA6qw2qCFLUkBpau_iXk90/preview",
